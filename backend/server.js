@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(__dirname, '../frontend/public')));
+app.use(express.static(path.join(__dirname, '../frontend/views')));
 
 // Routes
 const authRoutes = require('./routes/auth');
