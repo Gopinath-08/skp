@@ -2,6 +2,15 @@ import { useEffect, useState } from 'react';
 import { courseService, inquiryService } from '../services/api';
 import '../styles/pages.css';
 
+const fallbackCourses = [
+  { _id: 'dca', name: 'DCA' },
+  { _id: 'pgdca', name: 'PGDCA' },
+  { _id: 'adca', name: 'ADCA' },
+  { _id: 'tally', name: 'Tally' },
+  { _id: 'dtp', name: 'DTP' },
+  { _id: 'web', name: 'Web Development' },
+];
+
 export default function Admission() {
   const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
@@ -18,9 +27,10 @@ export default function Admission() {
     const fetchCourses = async () => {
       try {
         const response = await courseService.getAll();
-        setCourses(response.data);
+        setCourses(response.data.length > 0 ? response.data : fallbackCourses);
       } catch (error) {
         console.error('Error fetching courses:', error);
+        setCourses(fallbackCourses);
       }
     };
     fetchCourses();
@@ -56,25 +66,34 @@ export default function Admission() {
 
   return (
     <div className="admission-page">
-      <section className="page-header">
-        <h1>Admission</h1>
-        <p>Apply for your desired course today</p>
+      <section className="page-header page-header-admission">
+        <div>
+          <span>Admissions open</span>
+          <h1>Apply for a computer course</h1>
+          <p>Submit your inquiry and our team will help you with course selection, fees, and batch timing.</p>
+        </div>
       </section>
 
-      <section className="admission-content">
+      <section className="admission-content page-shell">
         <div className="admission-info">
-          <h2>Application Process</h2>
+          <span className="eyebrow">How it works</span>
+          <h2>Simple admission process</h2>
           <ol className="process-list">
-            <li><strong>Fill Application Form</strong> - Provide your basic information</li>
-            <li><strong>Select Course</strong> - Choose from our available courses</li>
-            <li><strong>Review & Confirm</strong> - Verify your information</li>
-            <li><strong>Make Payment</strong> - Complete the fee payment</li>
-            <li><strong>Start Learning</strong> - Access course materials immediately</li>
+            <li><strong>Submit Inquiry</strong> Share your details and preferred course.</li>
+            <li><strong>Counseling Call</strong> Our team explains eligibility, fees, and batch timing.</li>
+            <li><strong>Document Check</strong> Confirm basic student details for admission.</li>
+            <li><strong>Fee Confirmation</strong> Complete registration and payment formalities.</li>
+            <li><strong>Start Classes</strong> Join your batch and begin practical training.</li>
           </ol>
+          <div className="admission-help">
+            <h3>Need help choosing?</h3>
+            <p>Pick any course now. We can update it after counseling if another course fits better.</p>
+          </div>
         </div>
 
         <div className="admission-form-container">
-          <h2>Apply Now</h2>
+          <h2>Admission inquiry</h2>
+          <p className="form-note">This form creates an inquiry in the backend. Admin can view it after login.</p>
           {status.message && (
             <div className={status.type === 'success' ? 'success-message' : 'error-message'}>
               {status.message}
@@ -158,7 +177,10 @@ export default function Admission() {
       </section>
 
       <section className="admission-faq">
-        <h2>Frequently Asked Questions</h2>
+        <div className="section-heading">
+          <span>Questions</span>
+          <h2>Frequently asked questions</h2>
+        </div>
         <div className="faq-items">
           <div className="faq-item">
             <h3>What are the eligibility criteria?</h3>

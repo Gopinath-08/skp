@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   adminService,
+  authService,
   certificateService,
   courseService,
   facultyService,
@@ -31,6 +32,7 @@ export default function Admin() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [error, setError] = useState('');
   const isLoggedIn = Boolean(localStorage.getItem('authToken'));
+  const admin = JSON.parse(localStorage.getItem('admin') || 'null');
 
   const tabs = useMemo(() => [
     ['dashboard', 'Dashboard'],
@@ -102,11 +104,25 @@ export default function Admin() {
     newInquiries: data.inquiries.filter((item) => item.status === 'New').length,
   };
 
+  const handleLogout = () => {
+    authService.logout();
+    window.location.href = '/login';
+  };
+
   return (
     <div className="admin-page">
       <section className="admin-header">
-        <h1>Admin Dashboard</h1>
-        <p>Live data from the deployed backend API</p>
+        <div>
+          <span>Institute management</span>
+          <h1>Admin Dashboard</h1>
+          <p>Live data from the deployed backend API</p>
+        </div>
+        {isLoggedIn && (
+          <div className="admin-user">
+            <span>{admin?.name || admin?.email || 'Admin'}</span>
+            <button className="btn btn-small" onClick={handleLogout}>Logout</button>
+          </div>
+        )}
       </section>
 
       {!isLoggedIn && (

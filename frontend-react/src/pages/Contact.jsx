@@ -14,26 +14,29 @@ export default function Contact() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
+    setError('');
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setIsSubmitting(true);
+    setSubmitted(false);
     setError('');
+
     try {
       await inquiryService.create(formData);
       setSubmitted(true);
       setFormData({ name: '', email: '', phone: '', course: 'General Inquiry', message: '' });
       setTimeout(() => setSubmitted(false), 5000);
-    } catch (error) {
-      console.error('Error submitting inquiry:', error);
-      setError(error.response?.data?.message || 'Error submitting form. Please try again.');
+    } catch (submitError) {
+      console.error('Error submitting inquiry:', submitError);
+      setError(submitError.response?.data?.message || 'Error submitting form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -41,43 +44,40 @@ export default function Contact() {
 
   return (
     <div className="contact-page">
-      <section className="page-header">
-        <h1>Contact Us</h1>
-        <p>We'd love to hear from you</p>
+      <section className="page-header page-header-contact">
+        <div>
+          <span>Talk to us</span>
+          <h1>Contact Ideal Computer Education</h1>
+          <p>Ask about courses, fees, batches, certificates, or admission support.</p>
+        </div>
       </section>
 
-      <section className="contact-content">
+      <section className="contact-content page-shell">
         <div className="contact-info">
-          <div className="info-card">
-            <div className="info-icon">📍</div>
-            <h3>Location</h3>
-            <p>Ideal Computer Education<br />XYZ Street, City Name<br />State, Country - PIN</p>
-          </div>
-          <div className="info-card">
-            <div className="info-icon">📞</div>
-            <h3>Phone</h3>
-            <p>+91 (0) XXX-XXX-XXXX<br />+91 (0) YYY-YYY-YYYY<br />Mon - Fri: 9AM - 6PM</p>
-          </div>
-          <div className="info-card">
-            <div className="info-icon">📧</div>
-            <h3>Email</h3>
-            <p>info@idealedu.com<br />support@idealedu.com<br />admissions@idealedu.com</p>
-          </div>
-          <div className="info-card">
-            <div className="info-icon">⏰</div>
-            <h3>Business Hours</h3>
-            <p>Monday - Friday: 9:00 AM - 6:00 PM<br />Saturday: 10:00 AM - 4:00 PM<br />Sunday: Closed</p>
-          </div>
+          <InfoCard number="01" title="Location">
+            Ideal Computer Education<br />Visit the institute for course counseling and admission help.
+          </InfoCard>
+          <InfoCard number="02" title="Phone">
+            +91 (0) XXX-XXX-XXXX<br />Mon - Sat: 9:00 AM - 6:00 PM
+          </InfoCard>
+          <InfoCard number="03" title="Email">
+            info@idealedu.com<br />admissions@idealedu.com
+          </InfoCard>
+          <InfoCard number="04" title="Business Hours">
+            Monday - Saturday<br />Morning and evening batches available
+          </InfoCard>
         </div>
 
         <div className="contact-form-section">
-          <h2>Send us a Message</h2>
+          <h2>Send an inquiry</h2>
+          <p className="form-note">Share your details and our team will contact you with the next step.</p>
           {submitted && (
             <div className="success-message">
-              ✓ Thank you! Your message has been sent successfully. We'll get back to you soon.
+              Thank you. Your message has been sent successfully. We will get back to you soon.
             </div>
           )}
           {error && <div className="error-message">{error}</div>}
+
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="name">Full Name *</label>
@@ -106,15 +106,33 @@ export default function Contact() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">Phone Number</label>
+              <label htmlFor="phone">Phone Number *</label>
               <input
                 type="tel"
                 id="phone"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
+                required
                 placeholder="Enter your phone number"
               />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="course">Inquiry Type *</label>
+              <select
+                id="course"
+                name="course"
+                value={formData.course}
+                onChange={handleChange}
+                required
+              >
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Admission">Admission</option>
+                <option value="Fees">Fees</option>
+                <option value="Certificate">Certificate</option>
+                <option value="Batch Timing">Batch Timing</option>
+              </select>
             </div>
 
             <div className="form-group">
@@ -125,9 +143,9 @@ export default function Contact() {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                placeholder="Type your message here..."
+                placeholder="Type your message here"
                 rows="6"
-              ></textarea>
+              />
             </div>
 
             <button type="submit" className="btn btn-submit" disabled={isSubmitting}>
@@ -137,13 +155,26 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="map-section">
-        <h2>Find Us Here</h2>
-        <p>Visit our office to meet our team and explore the campus</p>
-        <div className="map-placeholder">
-          <p>📍 Google Maps Integration Coming Soon</p>
+      <section className="map-section page-shell">
+        <div>
+          <span className="eyebrow">Visit us</span>
+          <h2>Come in for course counseling</h2>
+          <p>Discuss your goal, compare courses, and confirm batch timings before admission.</p>
+        </div>
+        <div className="map-placeholder" aria-label="Location placeholder">
+          <p>Ideal Computer Education</p>
         </div>
       </section>
+    </div>
+  );
+}
+
+function InfoCard({ number, title, children }) {
+  return (
+    <div className="info-card">
+      <div className="info-icon">{number}</div>
+      <h3>{title}</h3>
+      <p>{children}</p>
     </div>
   );
 }
