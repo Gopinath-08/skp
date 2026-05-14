@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission - Ideal Computer Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <style>
+        .page-header {
+            padding: 150px 0 80px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(30,58,138,0.9), rgba(59,130,246,0.8)), url('/images/gallery2.jpg') center/cover;
+            color: white;
+        }
+        .admission-form-wrapper {
+            max-width: 800px;
+            margin: 60px auto;
+            background: var(--bg-card, #fff);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color, #333);
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-input, #f8fafc);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color, #1e3a8a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .btn-submit:hover {
+            background: var(--secondary-color, #3b82f6);
+        }
+        @media(max-width: 768px){
+            .form-row { grid-template-columns: 1fr; }
+        }
+        body.dark-mode .admission-form-wrapper { background: #1e1e2d; }
+        body.dark-mode .form-group input, body.dark-mode .form-group select, body.dark-mode .form-group textarea {
+            background: #2a2a3c;
+            border-color: #444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="/images/logo.png" alt="Logo" class="logo-img">
+                <span class="logo-text">IDEAL COMPUTER EDUCATION</span>
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/about" class="nav-link">About</a>
+                <a href="/courses" class="nav-link">Courses</a>
+                <a href="/gallery" class="nav-link">Gallery</a>
+                <a href="/admission" class="nav-link active">Admission</a>
+                <a href="/contact" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1 data-aos="fade-down">Online Admission</h1>
+            <p data-aos="fade-up">Take the first step towards a successful career</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="admission-form-wrapper" data-aos="fade-up">
+            <h2 style="text-align:center; margin-bottom: 30px; color: var(--primary-color);">Application Form</h2>
+            <form id="admission-form" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Parents Name *</label>
+                        <input type="text" name="parentsName" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" name="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <select name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mobile Number *</label>
+                        <input type="tel" name="mobile" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Aadhaar Number *</label>
+                    <input type="text" name="aadhaar" required maxlength="12">
+                </div>
+                
+                <div class="form-group">
+                    <label>Qualification *</label>
+                    <input type="text" name="qualification" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Address *</label>
+                    <textarea name="address" required rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Course *</label>
+                    <select name="course" id="course-select" required>
+                        <option value="">Loading courses...</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Passport Size Photo *</label>
+                        <input type="file" name="photo" accept="image/*" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Signature *</label>
+                        <input type="file" name="signature" accept="image/*" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">Submit Application</button>
+            </form>
+            <div id="response-msg" style="margin-top:20px; text-align:center;"></div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+        
+        // Load courses for select
+        async function loadCourses() {
+            try {
+                const res = await fetch('/api/courses');
+                const courses = await res.json();
+                const select = document.getElementById('course-select');
+                select.innerHTML = '<option value="">Select Course</option>' + 
+                    courses.map(c => `<option value="${c._id}">${c.name}</option>`).join('');
+                
+                // Pre-select if course id is in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const courseId = urlParams.get('course');
+                if (courseId) {
+                    select.value = courseId;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        loadCourses();
+
+        // Form submission
+        document.getElementById('admission-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msg = document.getElementById('response-msg');
+            msg.innerHTML = 'Submitting...';
+            msg.style.color = 'black';
+            
+            try {
+                const formData = new FormData(e.target);
+                const response = await fetch('/api/students', {
+                    method: 'POST',
+                    body: formData // No authorization header needed for public application? Wait, the API might require it. Let's check backend.
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    msg.innerHTML = `Application submitted successfully! Your Admission ID is <strong>${result.admissionId || 'Pending'}</strong>`;
+                    msg.style.color = 'green';
+                    e.target.reset();
+                } else {
+                    const err = await response.json();
+                    msg.innerHTML = `Error: ${err.message || 'Failed to submit'}`;
+                    msg.style.color = 'red';
+                }
+            } catch (err) {
+                msg.innerHTML = `Network error. Please try again later.`;
+                msg.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

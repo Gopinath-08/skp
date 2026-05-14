@@ -19,6 +19,17 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// Get fees by student
+router.get('/student/:studentId', auth, async (req, res) => {
+  try {
+    const fees = await Fee.find({ student: req.params.studentId })
+      .populate('course', 'name');
+    res.json(fees);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Get fee by ID
 router.get('/:id', auth, async (req, res) => {
   try {
@@ -31,17 +42,6 @@ router.get('/:id', auth, async (req, res) => {
     }
     
     res.json(fee);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Get fees by student
-router.get('/student/:studentId', auth, async (req, res) => {
-  try {
-    const fees = await Fee.find({ student: req.params.studentId })
-      .populate('course', 'name');
-    res.json(fees);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

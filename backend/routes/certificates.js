@@ -22,23 +22,6 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Get certificate by ID
-router.get('/:id', auth, async (req, res) => {
-  try {
-    const certificate = await Certificate.findById(req.params.id)
-      .populate('student')
-      .populate('course');
-    
-    if (!certificate) {
-      return res.status(404).json({ message: 'Certificate not found' });
-    }
-    
-    res.json(certificate);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
 // Verify certificate
 router.get('/verify/:certificateNumber', async (req, res) => {
   try {
@@ -60,6 +43,23 @@ router.get('/verify/:certificateNumber', async (req, res) => {
       grade: certificate.grade,
       isVerified: certificate.isVerified
     });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get certificate by ID
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const certificate = await Certificate.findById(req.params.id)
+      .populate('student')
+      .populate('course');
+    
+    if (!certificate) {
+      return res.status(404).json({ message: 'Certificate not found' });
+    }
+    
+    res.json(certificate);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

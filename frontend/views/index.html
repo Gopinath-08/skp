@@ -3,584 +3,740 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ideal Computer Education - Your Success ! Our Mission</title>
-    <meta name="description" content="Premier computer coaching institute offering DCA, PGDCA, Tally, Web Development, Python, Java and more. ISO 9001:2015 certified.">
-    <meta name="keywords" content="computer coaching, DCA, PGDCA, Tally, web development, python, java, computer institute">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="Ideal Computer Education">
-    <meta property="og:description" content="Your Success ! Our Mission">
-    <meta property="og:image" content="/images/logo.png">
-    <meta property="og:url" content="https://idealcomputer.in">
+    <title>Ideal Computer Education | Premium IT Training</title>
+    <meta name="description" content="A world-class platform for IT education, coding, and professional career development.">
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome -->
+    <!-- Icons & Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     
-    <!-- CSS Files -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/hero.css">
-    <link rel="stylesheet" href="/css/features.css">
-    <link rel="stylesheet" href="/css/courses.css">
-    <link rel="stylesheet" href="/css/why-choose.css">
-    <link rel="stylesheet" href="/css/counters.css">
-    <link rel="stylesheet" href="/css/testimonials.css">
-    <link rel="stylesheet" href="/css/gallery.css">
-    <link rel="stylesheet" href="/css/notice-board.css">
-    <link rel="stylesheet" href="/css/contact.css">
-    <link rel="stylesheet" href="/css/footer.css">
-    <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/navbar-premium.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <style>
+        /* Specific Page Styles */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 100px;
+            color: var(--accent-purple);
+            font-weight: 500;
+            margin-bottom: 30px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            line-height: 1.05;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        /* 3D Dashboard Mockup in Hero */
+        .hero-dashboard-preview {
+            margin-top: 60px;
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            height: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80') center/cover;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 100px rgba(139, 92, 246, 0.2);
+            transform: perspective(1000px) rotateX(10deg);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        
+        .hero-dashboard-preview:hover {
+            transform: perspective(1000px) rotateX(5deg) scale(1.02);
+        }
+
+        /* Stats Grid */
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        /* SaaS Features Layout */
+        .feature-showcase {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-bottom: 120px;
+        }
+        
+        .feature-showcase:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-text { flex: 1; }
+        .feature-visual {
+            flex: 1;
+            position: relative;
+        }
+        
+        .feature-visual-card {
+            width: 100%;
+            padding-bottom: 70%;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(20,20,24,0.8), rgba(30,30,40,0.8));
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Courses Carousel */
+        .course-card-premium {
+            padding: 0;
+            overflow: hidden;
+        }
+        .course-card-premium img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .course-card-content { padding: 30px; }
+        
+        /* Swiper custom dots */
+        .swiper-pagination-bullet { background: var(--text-muted); }
+        .swiper-pagination-bullet-active { background: var(--accent-purple); }
+
+        /* Accordion FAQ */
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 0;
+            cursor: pointer;
+        }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            color: var(--text-muted);
+            margin-top: 0;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            margin-top: 15px;
+        }
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        /* Floating elements */
+        .float-el {
+            position: absolute;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            z-index: 5;
+            padding: 20px;
+        }
+        
+        /* Premium Footer */
+        .footer-premium {
+            border-top: 1px solid var(--border-color);
+            padding: 80px 0 40px;
+            background: var(--bg-surface);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
 </head>
 <body>
-    <!-- Preloader -->
-    <div id="preloader">
-        <div class="preloader-content">
-            <div class="logo-animation">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="loading-text">Loading...</div>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <img src="/images/logo.png" alt="Ideal Computer Education" class="logo-img">
-                <span class="logo-text">IDEAL COMPUTER EDUCATION</span>
+    <!-- 1. Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container container flex justify-between items-center" style="height: 80px;">
+            <div class="nav-logo flex items-center" style="gap:12px;">
+                <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-graduation-cap" style="color:white; font-size:1.2rem;"></i>
+                </div>
+                <span style="font-family: 'Outfit'; font-weight:700; font-size:1.3rem; letter-spacing:-0.5px;">IDEAL COMPUTER</span>
             </div>
             
-            <div class="nav-menu">
-                <a href="#home" class="nav-link active">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#courses" class="nav-link">Courses</a>
-                <a href="#gallery" class="nav-link">Gallery</a>
-                <a href="#admission" class="nav-link">Admission</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="/admin" class="nav-link admin-link">Admin</a>
+            <div class="nav-menu flex" style="gap: 32px;">
+                <a href="#about" class="nav-link" style="color:var(--text-muted); text-decoration:none; font-weight:500; transition:color 0.3s;">About</a>
+                <a href="#courses" class="nav-link" style="color:var(--text-muted); text-decoration:none; font-weight:500;">Courses</a>
+                <a href="#features" class="nav-link" style="color:var(--text-muted); text-decoration:none; font-weight:500;">Platform</a>
+                <a href="#testimonials" class="nav-link" style="color:var(--text-muted); text-decoration:none; font-weight:500;">Reviews</a>
             </div>
             
-            <div class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="nav-actions flex" style="gap:16px;">
+                <a href="/admin" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;">Sign In</a>
+                <a href="#contact" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">Enroll Now</a>
             </div>
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu">
-        <a href="#home" class="mobile-link">Home</a>
-        <a href="#about" class="mobile-link">About</a>
-        <a href="#courses" class="mobile-link">Courses</a>
-        <a href="#gallery" class="mobile-link">Gallery</a>
-        <a href="#admission" class="mobile-link">Admission</a>
-        <a href="#contact" class="mobile-link">Contact</a>
-        <a href="/admin" class="mobile-link">Admin</a>
-    </div>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero-section">
-        <div class="hero-background">
-            <div class="particles-container" id="particles-js"></div>
-            <div class="gradient-overlay"></div>
-        </div>
+    <!-- 1. Premium Hero Section -->
+    <section class="hero-section">
+        <div class="float-el" style="top:20%; left:10%; width:150px; height:150px; border-radius:50%; background:radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);"></div>
+        <div class="float-el" style="bottom:30%; right:5%; width:250px; height:250px; background:radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%); border:none;"></div>
         
-        <div class="hero-content">
-            <div class="hero-text">
+        <div class="container">
+            <div class="hero-content mx-auto">
                 <div class="hero-badge">
-                    <i class="fas fa-certificate"></i>
-                    REGISTERED UNDER GOVT OF INDIA | ISO 9001:2015 CERTIFIED
+                    <span style="width:8px; height:8px; background:var(--accent-purple); border-radius:50%; display:inline-block; box-shadow: 0 0 10px var(--accent-purple);"></span>
+                    V 2.0 - The New Standard in IT Education
                 </div>
-                
-                <h1 class="hero-title">
-                    <span class="title-main">IDEAL COMPUTER EDUCATION</span>
-                    <span class="title-tagline" id="typed-text"></span>
-                </h1>
-                
-                <p class="hero-subtitle">
-                    Your Success ! Our Mission
-                </p>
+                <h1 class="hero-title">Build Your Career in <br><span class="text-gradient-primary">Tech & Development</span></h1>
+                <p class="hero-subtitle">Experience a modern, world-class educational platform. Master coding, design, and business logic with industry experts.</p>
                 
                 <div class="hero-buttons">
-                    <a href="#courses" class="btn btn-primary">
-                        <i class="fas fa-book-open"></i>
-                        Explore Courses
-                    </a>
-                    <a href="#admission" class="btn btn-secondary">
-                        <i class="fas fa-user-plus"></i>
-                        Apply Admission
-                    </a>
+                    <a href="#courses" class="btn btn-primary">Explore Courses <i class="fas fa-arrow-right"></i></a>
+                    <a href="#features" class="btn btn-secondary"><i class="fas fa-play-circle"></i> See Platform</a>
                 </div>
             </div>
             
-            <div class="hero-visual">
-                <div class="floating-elements">
-                    <div class="floating-card card-1">
-                        <i class="fas fa-laptop-code"></i>
-                        <span>Modern Labs</span>
-                    </div>
-                    <div class="floating-card card-2">
-                        <i class="fas fa-users"></i>
-                        <span>Expert Faculty</span>
-                    </div>
-                    <div class="floating-card card-3">
-                        <i class="fas fa-trophy"></i>
-                        <span>100% Placement</span>
-                    </div>
-                </div>
+            <div class="hero-dashboard-preview">
+                <!-- Abstract mockup -->
             </div>
-        </div>
-        
-        <div class="scroll-indicator">
-            <div class="scroll-mouse">
-                <div class="scroll-wheel"></div>
-            </div>
-            <span>Scroll Down</span>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features-section">
+    <!-- 5. Student Statistics / Logo Cloud -->
+    <section class="section-padding" style="border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.01);">
+        <div class="container">
+            <div class="grid grid-cols-4 text-center">
+                <div data-aos="zoom-in" data-aos-delay="0">
+                    <div class="stat-number text-gradient-primary">5K+</div>
+                    <div class="text-muted" style="font-weight:500;">Active Students</div>
+                </div>
+                <div data-aos="zoom-in" data-aos-delay="100">
+                    <div class="stat-number text-gradient-primary">98%</div>
+                    <div class="text-muted" style="font-weight:500;">Placement Rate</div>
+                </div>
+                <div data-aos="zoom-in" data-aos-delay="200">
+                    <div class="stat-number text-gradient-primary">20+</div>
+                    <div class="text-muted" style="font-weight:500;">Expert Mentors</div>
+                </div>
+                <div data-aos="zoom-in" data-aos-delay="300">
+                    <div class="stat-number text-gradient-primary">50+</div>
+                    <div class="text-muted" style="font-weight:500;">Partner Companies</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. About Institute & 4. Why Choose Us -->
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="grid grid-cols-2 items-center" style="gap:80px;">
+                <div data-aos="fade-right">
+                    <span class="tagline">Why Ideal Computer</span>
+                    <h2 style="font-size: 3rem;">Education that <span class="text-gradient">empowers your future.</span></h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 30px;">We go beyond traditional teaching. Our curriculum is constantly updated to match global SaaS and tech startup requirements. Learn by building real products.</p>
+                    
+                    <ul style="list-style: none; display:flex; flex-direction:column; gap:20px;">
+                        <li class="flex items-center" style="gap:15px;">
+                            <div style="width:40px; height:40px; border-radius:50%; background:rgba(6,182,212,0.1); color:var(--accent-cyan); display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span style="font-size:1.1rem; font-weight:500;">ISO 9001:2015 Certified Curriculum</span>
+                        </li>
+                        <li class="flex items-center" style="gap:15px;">
+                            <div style="width:40px; height:40px; border-radius:50%; background:rgba(139,92,246,0.1); color:var(--accent-purple); display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span style="font-size:1.1rem; font-weight:500;">Hands-on Project Based Learning</span>
+                        </li>
+                        <li class="flex items-center" style="gap:15px;">
+                            <div style="width:40px; height:40px; border-radius:50%; background:rgba(59,130,246,0.1); color:var(--accent-blue); display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span style="font-size:1.1rem; font-weight:500;">Dedicated Career Support & Placement</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="glass-panel" style="padding: 40px;" data-aos="fade-left">
+                    <div style="border-radius: 16px; overflow: hidden; position:relative;">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Team" style="width:100%; display:block;">
+                        <div style="position:absolute; inset:0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 50%);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Featured Courses -->
+    <section id="courses" class="section-padding" style="background: var(--bg-surface);">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Why Choose Us</h2>
-                <p class="section-subtitle">Experience excellence in computer education</p>
+                <span class="tagline">Explore Programs</span>
+                <h2>Master the most <br><span class="text-gradient">in-demand skills</span></h2>
+                <p>From foundational IT skills to advanced software engineering.</p>
             </div>
             
-            <div class="features-grid">
-                <div class="feature-card" data-aos="fade-up">
-                    <div class="feature-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
+            <!-- Swiper Carousel -->
+            <div class="swiper course-swiper" style="padding-bottom: 60px;">
+                <div class="swiper-wrapper" id="dynamic-courses">
+                    <!-- Loaded via JS -->
+                    <div class="swiper-slide">
+                        <div class="glass-card course-card-premium">
+                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80" alt="Web Dev">
+                            <div class="course-card-content">
+                                <span style="color:var(--accent-cyan); font-weight:600; font-size:0.9rem;">12 Months</span>
+                                <h3 style="margin: 10px 0; font-size:1.5rem;">Full Stack Development</h3>
+                                <p style="font-size:0.95rem;">Master React, Node.js, and MongoDB.</p>
+                                <hr style="border:none; border-top:1px solid var(--border-color); margin:20px 0;">
+                                <div class="flex justify-between items-center">
+                                    <span style="font-weight:700; font-size:1.2rem;">₹45,000</span>
+                                    <a href="#contact" class="btn btn-secondary" style="padding: 8px 16px; font-size:0.9rem;">Enroll</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h3>Expert Faculty</h3>
-                    <p>Learn from industry professionals with years of experience</p>
-                </div>
-                
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-icon">
-                        <i class="fas fa-laptop-code"></i>
+                     <div class="swiper-slide">
+                        <div class="glass-card course-card-premium">
+                            <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=600&q=80" alt="Python">
+                            <div class="course-card-content">
+                                <span style="color:var(--accent-purple); font-weight:600; font-size:0.9rem;">6 Months</span>
+                                <h3 style="margin: 10px 0; font-size:1.5rem;">Python Data Science</h3>
+                                <p style="font-size:0.95rem;">Learn Python, Pandas, Machine Learning.</p>
+                                <hr style="border:none; border-top:1px solid var(--border-color); margin:20px 0;">
+                                <div class="flex justify-between items-center">
+                                    <span style="font-weight:700; font-size:1.2rem;">₹25,000</span>
+                                    <a href="#contact" class="btn btn-secondary" style="padding: 8px 16px; font-size:0.9rem;">Enroll</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h3>Practical Training</h3>
-                    <p>Hands-on experience with real-world projects</p>
-                </div>
-                
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-icon">
-                        <i class="fas fa-briefcase"></i>
+                     <div class="swiper-slide">
+                        <div class="glass-card course-card-premium">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" alt="Tally">
+                            <div class="course-card-content">
+                                <span style="color:var(--accent-blue); font-weight:600; font-size:0.9rem;">3 Months</span>
+                                <h3 style="margin: 10px 0; font-size:1.5rem;">Tally Prime Pro</h3>
+                                <p style="font-size:0.95rem;">Advanced accounting and GST compliance.</p>
+                                <hr style="border:none; border-top:1px solid var(--border-color); margin:20px 0;">
+                                <div class="flex justify-between items-center">
+                                    <span style="font-weight:700; font-size:1.2rem;">₹12,000</span>
+                                    <a href="#contact" class="btn btn-secondary" style="padding: 8px 16px; font-size:0.9rem;">Enroll</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h3>Job-Oriented Courses</h3>
-                    <p>Courses designed to meet industry requirements</p>
                 </div>
-                
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-icon">
-                        <i class="fas fa-rupee-sign"></i>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8, 9, 10. SaaS Features / ERP Showcases -->
+    <section id="features" class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <span class="tagline">SaaS Architecture</span>
+                <h2>A unified platform for <br><span class="text-gradient">management & learning</span></h2>
+            </div>
+
+            <!-- Showcase 1 -->
+            <div class="feature-showcase">
+                <div class="feature-text" data-aos="fade-right">
+                    <div style="width:50px; height:50px; border-radius:12px; background:rgba(139,92,246,0.1); color:var(--accent-purple); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:24px;">
+                        <i class="fas fa-user-graduate"></i>
                     </div>
-                    <h3>Affordable Fees</h3>
-                    <p>Quality education at reasonable prices</p>
+                    <h3 style="font-size:2.5rem; margin-bottom:20px;">Intelligent Student <br>Management</h3>
+                    <p style="font-size:1.1rem; margin-bottom:30px;">Our custom-built ERP tracks attendance, assignments, and overall performance with real-time analytics to ensure no student is left behind.</p>
+                    <ul style="list-style:none; display:grid; gap:12px; color:white;">
+                        <li><i class="fas fa-check-circle" style="color:var(--accent-purple); margin-right:10px;"></i> Real-time progress tracking</li>
+                        <li><i class="fas fa-check-circle" style="color:var(--accent-purple); margin-right:10px;"></i> Automated performance reports</li>
+                        <li><i class="fas fa-check-circle" style="color:var(--accent-purple); margin-right:10px;"></i> Digital assignment submission</li>
+                    </ul>
                 </div>
-                
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-icon">
-                        <i class="fas fa-building"></i>
+                <div class="feature-visual" data-aos="fade-left">
+                    <div class="feature-visual-card flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80" alt="Dashboard" style="position:absolute; width:90%; border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,0.5); transform:rotate(5deg);">
                     </div>
-                    <h3>Modern Infrastructure</h3>
-                    <p>State-of-the-art computer labs and facilities</p>
                 </div>
-                
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
-                    <div class="feature-icon">
+            </div>
+
+            <!-- Showcase 2 -->
+            <div class="feature-showcase">
+                <div class="feature-text" data-aos="fade-left">
+                    <div style="width:50px; height:50px; border-radius:12px; background:rgba(6,182,212,0.1); color:var(--accent-cyan); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:24px;">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 style="font-size:2.5rem; margin-bottom:20px;">Seamless Fee <br>Tracking</h3>
+                    <p style="font-size:1.1rem; margin-bottom:30px;">Fully transparent billing system. View payment histories, download digital receipts, and get automated reminders for upcoming installments.</p>
+                </div>
+                <div class="feature-visual" data-aos="fade-right">
+                    <div class="feature-visual-card flex items-center justify-center">
+                         <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Finance" style="position:absolute; width:90%; border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,0.5); transform:rotate(-3deg);">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Showcase 3 -->
+            <div class="feature-showcase">
+                <div class="feature-text" data-aos="fade-right">
+                    <div style="width:50px; height:50px; border-radius:12px; background:rgba(59,130,246,0.1); color:var(--accent-blue); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:24px;">
                         <i class="fas fa-certificate"></i>
                     </div>
-                    <h3>Certification</h3>
-                    <p>Government recognized certificates</p>
+                    <h3 style="font-size:2.5rem; margin-bottom:20px;">Verifiable Digital <br>Certificates</h3>
+                    <p style="font-size:1.1rem; margin-bottom:30px;">Upon course completion, students receive instantly generated, globally verifiable digital certificates secured by our internal registry.</p>
+                </div>
+                <div class="feature-visual" data-aos="fade-left">
+                    <div class="feature-visual-card flex items-center justify-center">
+                         <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80" alt="Certificate" style="position:absolute; width:90%; border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,0.5); transform:rotate(4deg);">
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Courses Section -->
-    <section id="courses" class="courses-section">
+    <!-- 7. Testimonials -->
+    <section id="testimonials" class="section-padding" style="background: var(--bg-surface);">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Our Courses</h2>
-                <p class="section-subtitle">Choose from our comprehensive range of courses</p>
+                <span class="tagline">Success Stories</span>
+                <h2>Don't just take <br>our word for it.</h2>
             </div>
             
-            <div class="courses-grid" id="courses-grid">
-                <!-- Courses will be loaded dynamically -->
-            </div>
-            
-            <div class="courses-cta">
-                <a href="#admission" class="btn btn-primary">
-                    <i class="fas fa-graduation-cap"></i>
-                    Enroll Now
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Us Section -->
-    <section id="why-choose" class="why-choose-section">
-        <div class="container">
-            <div class="why-choose-content">
-                <div class="why-choose-text" data-aos="fade-right">
-                    <h2>About Ideal Computer Education</h2>
-                    <p>At Ideal Computer Education, we combine quality learning with practical skills to prepare students for the digital future. Our institute is committed to providing comprehensive computer education that bridges the gap between theoretical knowledge and practical application.</p>
-                    <p>With experienced faculty, modern infrastructure, and industry-relevant curriculum, we ensure that our students are well-equipped to succeed in today's competitive job market.</p>
-                    <div class="stats">
-                        <div class="stat">
-                            <span class="stat-number" data-count="5000">0</span>
-                            <span class="stat-label">Students Trained</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number" data-count="12">0</span>
-                            <span class="stat-label">Courses Offered</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number" data-count="95">0</span>
-                            <span class="stat-label">Placement Rate</span>
+            <div class="grid grid-cols-3">
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="0">
+                    <div style="color:var(--accent-purple); font-size:1.5rem; margin-bottom:20px;"><i class="fas fa-quote-left"></i></div>
+                    <p style="color:white; font-size:1.1rem; line-height:1.7; margin-bottom:30px;">"The curriculum is directly aligned with what tech companies actually want. I landed a Junior Dev role right after completing the Full Stack course."</p>
+                    <div class="flex items-center" style="gap:15px;">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+                        <div>
+                            <h4 style="font-size:1.1rem;">Rahul Sharma</h4>
+                            <span style="color:var(--text-muted); font-size:0.9rem;">Software Engineer at TCS</span>
                         </div>
                     </div>
                 </div>
-                <div class="why-choose-image" data-aos="fade-left">
-                    <img src="/images/institute.jpg" alt="Institute Building">
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
+                    <div style="color:var(--accent-cyan); font-size:1.5rem; margin-bottom:20px;"><i class="fas fa-quote-left"></i></div>
+                    <p style="color:white; font-size:1.1rem; line-height:1.7; margin-bottom:30px;">"The infrastructure and mentors are phenomenal. The real-world projects helped me build a portfolio that stood out in interviews."</p>
+                    <div class="flex items-center" style="gap:15px;">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+                        <div>
+                            <h4 style="font-size:1.1rem;">Priya Singh</h4>
+                            <span style="color:var(--text-muted); font-size:0.9rem;">Data Analyst</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card" data-aos="fade-up" data-aos-delay="200">
+                    <div style="color:var(--accent-blue); font-size:1.5rem; margin-bottom:20px;"><i class="fas fa-quote-left"></i></div>
+                    <p style="color:white; font-size:1.1rem; line-height:1.7; margin-bottom:30px;">"I started with zero coding knowledge. The instructors were patient and the platform's assignment tracking kept me accountable."</p>
+                    <div class="flex items-center" style="gap:15px;">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+                        <div>
+                            <h4 style="font-size:1.1rem;">Amit Kumar</h4>
+                            <span style="color:var(--text-muted); font-size:0.9rem;">Freelance Developer</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Achievement Counters -->
-    <section class="counters-section">
-        <div class="container">
-            <div class="counters-grid">
-                <div class="counter-card">
-                    <div class="counter-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="counter-number" data-target="5000">0</div>
-                    <div class="counter-label">Students</div>
-                </div>
-                
-                <div class="counter-card">
-                    <div class="counter-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="counter-number" data-target="12">0</div>
-                    <div class="counter-label">Courses</div>
-                </div>
-                
-                <div class="counter-card">
-                    <div class="counter-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <div class="counter-number" data-target="4500">0</div>
-                    <div class="counter-label">Placements</div>
-                </div>
-                
-                <div class="counter-card">
-                    <div class="counter-icon">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
-                    <div class="counter-number" data-target="25">0</div>
-                    <div class="counter-label">Faculty</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="testimonials-section">
-        <div class="container">
+    <!-- 12. FAQ Section -->
+    <section class="section-padding">
+        <div class="container" style="max-width: 800px;">
             <div class="section-header">
-                <h2 class="section-title">What Our Students Say</h2>
-                <p class="section-subtitle">Hear from our successful students</p>
+                <span class="tagline">FAQ</span>
+                <h2>Common Questions</h2>
             </div>
             
-            <div class="testimonials-slider">
-                <div class="testimonial-card active">
-                    <div class="testimonial-content">
-                        <p>"Excellent faculty and practical approach to learning. Got placed within 2 months of completion."</p>
+            <div class="glass-card" style="padding: 20px 40px;">
+                <div class="faq-item active">
+                    <div class="faq-question">
+                        Are the certificates government recognized?
+                        <i class="fas fa-chevron-down" style="transition: transform 0.3s;"></i>
                     </div>
-                    <div class="testimonial-author">
-                        <img src="/images/student1.jpg" alt="Student">
-                        <div>
-                            <h4>Rahul Sharma</h4>
-                            <span>DCA Graduate</span>
-                        </div>
+                    <div class="faq-answer">
+                        Yes, Ideal Computer Education is an ISO 9001:2015 certified institute and registered under Govt. of India. Our certificates are valid for all state and central government jobs.
                     </div>
                 </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"The Python course was comprehensive and the projects helped me build a strong portfolio."</p>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Do you provide placement assistance?
+                        <i class="fas fa-chevron-down" style="transition: transform 0.3s;"></i>
                     </div>
-                    <div class="testimonial-author">
-                        <img src="/images/student2.jpg" alt="Student">
-                        <div>
-                            <h4>Priya Singh</h4>
-                            <span>Python Developer</span>
-                        </div>
+                    <div class="faq-answer">
+                        Absolutely. We have a dedicated placement cell that helps with resume building, interview preparation, and connects you with our network of hiring partners.
                     </div>
                 </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"Best institute for computer education. Modern labs and experienced teachers."</p>
+                <div class="faq-item" style="border-bottom:none;">
+                    <div class="faq-question">
+                        Can I pay the fees in installments?
+                        <i class="fas fa-chevron-down" style="transition: transform 0.3s;"></i>
                     </div>
-                    <div class="testimonial-author">
-                        <img src="/images/student3.jpg" alt="Student">
-                        <div>
-                            <h4>Amit Kumar</h4>
-                            <span>Web Developer</span>
-                        </div>
+                    <div class="faq-answer">
+                        Yes, we offer flexible EMI and installment options for all our long-term courses to make education accessible to everyone.
                     </div>
-                </div>
-            </div>
-            
-            <div class="slider-dots">
-                <span class="dot active" data-slide="0"></span>
-                <span class="dot" data-slide="1"></span>
-                <span class="dot" data-slide="2"></span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Preview -->
-    <section id="gallery" class="gallery-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Our Gallery</h2>
-                <p class="section-subtitle">Take a glimpse of our institute</p>
-            </div>
-            
-            <div class="gallery-grid">
-                <div class="gallery-item" data-aos="zoom-in">
-                    <img src="/images/gallery1.jpg" alt="Computer Lab">
-                    <div class="gallery-overlay">
-                        <h4>Modern Computer Lab</h4>
-                    </div>
-                </div>
-                
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="/images/gallery2.jpg" alt="Faculty">
-                    <div class="gallery-overlay">
-                        <h4>Expert Faculty</h4>
-                    </div>
-                </div>
-                
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="/images/gallery3.jpg" alt="Students">
-                    <div class="gallery-overlay">
-                        <h4>Happy Students</h4>
-                    </div>
-                </div>
-                
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
-                    <img src="/images/gallery4.jpg" alt="Campus">
-                    <div class="gallery-overlay">
-                        <h4>Beautiful Campus</h4>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="gallery-cta">
-                <a href="/gallery" class="btn btn-secondary">View All Photos</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Notice Board -->
-    <section class="notice-board-section">
-        <div class="container">
-            <div class="notice-board">
-                <div class="notice-header">
-                    <i class="fas fa-bullhorn"></i>
-                    <h3>Latest Notices</h3>
-                </div>
-                
-                <div class="notice-content" id="notice-content">
-                    <!-- Notices will be loaded dynamically -->
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section">
+    <!-- 13. Contact Form -->
+    <section id="contact" class="section-padding" style="background: radial-gradient(circle at 50% 100%, rgba(139,92,246,0.1), transparent 50%); border-top: 1px solid var(--border-color);">
         <div class="container">
-            <div class="contact-content">
-                <div class="contact-info" data-aos="fade-right">
-                    <h2>Get In Touch</h2>
-                    <p>Ready to start your journey? Contact us today!</p>
+            <div class="grid grid-cols-2" style="gap:60px; max-width:1000px; margin:0 auto;">
+                <div data-aos="fade-right">
+                    <h2 style="font-size:3rem; margin-bottom:20px;">Let's build your <br><span class="text-gradient">future together.</span></h2>
+                    <p style="margin-bottom: 40px;">Fill out the form and our admission counselors will contact you within 24 hours.</p>
                     
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
+                    <div style="display:flex; flex-direction:column; gap:24px;">
+                        <div class="flex items-center" style="gap:20px;">
+                            <div style="width:50px; height:50px; border-radius:50%; background:var(--bg-surface); border:1px solid var(--border-color); display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+                                <i class="fas fa-envelope"></i>
+                            </div>
                             <div>
-                                <h4>Address</h4>
-                                <p>NEAR DAV COLLEGE, TITILAGARH,<br>DIST-BALANGIR, ODISHA,<br>PIN-767033</p>
+                                <h4 style="font-size:1.1rem;">Email Us</h4>
+                                <span style="color:var(--text-muted);">iceworldtlg.in@gmail.com</span>
                             </div>
                         </div>
-                        
-                        <div class="contact-item">
-                            <i class="fas fa-phone"></i>
-                            <div>
-                                <h4>Phone</h4>
-                                <p>9124280311<br>9124280322</p>
+                        <div class="flex items-center" style="gap:20px;">
+                            <div style="width:50px; height:50px; border-radius:50%; background:var(--bg-surface); border:1px solid var(--border-color); display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+                                <i class="fas fa-phone"></i>
                             </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <i class="fas fa-envelope"></i>
                             <div>
-                                <h4>Email</h4>
-                                <p>iceworldtlg.in@gmail.com</p>
+                                <h4 style="font-size:1.1rem;">Call Us</h4>
+                                <span style="color:var(--text-muted);">+91 91242 80311</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="contact-form" data-aos="fade-left">
+                <div class="glass-panel" style="padding: 40px;" data-aos="fade-left">
                     <form id="contact-form">
-                        <div class="form-group">
-                            <input type="text" name="name" placeholder="Your Name" required>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display:block; margin-bottom:8px; font-weight:500; color:#fff;">Full Name</label>
+                            <input type="text" name="name" required style="width:100%; padding:14px 20px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; font-family:'Inter', sans-serif;">
                         </div>
-                        
-                        <div class="form-group">
-                            <input type="email" name="email" placeholder="Your Email" required>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display:block; margin-bottom:8px; font-weight:500; color:#fff;">Email Address</label>
+                            <input type="email" name="email" required style="width:100%; padding:14px 20px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; font-family:'Inter', sans-serif;">
                         </div>
-                        
-                        <div class="form-group">
-                            <input type="tel" name="phone" placeholder="Your Phone" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <select name="course" required>
-                                <option value="">Select Course</option>
-                                <option value="DCA">DCA</option>
-                                <option value="PGDCA">PGDCA</option>
-                                <option value="ADCA">ADCA</option>
-                                <option value="Tally">Tally</option>
-                                <option value="Web Development">Web Development</option>
-                                <option value="Python">Python</option>
-                                <option value="Java">Java</option>
+                        <div style="margin-bottom: 24px;">
+                            <label style="display:block; margin-bottom:8px; font-weight:500; color:#fff;">Interested Course</label>
+                            <select name="course" required style="width:100%; padding:14px 20px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; font-family:'Inter', sans-serif; appearance:none;">
+                                <option value="" style="color:black;">Select Course</option>
+                                <option value="fullstack" style="color:black;">Full Stack Web Dev</option>
+                                <option value="python" style="color:black;">Python Data Science</option>
+                                <option value="tally" style="color:black;">Tally Prime Pro</option>
+                                <option value="dca" style="color:black;">DCA / PGDCA</option>
                             </select>
                         </div>
-                        
-                        <div class="form-group">
-                            <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i>
-                            Send Message
-                        </button>
+                        <button type="submit" class="btn btn-primary" style="width:100%;">Submit Inquiry</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- 14. Premium Footer -->
+    <footer class="footer-premium">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <img src="/images/logo.png" alt="Ideal Computer Education">
-                        <h3>IDEAL COMPUTER EDUCATION</h3>
-                    </div>
-                    <p>Your Success ! Our Mission</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#courses">Courses</a></li>
-                        <li><a href="#gallery">Gallery</a></li>
-                        <li><a href="#admission">Admission</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Our Courses</h4>
-                    <ul>
-                        <li><a href="#courses">DCA</a></li>
-                        <li><a href="#courses">PGDCA</a></li>
-                        <li><a href="#courses">ADCA</a></li>
-                        <li><a href="#courses">Tally</a></li>
-                        <li><a href="#courses">Web Development</a></li>
-                        <li><a href="#courses">Python</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <div class="contact-info">
-                        <p><i class="fas fa-map-marker-alt"></i> NEAR DAV COLLEGE, TITILAGARH</p>
-                        <p><i class="fas fa-phone"></i> 9124280311</p>
-                        <p><i class="fas fa-envelope"></i> iceworldtlg.in@gmail.com</p>
-                    </div>
-                    <div class="newsletter">
-                        <h5>Subscribe to Newsletter</h5>
-                        <div class="newsletter-form">
-                            <input type="email" placeholder="Your Email">
-                            <button class="btn btn-primary">Subscribe</button>
+            <div class="grid grid-cols-4" style="gap:40px; margin-bottom:60px;">
+                <div style="grid-column: span 1;">
+                    <div class="nav-logo flex items-center" style="gap:12px; margin-bottom:20px;">
+                        <div style="width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); display:flex; align-items:center; justify-content:center;">
+                            <i class="fas fa-graduation-cap" style="color:white; font-size:1rem;"></i>
                         </div>
+                        <span style="font-family: 'Outfit'; font-weight:700; font-size:1.1rem; color:white;">IDEAL COMPUTER</span>
                     </div>
+                    <p style="font-size:0.9rem;">Building the next generation of engineers, designers, and business leaders through world-class practical education.</p>
+                </div>
+                
+                <div>
+                    <h4 style="color:white; margin-bottom:20px; font-size:1.1rem;">Platform</h4>
+                    <ul style="list-style:none; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="#courses" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">All Courses</a></li>
+                        <li><a href="#features" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">Student Dashboard</a></li>
+                        <li><a href="#" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">Verify Certificate</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="color:white; margin-bottom:20px; font-size:1.1rem;">Company</h4>
+                    <ul style="list-style:none; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="#about" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">About Us</a></li>
+                        <li><a href="#" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">Careers</a></li>
+                        <li><a href="#contact" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="color:white; margin-bottom:20px; font-size:1.1rem;">Legal</h4>
+                    <ul style="list-style:none; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="#" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">Privacy Policy</a></li>
+                        <li><a href="#" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">Terms of Service</a></li>
+                        <li><a href="#" style="color:var(--text-muted); text-decoration:none; font-size:0.9rem; transition:color 0.2s;">Refund Policy</a></li>
+                    </ul>
                 </div>
             </div>
             
-            <div class="footer-bottom">
-                <div class="footer-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.0000!2d83.0000!3d21.0000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjHCsDAwJzAwLjAiTiA4M8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sin!4v1234567890!5m2!1sen!2sin" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-                
-                <div class="copyright">
-                    <p>&copy; 2024 Ideal Computer Education. All rights reserved.</p>
-                    <p>ISO 9001:2015 Certified | Government Registered</p>
+            <div style="border-top: 1px solid var(--border-color); padding-top:30px; display:flex; justify-content:space-between; align-items:center;">
+                <p style="font-size:0.9rem; margin:0;">&copy; 2024 Ideal Computer Education. All rights reserved.</p>
+                <div style="display:flex; gap:15px;">
+                    <a href="#" style="color:var(--text-muted); font-size:1.2rem;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color:var(--text-muted); font-size:1.2rem;"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" style="color:var(--text-muted); font-size:1.2rem;"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.0.42/lenis.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/swiper/10.2.0/swiper-bundle.min.js"></script>
     
-    <script src="/js/main.js"></script>
-    <script src="/js/hero.js"></script>
-    <script src="/js/navbar.js"></script>
-    <script src="/js/courses.js"></script>
-    <script src="/js/counters.js"></script>
-    <script src="/js/testimonials.js"></script>
-    <script src="/js/contact.js"></script>
-    <script src="/js/animations.js"></script>
+    <script>
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(5, 5, 5, 0.8)';
+                nav.style.backdropFilter = 'blur(20px)';
+                nav.style.borderBottom = '1px solid var(--border-color)';
+            } else {
+                nav.style.background = 'transparent';
+                nav.style.backdropFilter = 'none';
+                nav.style.borderBottom = 'none';
+            }
+        });
+
+        // Initialize Swiper for Courses
+        if(typeof Swiper !== 'undefined') {
+            new Swiper('.course-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 }
+                }
+            });
+        }
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+
+        // Basic Contact Form Submit
+        document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Application submitted successfully! We will contact you soon.');
+            e.target.reset();
+        });
+
+        // GSAP Advanced Animations (Framer-motion style)
+        document.addEventListener("DOMContentLoaded", (event) => {
+            // Hero Badge Animation
+            gsap.from(".hero-badge", 
+                { y: 20, opacity: 0, duration: 1, ease: "power3.out", delay: 0.1 }
+            );
+
+            // Hero Title Animation
+            gsap.from(".hero-title", 
+                { y: 50, opacity: 0, rotationX: -20, transformPerspective: 500, duration: 1.2, ease: "power4.out", delay: 0.2 }
+            );
+
+            // Hero Subtitle & Buttons
+            gsap.from(".hero-subtitle", 
+                { y: 30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.4 }
+            );
+            gsap.from(".hero-buttons", 
+                { y: 30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.6 }
+            );
+
+            // Dashboard Mockup 3D Reveal
+            gsap.from(".hero-dashboard-preview", 
+                { y: 100, opacity: 0, rotationX: 20, transformPerspective: 1000, duration: 1.5, ease: "power3.out", delay: 0.8 }
+            );
+
+            // Floating Elements Parallax Effect on Mouse Move
+            document.addEventListener("mousemove", (e) => {
+                const x = (window.innerWidth / 2 - e.pageX) * 0.05;
+                const y = (window.innerHeight / 2 - e.pageY) * 0.05;
+                
+                gsap.to(".float-el", {
+                    x: x,
+                    y: y,
+                    duration: 1,
+                    ease: "power1.out"
+                });
+                
+                gsap.to(".hero-dashboard-preview", {
+                    rotationY: x * 0.2,
+                    rotationX: 10 + (y * 0.2),
+                    duration: 1,
+                    ease: "power1.out"
+                });
+            });
+        });
+    </script>
 </body>
 </html>

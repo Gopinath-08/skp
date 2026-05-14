@@ -26,6 +26,16 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get gallery categories
+router.get('/categories/list', async (req, res) => {
+  try {
+    const categories = await Gallery.distinct('category', { isActive: true });
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Get gallery item by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -105,16 +115,6 @@ router.delete('/:id', auth, async (req, res) => {
 
     await Gallery.findByIdAndDelete(req.params.id);
     res.json({ message: 'Gallery item deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Get gallery categories
-router.get('/categories/list', async (req, res) => {
-  try {
-    const categories = await Gallery.distinct('category', { isActive: true });
-    res.json(categories);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

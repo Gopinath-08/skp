@@ -20,6 +20,23 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// Verify student
+router.get('/verify/:admissionId', async (req, res) => {
+  try {
+    const student = await Student.findOne({ admissionId: req.params.admissionId })
+      .populate('course', 'name')
+      .select('fullName admissionId course status admissionDate');
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    res.json(student);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Get student by ID
 router.get('/:id', auth, async (req, res) => {
   try {
@@ -136,23 +153,6 @@ router.delete('/:id', auth, async (req, res) => {
 
     await Student.findByIdAndDelete(req.params.id);
     res.json({ message: 'Student deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Verify student
-router.get('/verify/:admissionId', async (req, res) => {
-  try {
-    const student = await Student.findOne({ admissionId: req.params.admissionId })
-      .populate('course', 'name')
-      .select('fullName admissionId course status admissionDate');
-
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
-    }
-
-    res.json(student);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

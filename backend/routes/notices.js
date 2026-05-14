@@ -24,6 +24,26 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get notices by type
+router.get('/type/:type', async (req, res) => {
+  try {
+    const notices = await Notice.find({ 
+      type: req.params.type,
+      isActive: true,
+      $or: [
+        { expiryDate: { $exists: false } },
+        { expiryDate: { $gte: new Date() } }
+      ]
+    })
+    .populate('createdBy', 'name')
+    .sort({ createdAt: -1 });
+    
+    res.json(notices);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Get notice by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -97,26 +117,6 @@ router.delete('/:id', auth, async (req, res) => {
 
     await Notice.findByIdAndDelete(req.params.id);
     res.json({ message: 'Notice deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Get notices by type
-router.get('/type/:type', async (req, res) => {
-  try {
-    const notices = await Notice.find({ 
-      type: req.params.type,
-      isActive: true,
-      $or: [
-        { expiryDate: { $exists: false } },
-        { expiryDate: { $gte: new Date() } }
-      ]
-    })
-    .populate('createdBy', 'name')
-    .sort({ createdAt: -1 });
-    
-    res.json(notices);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
