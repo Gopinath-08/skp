@@ -102,6 +102,37 @@ export const adminService = {
   seed: () => api.post('/admin/seed'),
 };
 
+export const batchService = {
+  getAll: () => api.get('/batches'),
+  getById: (id) => api.get(`/batches/${id}`),
+  create: (data) => api.post('/batches', data),
+  update: (id, data) => api.put(`/batches/${id}`, data),
+  delete: (id) => api.delete(`/batches/${id}`),
+};
+
+export const contentService = {
+  getAll: () => api.get('/content'),
+  getBySection: (section) => api.get(`/content/${section}`),
+  update: (section, data) => api.put(`/content/${section}`, data),
+};
+
+export const testimonialService = {
+  getAll: () => api.get('/testimonials'),
+  getById: (id) => api.get(`/testimonials/${id}`),
+  create: (data) => api.post('/testimonials', data),
+  update: (id, data) => api.put(`/testimonials/${id}`, data),
+  delete: (id) => api.delete(`/testimonials/${id}`),
+};
+
+export const reportService = {
+  getReports: () => api.get('/reports'),
+};
+
+export const settingService = {
+  getAll: () => api.get('/settings'),
+  update: (data) => api.post('/settings', data),
+};
+
 export const authService = {
   login: (credentials) => api.post('/auth/login', credentials),
   me: () => api.get('/auth/me'),
