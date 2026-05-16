@@ -36,7 +36,7 @@ async function runTest() {
       body: JSON.stringify({
         name: 'Ravi Sharma',
         designation: 'Senior Instructor',
-        email: 'ravi.sharma@idealedu.com',
+        email: `ravi.sharma.${Date.now()}@idealedu.com`,
         phone: '9876543210',
         experience: '8 Years',
         qualification: 'MCA'
@@ -52,7 +52,7 @@ async function runTest() {
       body: JSON.stringify({
         name: 'Advanced Full Stack Web Development',
         code: 'FSWD-Pro',
-        category: 'Web Development',
+        category: 'Advanced',
         duration: '6 Months',
         fees: 25000,
         description: 'Learn React, Node.js, and PostgreSQL from scratch.'

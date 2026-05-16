@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const DEPLOYED_BACKEND_URL = 'https://skp-lh6r.onrender.com';
-const API_BASE_URL = import.meta.env.VITE_API_URL || `${DEPLOYED_BACKEND_URL}/api`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const ASSET_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 const api = axios.create({
