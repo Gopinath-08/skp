@@ -1,53 +1,40 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const Student = require('../models/Student');
-const Course = require('../models/Course');
-const Fee = require('../models/Fee');
+const { Student, Course, Batch, Fee } = require('../models/associations');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
 const router = express.Router();
 
 // Get all students
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const students = await Student.find()
-      .populate('course', 'name code')
-      .sort({ admissionDate: -1 });
+    const students = await Student.findAll({
+      include: [
+        { model: Course, attributes: ['id', 'name'] },
+        { model: Batch, attributes: ['id', 'name', 'timing'] }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
     res.json(students);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Verify student
-router.get('/verify/:admissionId', async (req, res) => {
-  try {
-    const student = await Student.findOne({ admissionId: req.params.admissionId })
-      .populate('course', 'name')
-      .select('fullName admissionId course status admissionDate');
-
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
-    }
-
-    res.json(student);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
 // Get student by ID
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id)
-      .populate('course', 'name code fees')
-      .populate('fees');
-    
+    const student = await Student.findByPk(req.params.id, {
+      include: [
+        { model: Course },
+        { model: Batch },
+        { model: Fee }
+      ]
+    });
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
-    
     res.json(student);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -59,16 +46,16 @@ router.post('/', auth, upload.fields([
   { name: 'photo', maxCount: 1 },
   { name: 'signature', maxCount: 1 }
 ]), [
-  body('fullName').notEmpty().trim(),
-  body('parentsName').notEmpty().trim(),
-  body('dob').isISO8601(),
-  body('gender').isIn(['Male', 'Female', 'Other']),
-  body('mobile').isMobilePhone(),
-  body('email').isEmail().normalizeEmail(),
-  body('aadhaar').isLength({ min: 12, max: 12 }),
+  body('fullName').notEmpty(),
+  body('parentsName').notEmpty(),
+  body('dob').notEmpty(),
+  body('gender').notEmpty(),
+  body('mobile').notEmpty(),
+  body('email').isEmail(),
+  body('aadhaar').notEmpty(),
   body('qualification').notEmpty(),
   body('address').notEmpty(),
-  body('course').isMongoId()
+  body('courseId').notEmpty()
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -76,42 +63,20 @@ router.post('/', auth, upload.fields([
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const course = await Course.findById(req.body.course);
-    if (!course) {
-      return res.status(400).json({ message: 'Invalid course' });
-    }
-
-    // Generate admission ID
-    const count = await Student.countDocuments();
-    const admissionId = `ICE${new Date().getFullYear()}${(count + 1).toString().padStart(4, '0')}`;
+    const lastStudent = await Student.findOne({ order: [['id', 'DESC']] });
+    const lastId = lastStudent ? parseInt(lastStudent.admissionId.replace('ICE', '')) : 0;
+    const admissionId = `ICE${(lastId + 1).toString().padStart(4, '0')}`;
 
     const studentData = {
       ...req.body,
       admissionId,
-      photo: req.files.photo ? req.files.photo[0].path : null,
-      signature: req.files.signature ? req.files.signature[0].path : null
+      photo: req.files?.photo ? req.files.photo[0].path : null,
+      signature: req.files?.signature ? req.files.signature[0].path : null
     };
 
-    const student = new Student(studentData);
-    await student.save();
-
-    // Create fee record
-    const fee = new Fee({
-      student: student._id,
-      course: course._id,
-      totalFees: course.fees
-    });
-    await fee.save();
-
-    // Update student with fee reference
-    student.fees.push(fee._id);
-    await student.save();
-
-    res.status(201).json({ student, admissionId });
+    const student = await Student.create(studentData);
+    res.status(201).json(student);
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({ message: 'Admission ID already exists' });
-    }
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -122,22 +87,17 @@ router.put('/:id', auth, upload.fields([
   { name: 'signature', maxCount: 1 }
 ]), async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id);
+    const student = await Student.findByPk(req.params.id);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
     const updateData = { ...req.body };
-    if (req.files.photo) updateData.photo = req.files.photo[0].path;
-    if (req.files.signature) updateData.signature = req.files.signature[0].path;
+    if (req.files?.photo) updateData.photo = req.files.photo[0].path;
+    if (req.files?.signature) updateData.signature = req.files.signature[0].path;
 
-    const updatedStudent = await Student.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true }
-    ).populate('course', 'name code');
-
-    res.json(updatedStudent);
+    await student.update(updateData);
+    res.json(student);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -146,12 +106,12 @@ router.put('/:id', auth, upload.fields([
 // Delete student
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id);
+    const student = await Student.findByPk(req.params.id);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    await Student.findByIdAndDelete(req.params.id);
+    await student.destroy();
     res.json({ message: 'Student deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

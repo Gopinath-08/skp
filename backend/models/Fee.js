@@ -1,61 +1,43 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const feeSchema = new mongoose.Schema({
-  student: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Student',
-    required: true
+const Fee = sequelize.define('Fee', {
+  studentId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
-  course: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-    required: true
+  courseId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   totalFees: {
-    type: Number,
-    required: true
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
   },
   paidAmount: {
-    type: Number,
-    default: 0
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
   },
   pendingAmount: {
-    type: Number,
-    default: function() {
-      return this.totalFees - this.paidAmount;
-    }
+    type: DataTypes.DECIMAL(10, 2)
   },
-  installments: [{
-    amount: {
-      type: Number,
-      required: true
-    },
-    dueDate: {
-      type: Date,
-      required: true
-    },
-    paidDate: {
-      type: Date
-    },
-    status: {
-      type: String,
-      enum: ['Pending', 'Paid', 'Overdue'],
-      default: 'Pending'
-    },
-    receiptNumber: {
-      type: String
+  discount: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
+  paymentMethod: {
+    type: DataTypes.STRING, // e.g., 'Cash', 'UPI', 'Bank Transfer'
+    defaultValue: 'Cash'
+  },
+  installments: {
+    type: DataTypes.JSONB // Array of installment objects
+  }
+}, {
+  hooks: {
+    beforeSave: (fee) => {
+      fee.pendingAmount = fee.totalFees - fee.paidAmount - (fee.discount || 0);
     }
-  }],
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 });
 
-// Calculate pending amount before saving
-feeSchema.pre('save', function(next) {
-  this.pendingAmount = this.totalFees - this.paidAmount;
-  next();
-});
-
-module.exports = mongoose.model('Fee', feeSchema);
+module.exports = Fee;

@@ -1,37 +1,36 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const gallerySchema = new mongoose.Schema({
+const Gallery = sequelize.define('Gallery', {
   title: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   description: {
-    type: String
+    type: DataTypes.TEXT
   },
   image: {
-    type: String,
-    required: true // path to image
+    type: DataTypes.STRING,
+    allowNull: false
   },
   category: {
-    type: String,
-    enum: ['Campus', 'Events', 'Students', 'Faculty', 'Achievements', 'Infrastructure'],
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  tags: [{
-    type: String
-  }],
+  tags: {
+    type: DataTypes.JSONB // Array of strings
+  },
   isActive: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   },
   uploadedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Admin'
+    type: DataTypes.INTEGER
   },
   uploadedAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 });
 
-module.exports = mongoose.model('Gallery', gallerySchema);
+module.exports = Gallery;

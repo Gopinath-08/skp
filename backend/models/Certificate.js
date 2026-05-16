@@ -1,40 +1,38 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const certificateSchema = new mongoose.Schema({
-  student: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Student',
-    required: true
+const Certificate = sequelize.define('Certificate', {
+  studentId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
-  course: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-    required: true
+  courseId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   certificateNumber: {
-    type: String,
-    unique: true,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
   },
   issueDate: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   },
   grade: {
-    type: String,
-    enum: ['A+', 'A', 'B+', 'B', 'C', 'Pass'],
-    default: 'Pass'
+    type: DataTypes.STRING,
+    defaultValue: 'Pass'
   },
   qrCode: {
-    type: String // URL or path to QR code
+    type: DataTypes.STRING
   },
   isVerified: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   },
   pdfPath: {
-    type: String // path to generated PDF
+    type: DataTypes.STRING
   }
 });
 
-module.exports = mongoose.model('Certificate', certificateSchema);
+module.exports = Certificate;

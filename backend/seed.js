@@ -1,43 +1,39 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const Admin = require('./models/Admin');
+const sequelize = require('./config/database');
+const { Admin } = require('./models/associations');
 require('dotenv').config();
 
 const seedAdmin = async () => {
   try {
-    // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('MongoDB connected for seeding');
+    // Connect to PostgreSQL
+    await sequelize.authenticate();
+    console.log('PostgreSQL connected for seeding');
+
+    // Sync database (ensure tables exist)
+    await sequelize.sync();
 
     // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ email: process.env.ADMIN_EMAIL });
+    const existingAdmin = await Admin.findOne({ where: { email: process.env.ADMIN_EMAIL } });
     if (existingAdmin) {
       console.log('Admin user already exists');
       process.exit(0);
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, salt);
-
     // Create admin user
-    const admin = new Admin({
-      name: 'System Administrator',
+    // Note: The Admin model has a beforeSave hook that automatically hashes the password
+    const admin = await Admin.create({
+      name: 'System Director',
       email: process.env.ADMIN_EMAIL,
-      password: hashedPassword,
+      password: process.env.ADMIN_PASSWORD,
       role: 'superadmin'
     });
 
-    await admin.save();
     console.log('Admin user created successfully');
     console.log(`Email: ${process.env.ADMIN_EMAIL}`);
     console.log(`Password: ${process.env.ADMIN_PASSWORD}`);
-
+    process.exit(0);
   } catch (error) {
     console.error('Error seeding admin:', error);
-  } finally {
-    await mongoose.connection.close();
-    console.log('Database connection closed');
+    process.exit(1);
   }
 };
 

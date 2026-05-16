@@ -1,49 +1,52 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const facultySchema = new mongoose.Schema({
+const Faculty = sequelize.define('Faculty', {
   name: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   designation: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   email: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true,
-    lowercase: true
+    validate: {
+      isEmail: true
+    }
   },
   phone: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   qualification: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   experience: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  subjects: [{
-    type: String
-  }],
+  subjects: {
+    type: DataTypes.JSONB // Array of strings
+  },
   photo: {
-    type: String // path to photo
+    type: DataTypes.STRING
   },
   bio: {
-    type: String
+    type: DataTypes.TEXT
   },
   isActive: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   },
   joinedAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 });
 
-module.exports = mongoose.model('Faculty', facultySchema);
+module.exports = Faculty;

@@ -1,39 +1,33 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const noticeSchema = new mongoose.Schema({
+const Notice = sequelize.define('Notice', {
   title: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   content: {
-    type: String,
-    required: true
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   type: {
-    type: String,
-    enum: ['General', 'Admission', 'Exam', 'Result', 'Holiday', 'Event'],
-    default: 'General'
+    type: DataTypes.STRING,
+    defaultValue: 'General'
   },
   priority: {
-    type: String,
-    enum: ['Low', 'Medium', 'High', 'Urgent'],
-    default: 'Medium'
+    type: DataTypes.STRING,
+    defaultValue: 'Medium'
   },
   isActive: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   },
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Admin'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.INTEGER
   },
   expiryDate: {
-    type: Date
+    type: DataTypes.DATE
   }
 });
 
-module.exports = mongoose.model('Notice', noticeSchema);
+module.exports = Notice;

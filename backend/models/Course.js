@@ -1,51 +1,52 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const courseSchema = new mongoose.Schema({
+const Course = sequelize.define('Course', {
   name: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true
   },
   code: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true
   },
   description: {
-    type: String,
-    required: true
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   duration: {
-    type: String,
-    required: true // e.g., "3 months", "6 months"
+    type: DataTypes.STRING,
+    allowNull: false
   },
   fees: {
-    type: Number,
-    required: true
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
+  },
+  batchTiming: {
+    type: DataTypes.STRING
+  },
+  facultyId: {
+    type: DataTypes.INTEGER
   },
   category: {
-    type: String,
-    enum: ['Basic', 'Advanced', 'Certification', 'Skill Development'],
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  syllabus: [{
-    topic: String,
-    description: String
-  }],
+  syllabus: {
+    type: DataTypes.JSONB // Stores array of objects
+  },
   prerequisites: {
-    type: String
+    type: DataTypes.STRING
   },
   image: {
-    type: String // path to course image
+    type: DataTypes.STRING
   },
   isActive: {
-    type: Boolean,
-    default: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
 });
 
-module.exports = mongoose.model('Course', courseSchema);
+module.exports = Course;

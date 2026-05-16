@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const Admin = require('../models/Admin');
+const { Admin } = require('../models/associations');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
@@ -18,20 +18,20 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ where: { email } });
 
     if (!admin || !(await admin.comparePassword(password))) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: admin.id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE
     });
 
     res.json({
       token,
       admin: {
-        id: admin._id,
+        id: admin.id,
         name: admin.name,
         email: admin.email
       }
@@ -45,7 +45,7 @@ router.post('/login', [
 router.get('/me', auth, async (req, res) => {
   res.json({
     admin: {
-      id: req.admin._id,
+      id: req.admin.id,
       name: req.admin.name,
       email: req.admin.email
     }
@@ -70,6 +70,7 @@ router.put('/change-password', auth, [
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
 
+    // Sequelize hook will hash it automatically since we used beforeSave hook
     admin.password = newPassword;
     await admin.save();
 

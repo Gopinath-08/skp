@@ -1,76 +1,75 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const studentSchema = new mongoose.Schema({
+const Student = sequelize.define('Student', {
   admissionId: {
-    type: String,
-    unique: true,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
   },
   fullName: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   parentsName: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   dob: {
-    type: Date,
-    required: true
+    type: DataTypes.DATE,
+    allowNull: false
   },
   gender: {
-    type: String,
-    enum: ['Male', 'Female', 'Other'],
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   mobile: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   whatsapp: {
-    type: String
+    type: DataTypes.STRING
   },
   email: {
-    type: String,
-    required: true,
-    lowercase: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isEmail: true
+    }
   },
   aadhaar: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   qualification: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   address: {
-    type: String,
-    required: true
+    type: DataTypes.TEXT,
+    allowNull: false
   },
-  course: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-    required: true
+  courseId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  batchId: {
+    type: DataTypes.INTEGER
   },
   photo: {
-    type: String // path to uploaded photo
+    type: DataTypes.STRING
   },
   signature: {
-    type: String // path to uploaded signature
+    type: DataTypes.STRING
   },
   admissionDate: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   },
   status: {
-    type: String,
-    enum: ['Active', 'Inactive', 'Completed'],
-    default: 'Active'
-  },
-  fees: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Fee'
-  }]
+    type: DataTypes.STRING,
+    defaultValue: 'Active'
+  }
 });
 
-module.exports = mongoose.model('Student', studentSchema);
+module.exports = Student;
