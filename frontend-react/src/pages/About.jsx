@@ -18,13 +18,17 @@ export default function About() {
       <section className="about-hero page-shell">
         <div className="about-photo" aria-label="Students learning in computer lab"></div>
         <div className="about-intro">
-          <span className="eyebrow">Our approach</span>
-          <h2>Learn by doing, not just by watching</h2>
+          <span className="eyebrow">YOUR SUCCESS ! OUR MISSION</span>
+          <h2>IDEAL COMPUTER EDUCATION</h2>
           <p>
-            Ideal Computer Education focuses on practical IT training for everyday office work,
-            accounting, design, programming, and career preparation. Each course is structured so
-            students can practice on systems, ask questions, and build confidence step by step.
+            Focusing on practical IT training for everyday office work, accounting, design, programming, and career preparation. Each course is structured so students can practice on systems, ask questions, and build confidence step by step.
           </p>
+          <div style={{marginTop: '1.5rem', marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--primary-light)', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--primary-color)'}}>
+             <h4 style={{color: 'var(--primary-color)', marginBottom: '0.25rem'}}>Leadership</h4>
+             <p style={{margin: 0, fontWeight: 600}}>CHAIR PERSON-CUM-MANAGING DIRECTOR</p>
+             <p style={{margin: 0, fontSize: '1.125rem'}}>JAGABALIA SAHU</p>
+             <p style={{margin: 0, color: 'var(--text-secondary)'}}>Mob: 80184 04687</p>
+          </div>
           <div className="about-actions">
             <Link to="/courses" className="btn btn-primary">View Courses</Link>
             <Link to="/admission" className="btn btn-outline">Apply for Admission</Link>

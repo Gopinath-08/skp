@@ -58,11 +58,11 @@ export default function Home() {
     <div className="home">
       <section className="hero-section">
         <div className="hero-content">
-          <span className="hero-badge">Admissions open for 2026</span>
-          <h1 className="hero-title">Practical computer education for real careers</h1>
+          <span className="hero-badge">YOUR SUCCESS ! OUR MISSION</span>
+          <h1 className="hero-title">IDEAL COMPUTER EDUCATION</h1>
           <p className="hero-subtitle">
             Learn job-ready IT, accounting, office, design, and programming skills with guided practice,
-            certification, and local support.
+            certification, and local support in Titilagarh.
           </p>
           <div className="hero-buttons">
             <Link to="/courses" className="btn btn-primary">Explore Courses</Link>

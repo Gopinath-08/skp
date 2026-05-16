@@ -23,8 +23,10 @@ export default function Footer() {
           
           <div className="footer-section">
             <h3>Contact</h3>
-            <p>Email: info@idealedu.com</p>
-            <p>Phone: +91 (0) XXX-XXX-XXXX</p>
+            <p>NEAR DAV COLLEGE, TITILAGARH<br/>DIST-BALANGIR, ODISHA, PIN-767033</p>
+            <p style={{marginTop: '0.5rem'}}>Email: iceworldtlg.in@gmail.com</p>
+            <p>Phone: 9124280311 / 9124280322</p>
+            <p>WhatsApp: 9124280311 / 9124280322</p>
           </div>
           
           <div className="footer-section">

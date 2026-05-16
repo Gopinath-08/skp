@@ -13,8 +13,8 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo">
-          <span className="logo-mark">ICE</span>
-          <span>Ideal Computer Education</span>
+          <span className="logo-mark" style={{fontSize: '0.75rem', textAlign: 'center'}}>ICE</span>
+          <span style={{textTransform: 'uppercase'}}>IDEAL COMPUTER EDUCATION</span>
         </Link>
         
         <button className="nav-toggle" onClick={toggleMenu}>

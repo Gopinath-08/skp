@@ -55,13 +55,16 @@ export default function Contact() {
       <section className="contact-content page-shell">
         <div className="contact-info">
           <InfoCard number="01" title="Location">
-            Ideal Computer Education<br />Visit the institute for course counseling and admission help.
+            <strong>IDEAL COMPUTER EDUCATION</strong><br />
+            NEAR DAV COLLEGE, TITILAGARH<br />
+            DIST-BALANGIR, ODISHA, PIN-767033
           </InfoCard>
-          <InfoCard number="02" title="Phone">
-            +91 (0) XXX-XXX-XXXX<br />Mon - Sat: 9:00 AM - 6:00 PM
+          <InfoCard number="02" title="Phone & WhatsApp">
+            Call/WhatsApp: 9124280311<br />
+            Call/WhatsApp: 9124280322
           </InfoCard>
           <InfoCard number="03" title="Email">
-            info@idealedu.com<br />admissions@idealedu.com
+            iceworldtlg.in@gmail.com
           </InfoCard>
           <InfoCard number="04" title="Business Hours">
             Monday - Saturday<br />Morning and evening batches available
