@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import {
   adminService,
   authService,
@@ -346,12 +348,49 @@ export default function Admin() {
                      <div className="stat-card">
                        <h3>Download</h3>
                        <p>Export all students as CSV</p>
-                       <button className="btn btn-secondary btn-small" style={{marginTop: '1rem'}} onClick={() => alert('Download starting...')}>Export Excel</button>
+                       <button className="btn btn-secondary btn-small" style={{marginTop: '1rem'}} onClick={() => {
+                          if (!data.reports || !data.reports.studentsReport) return alert('No students data');
+                          const rows = data.reports.studentsReport;
+                          const headers = ['ID', 'Name', 'Phone', 'Email', 'Course', 'Batch', 'Status'];
+                          const fields = ['id', 'fullName', 'phone', 'email', 'Course.name', 'Batch.name', 'status'];
+                          let csvContent = headers.join(',') + '\n';
+                          rows.forEach(r => {
+                            const values = fields.map(f => {
+                              const v = f.split('.').reduce((o, i) => (o ? o[i] : null), r) || '';
+                              return `"${String(v).replace(/"/g, '""')}"`;
+                            });
+                            csvContent += values.join(',') + '\n';
+                          });
+                          const blob = new Blob([csvContent], { type: 'text/csv' });
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = 'students_report.csv';
+                          a.click();
+                       }}>Export Excel</button>
                      </div>
                      <div className="stat-card">
                        <h3>Download</h3>
                        <p>Export all fees reports as PDF</p>
-                       <button className="btn btn-secondary btn-small" style={{marginTop: '1rem'}} onClick={() => alert('Download starting...')}>Export PDF</button>
+                       <button className="btn btn-secondary btn-small" style={{marginTop: '1rem'}} onClick={() => {
+                          if (!data.reports || !data.reports.feesReport) return alert('No fees data');
+                          const doc = new jsPDF();
+                          doc.text('Fees Report', 14, 15);
+                          const headers = ['Fee ID', 'Student', 'Amount', 'Date', 'Status'];
+                          const tableData = data.reports.feesReport.map(fee => [
+                             fee.id,
+                             fee.Student?.fullName || 'N/A',
+                             `Rs. ${fee.amountPaid}`,
+                             new Date(fee.paymentDate).toLocaleDateString(),
+                             fee.status
+                          ]);
+                          autoTable(doc, {
+                            head: [headers],
+                            body: tableData,
+                            startY: 20,
+                          });
+                          doc.save('fees_report.pdf');
+                       }}>Export PDF</button>
                      </div>
                   </div>
                 </div>

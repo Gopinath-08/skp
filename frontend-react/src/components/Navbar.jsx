@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import logo from '../assets/logo.png';
 import '../styles/navbar.css';
 
 const navItems = [
@@ -33,13 +34,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div className="logo-image" style={{ width: '40px', height: '40px', background: 'linear-gradient(135deg, var(--primary-color), #3b82f6)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1rem', letterSpacing: '1px', boxShadow: 'var(--shadow-md)' }}>
-            ICE
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <span style={{textTransform: 'uppercase', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.02em', fontSize: '1.05rem', color: 'var(--text-primary)'}}>IDEAL COMPUTER</span>
-            <span style={{textTransform: 'uppercase', fontWeight: 700, color: 'var(--primary-color)', fontSize: '0.65rem', letterSpacing: '0.15em', marginTop: '2px'}}>EDUCATION</span>
-          </div>
+          <img src={logo} alt="Ideal Computer Education Logo" style={{ height: '55px', width: 'auto', objectFit: 'contain' }} />
         </Link>
         
         <button className="nav-toggle" onClick={toggleMenu}>

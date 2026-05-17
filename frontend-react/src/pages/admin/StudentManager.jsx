@@ -48,7 +48,24 @@ export default function StudentManager({ students, courses, batches, onRefresh }
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <h2>Student Management</h2>
         <div style={{display: 'flex', gap: '1rem'}}>
-           <button className="btn btn-secondary" onClick={() => alert('Downloading CSV...')}>Export Excel</button>
+           <button className="btn btn-secondary" onClick={() => {
+              const headers = ['Admission ID', 'Name', 'Phone', 'Email', 'Course', 'Batch', 'Status'];
+              const fields = ['admissionId', 'fullName', 'phone', 'email', 'Course.name', 'Batch.name', 'status'];
+              let csvContent = headers.join(',') + '\n';
+              filteredStudents.forEach(r => {
+                const values = fields.map(f => {
+                  const v = f.split('.').reduce((o, i) => (o ? o[i] : null), r) || '';
+                  return `"${String(v).replace(/"/g, '""')}"`;
+                });
+                csvContent += values.join(',') + '\n';
+              });
+              const blob = new Blob([csvContent], { type: 'text/csv' });
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'students_export.csv';
+              a.click();
+           }}>Export Excel</button>
            <button className="btn btn-primary" onClick={() => { setFormData({}); setModalOpen(true); }}>+ Add Student</button>
         </div>
       </div>

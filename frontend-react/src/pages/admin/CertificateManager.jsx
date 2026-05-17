@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { jsPDF } from 'jspdf';
 import { certificateService } from '../../services/api';
 
 export default function CertificateManager({ certificates, students, courses, onRefresh }) {
@@ -75,7 +76,19 @@ export default function CertificateManager({ certificates, students, courses, on
                 <td><strong>{cert.grade || '-'}</strong></td>
                 <td>{new Date(cert.issueDate).toLocaleDateString()}</td>
                 <td style={{textAlign: 'right'}}>
-                  <button className="btn btn-secondary btn-small" onClick={() => alert('Downloading/Printing Certificate...')} style={{marginRight: '0.5rem'}}>Print PDF</button>
+                  <button className="btn btn-secondary btn-small" onClick={() => {
+                      const doc = new jsPDF('landscape');
+                      doc.setFontSize(24);
+                      doc.text('IDEAL COMPUTER EDUCATION', 148, 40, { align: 'center' });
+                      doc.setFontSize(16);
+                      doc.text('Certificate of Completion', 148, 60, { align: 'center' });
+                      doc.setFontSize(14);
+                      doc.text(`This is to certify that ${cert.Student?.fullName || 'the student'}`, 148, 90, { align: 'center' });
+                      doc.text(`has successfully completed the ${cert.Course?.name || 'course'}`, 148, 110, { align: 'center' });
+                      doc.text(`Certificate No: ${cert.certificateNumber}   |   Grade: ${cert.grade || 'N/A'}`, 148, 130, { align: 'center' });
+                      doc.text(`Date of Issue: ${new Date(cert.issueDate).toLocaleDateString()}`, 148, 150, { align: 'center' });
+                      doc.save(`Certificate_${cert.certificateNumber}.pdf`);
+                  }} style={{marginRight: '0.5rem'}}>Print PDF</button>
                   <button className="btn btn-secondary btn-small" onClick={() => handleDelete(cert.id)} style={{color: '#ef4444', borderColor: '#fee2e2'}}>Delete</button>
                 </td>
               </tr>

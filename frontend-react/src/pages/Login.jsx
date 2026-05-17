@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/api';
+import logo from '../assets/logo.png';
 import '../styles/pages.css';
 
 export default function Login() {
@@ -89,7 +90,7 @@ export default function Login() {
 
         <div className="login-image">
           <div className="login-illustration">
-            <span>ICE Admin</span>
+            <img src={logo} alt="ICE Logo" style={{ width: '120px', height: 'auto', marginBottom: '1.5rem', background: 'white', padding: '1rem', borderRadius: 'var(--radius-xl)' }} />
             <h2>One place for institute data</h2>
             <p>Use your admin account to view live backend records and monitor new inquiries.</p>
           </div>
