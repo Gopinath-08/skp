@@ -46,7 +46,9 @@ export default function Footer() {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Ideal Computer Education. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} All Rights Reserved | <a href="https://www.codeyouridea.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: 600 }}>CodeYourIdea</a>
+          </p>
         </div>
       </div>
     </footer>
