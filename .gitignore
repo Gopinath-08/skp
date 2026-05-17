@@ -118,11 +118,6 @@ Desktop.ini
 
 # Uploads directory (user uploaded files)
 uploads/
-*.pdf
-*.jpg
-*.jpeg
-*.png
-*.gif
 
 # Database files
 *.db
