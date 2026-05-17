@@ -8,12 +8,12 @@ export default function DashboardOverview({ stats, activities }) {
       <div className="stats-grid">
         <StatCard label="Total Students" value={stats.totalStudents} color="#3b82f6" />
         <StatCard label="Active Courses" value={stats.totalCourses} color="#10b981" />
-        <StatCard label="Faculty Members" value={stats.totalFaculty} color="#8b5cf6" />
+        <StatCard label="Faculty Members" value={stats.totalFaculty || 0} color="#8b5cf6" />
         <StatCard label="Total Batches" value={stats.totalBatches || 0} color="#f59e0b" />
         <StatCard label="Fees Collected" value={`Rs. ${stats.totalRevenue || 0}`} color="#059669" />
         <StatCard label="Pending Fees" value={`Rs. ${stats.pendingFees || 0}`} color="#ef4444" />
         <StatCard label="New Leads" value={stats.newInquiries || 0} color="#ec4899" />
-        <StatCard label="Notices" value={stats.totalNotices} color="#64748b" />
+        <StatCard label="Notices" value={stats.totalNotices || 0} color="#64748b" />
       </div>
 
       <div className="analytics-charts" style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>

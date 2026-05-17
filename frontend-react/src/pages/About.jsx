@@ -23,11 +23,17 @@ export default function About() {
           <p>
             Focusing on practical IT training for everyday office work, accounting, design, programming, and career preparation. Each course is structured so students can practice on systems, ask questions, and build confidence step by step.
           </p>
-          <div style={{marginTop: '1.5rem', marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--primary-light)', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--primary-color)'}}>
-             <h4 style={{color: 'var(--primary-color)', marginBottom: '0.25rem'}}>Leadership</h4>
-             <p style={{margin: 0, fontWeight: 600}}>CHAIR PERSON-CUM-MANAGING DIRECTOR</p>
-             <p style={{margin: 0, fontSize: '1.125rem'}}>JAGABALIA SAHU</p>
-             <p style={{margin: 0, color: 'var(--text-secondary)'}}>Mob: 80184 04687</p>
+          <div style={{marginTop: '2rem', marginBottom: '2rem', padding: '2rem', backgroundColor: 'var(--surface-light)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)', position: 'relative', overflow: 'hidden'}}>
+             <div style={{position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'var(--primary-color)'}}></div>
+             <span className="eyebrow" style={{marginBottom: '1rem'}}>Chairperson's Message</span>
+             <blockquote style={{ fontSize: '1.125rem', fontStyle: 'italic', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+               "Our mission is to empower the youth of Titilagarh and surrounding areas with high-quality, practical computer education. We believe that right digital skills are the foundation for a successful career in today's modern world. We are committed to your success."
+             </blockquote>
+             <div>
+               <p style={{margin: 0, fontWeight: 800, fontSize: '1.125rem', color: 'var(--text-primary)'}}>JAGABALIA SAHU</p>
+               <p style={{margin: 0, fontSize: '0.875rem', color: 'var(--primary-color)', fontWeight: 600}}>Chairperson-cum-Managing Director</p>
+               <p style={{margin: 0, color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem'}}>WhatsApp / Mob: +91 80184 04687</p>
+             </div>
           </div>
           <div className="about-actions">
             <Link to="/courses" className="btn btn-primary">View Courses</Link>

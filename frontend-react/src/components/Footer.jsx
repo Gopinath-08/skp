@@ -1,7 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import '../styles/footer.css';
 
 export default function Footer() {
+  const location = useLocation();
+
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -25,8 +31,8 @@ export default function Footer() {
             <h3>Contact</h3>
             <p>NEAR DAV COLLEGE, TITILAGARH<br/>DIST-BALANGIR, ODISHA, PIN-767033</p>
             <p style={{marginTop: '0.5rem'}}>Email: iceworldtlg.in@gmail.com</p>
-            <p>Phone: 9124280311 / 9124280322</p>
-            <p>WhatsApp: 9124280311 / 9124280322</p>
+            <p>Phone: +91 91242 80311 / +91 91242 80322</p>
+            <p>WhatsApp: +91 91242 80311</p>
           </div>
           
           <div className="footer-section">
@@ -40,7 +46,7 @@ export default function Footer() {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; 2026 Ideal Computer Education. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Ideal Computer Education. All rights reserved.</p>
         </div>
       </div>
     </footer>

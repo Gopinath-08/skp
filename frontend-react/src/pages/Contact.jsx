@@ -60,8 +60,8 @@ export default function Contact() {
             DIST-BALANGIR, ODISHA, PIN-767033
           </InfoCard>
           <InfoCard number="02" title="Phone & WhatsApp">
-            Call/WhatsApp: 9124280311<br />
-            Call/WhatsApp: 9124280322
+            Call/WhatsApp: +91 91242 80311<br />
+            Call/WhatsApp: +91 91242 80322
           </InfoCard>
           <InfoCard number="03" title="Email">
             iceworldtlg.in@gmail.com

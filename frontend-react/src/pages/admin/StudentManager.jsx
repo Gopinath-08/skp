@@ -108,7 +108,7 @@ export default function StudentManager({ students, courses, batches, onRefresh }
 
       {modalOpen && (
         <div className="modal">
-          <div className="modal-content" style={{maxWidth: '800px', padding: '2rem'}}>
+          <div className="modal-content" style={{maxWidth: '800px'}}>
             <button className="close" onClick={() => setModalOpen(false)}>×</button>
             <h2 style={{marginBottom: '1.5rem'}}>{formData.id ? 'Edit Student Profile' : 'Add New Student'}</h2>
             

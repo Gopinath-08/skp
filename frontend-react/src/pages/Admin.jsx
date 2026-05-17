@@ -145,12 +145,12 @@ export default function Admin() {
 
   const tabs = useMemo(() => [
     ['dashboard', 'Dashboard'],
+    ['inquiries', 'Inquiries / Leads'],
     ['students', 'Students'],
     ['courses', 'Courses'],
     ['batches', 'Batches'],
     ['fees', 'Fees'],
     ['certificates', 'Certificates'],
-    ['inquiries', 'Inquiries / Leads'],
     ['faculty', 'Faculty'],
     ['notices', 'Notices'],
     ['content', 'Web Content'],
@@ -212,15 +212,12 @@ export default function Admin() {
   }, []);
 
   const stats = data.stats || {
-    totalCourses: data.courses.length,
-    totalNotices: data.notices.length,
     totalStudents: data.students.length,
-    totalFaculty: data.faculty.length,
-    totalGallery: data.gallery.length,
-    totalCertificates: data.certificates.length,
-    pendingFees: 0,
-    totalRevenue: 0,
     newInquiries: data.inquiries.filter((item) => item.status === 'New').length,
+    totalCourses: data.courses.length,
+    totalCertificates: data.certificates.length,
+    totalRevenue: 0,
+    pendingFees: 0,
   };
 
   const handleLogout = () => {
@@ -277,10 +274,18 @@ export default function Admin() {
   return (
     <div className="admin-page">
       <section className="admin-header">
-        <div>
-          <span>Institute management</span>
-          <h1>Admin Dashboard</h1>
-          <p>Live data from the deployed backend API</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <h1 style={{ margin: 0 }}>
+            Admin Dashboard
+          </h1>
+          <div style={{ width: '1px', height: '20px', background: 'var(--border-color)' }}></div>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span style={{ fontSize: '0.65rem', padding: '0.2rem 0.6rem', background: '#dcfce7', color: '#166534', borderRadius: 'var(--radius-full)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600 }}>
+              <span style={{ width: '6px', height: '6px', background: '#166534', borderRadius: '50%', display: 'inline-block' }}></span>
+              System Online
+            </span>
+            <span style={{ color: 'var(--text-secondary)', textTransform: 'capitalize', fontSize: '0.85rem' }}>{activeTab.replace('-', ' ')}</span>
+          </span>
         </div>
         {isLoggedIn && (
           <div className="admin-user">
@@ -377,7 +382,7 @@ export default function Admin() {
       {/* Dynamic Modal */}
       {modalOpen && (
         <div className="modal">
-          <div className="modal-content" style={{maxWidth: '500px', padding: '2rem'}}>
+          <div className="modal-content" style={{maxWidth: '500px'}}>
             <button className="close" onClick={() => setModalOpen(false)}>×</button>
             <h2 style={{marginBottom: '1.5rem'}}>{editingItem ? 'Edit' : 'Add'} {activeTab.slice(0,-1)}</h2>
             <form onSubmit={handleSave}>
