@@ -37,7 +37,7 @@ export default function Navbar() {
           <img src={logo} alt="Ideal Computer Education Logo" style={{ height: '55px', width: 'auto', objectFit: 'contain' }} />
         </Link>
         
-        <button className="nav-toggle" onClick={toggleMenu}>
+        <button className={`nav-toggle ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
           <span></span>
           <span></span>
           <span></span>

@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { facultyService } from '../services/api';
 import '../styles/pages.css';
 
 export default function About() {
   const [faculty, setFaculty] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/faculty')
+    facultyService.getAll()
       .then(res => setFaculty(res.data))
       .catch(err => console.error('Failed to fetch faculty:', err));
   }, []);
@@ -85,7 +85,7 @@ export default function About() {
             <span>Our Team</span>
             <h2>Meet Our Expert Faculty</h2>
           </div>
-          <div className="faculty-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+          <div className="faculty-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
             {faculty.map(f => (
               <div key={f.id} className="faculty-card" style={{ padding: '2rem', background: 'var(--surface-light)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)', transition: 'transform var(--transition-normal)' }}>
                  <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)', fontSize: '1.25rem' }}>{f.name}</h3>
