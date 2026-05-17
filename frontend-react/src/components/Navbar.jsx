@@ -1,12 +1,26 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import '../styles/navbar.css';
+
+const navItems = [
+  { name: 'Home', path: '/' },
+  { name: 'Courses', path: '/courses' },
+  { name: 'Gallery', path: '/gallery' },
+  { name: 'About', path: '/about' },
+  { name: 'Admission', path: '/admission' },
+  { name: 'Contact', path: '/contact' },
+  { name: 'Login', path: '/login' },
+];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const getNavClass = ({ isActive }) => {
+    return `nav-link ${isActive ? 'active' : ''}`;
   };
 
   return (
@@ -23,42 +37,23 @@ export default function Navbar() {
           <span></span>
         </button>
 
-        <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
-          <li className="nav-item">
-            <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-              Home
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/courses" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-              Courses
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/gallery" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-              Gallery
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/about" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-              About
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/admission" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-              Admission
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/contact" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-              Contact
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/login" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-              Login
-            </Link>
-          </li>
+        <ul className={`nav-menu ${isMenuOpen ? 'menu-open' : ''}`}>
+          {navItems.map((item) => (
+            <li className="nav-item" key={item.path}>
+              <NavLink 
+                to={item.path} 
+                className={getNavClass} 
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  if (window.location.pathname === item.path) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+              >
+                {item.name}
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>

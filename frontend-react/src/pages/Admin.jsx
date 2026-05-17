@@ -160,8 +160,8 @@ export default function Admin() {
     ['settings', 'Settings'],
   ], []);
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setLoading(true);
     setError('');
 
     const requests = {
@@ -242,7 +242,7 @@ export default function Admin() {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
       await services[activeTab].delete(id);
-      await fetchData();
+      await fetchData(true);
     } catch (err) {
       alert('Error deleting item: ' + (err.response?.data?.message || err.message));
     }
@@ -263,7 +263,7 @@ export default function Admin() {
         }
       }
       setModalOpen(false);
-      await fetchData();
+      await fetchData(true);
     } catch (err) {
       alert('Error saving item: ' + (err.response?.data?.message || err.message));
     }
@@ -322,16 +322,16 @@ export default function Admin() {
                 <DashboardOverview stats={stats} activities={data.activities} />
               )}
               {activeTab === 'students' && (
-                <StudentManager students={data.students} courses={data.courses} batches={data.batches} onRefresh={fetchData} />
+                <StudentManager students={data.students} courses={data.courses} batches={data.batches} onRefresh={() => fetchData(true)} />
               )}
               {activeTab === 'fees' && (
-                <FeeManager fees={data.fees} students={data.students} courses={data.courses} onRefresh={fetchData} />
+                <FeeManager fees={data.fees} students={data.students} courses={data.courses} onRefresh={() => fetchData(true)} />
               )}
               {activeTab === 'courses' && (
-                <CourseManager courses={data.courses} faculty={data.faculty} onRefresh={fetchData} />
+                <CourseManager courses={data.courses} faculty={data.faculty} onRefresh={() => fetchData(true)} />
               )}
               {activeTab === 'certificates' && (
-                <CertificateManager certificates={data.certificates} students={data.students} courses={data.courses} onRefresh={fetchData} />
+                <CertificateManager certificates={data.certificates} students={data.students} courses={data.courses} onRefresh={() => fetchData(true)} />
               )}
 
               {activeTab === 'reports' && (
