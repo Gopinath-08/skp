@@ -105,8 +105,12 @@
   border: none;
   cursor: pointer;
   gap: 5px;
-  padding: 0.5rem;
+  padding: 0.75rem;
   transition: transform 0.2s ease;
+  min-width: 48px;
+  min-height: 48px;
+  justify-content: center;
+  align-items: center;
 }
 
 .nav-toggle span {
@@ -165,7 +169,8 @@
   .nav-link {
     display: block;
     padding: 1rem 1.5rem;
-    width: 100%;
+    width: auto;
+    box-sizing: border-box;
     height: auto;
     border-bottom: 1px solid var(--border-color);
     border-left: 4px solid transparent;
