@@ -1,10 +1,41 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const { body, validationResult } = require('express-validator');
 const { Student, Course, Batch, Fee } = require('../models/associations');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
 const router = express.Router();
+
+const branchCodes = {
+  Titlagarh: 'TLG',
+  'Khariar Road': 'KHR'
+};
+
+const getAdmissionYear = (dateValue) => {
+  const date = dateValue ? new Date(dateValue) : new Date();
+  return String(date.getFullYear()).slice(-2);
+};
+
+const getNextAdmissionId = async (branch, admissionDate) => {
+  const branchCode = branchCodes[branch] || branchCodes.Titlagarh;
+  const prefix = `ICE${getAdmissionYear(admissionDate)}${branchCode}`;
+  const branchStudents = await Student.findAll({
+    where: {
+      admissionId: {
+        [Op.like]: `${prefix}%`
+      }
+    },
+    attributes: ['admissionId']
+  });
+
+  const lastNumber = branchStudents.reduce((max, student) => {
+    const number = Number(String(student.admissionId || '').replace(prefix, ''));
+    return Number.isFinite(number) && number > max ? number : max;
+  }, 0);
+
+  return `${prefix}${String(lastNumber + 1).padStart(3, '0')}`;
+};
 
 // Get all students
 router.get('/', async (req, res) => {
@@ -47,7 +78,11 @@ router.post('/', auth, upload.fields([
   { name: 'signature', maxCount: 1 }
 ]), [
   body('fullName').notEmpty(),
+  body('branch').isIn(Object.keys(branchCodes)),
   body('parentsName').notEmpty(),
+  body('motherName').notEmpty(),
+  body('parentNumber').notEmpty(),
+  body('studentCategory').notEmpty(),
   body('dob').notEmpty(),
   body('gender').notEmpty(),
   body('mobile').notEmpty(),
@@ -55,6 +90,9 @@ router.post('/', auth, upload.fields([
   body('aadhaar').notEmpty(),
   body('qualification').notEmpty(),
   body('address').notEmpty(),
+  body('state').notEmpty(),
+  body('district').notEmpty(),
+  body('pinCode').notEmpty(),
   body('courseId').notEmpty()
 ], async (req, res) => {
   try {
@@ -63,12 +101,12 @@ router.post('/', auth, upload.fields([
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const lastStudent = await Student.findOne({ order: [['id', 'DESC']] });
-    const lastId = lastStudent ? parseInt(lastStudent.admissionId.replace('ICE', '')) : 0;
-    const admissionId = `ICE${(lastId + 1).toString().padStart(4, '0')}`;
+    const branch = req.body.branch || 'Titlagarh';
+    const admissionId = await getNextAdmissionId(branch, req.body.admissionDate);
 
     const studentData = {
       ...req.body,
+      branch,
       admissionId,
       photo: req.files?.photo ? req.files.photo[0].path : null,
       signature: req.files?.signature ? req.files.signature[0].path : null

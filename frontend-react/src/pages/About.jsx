@@ -92,6 +92,10 @@ export default function About() {
                  <p style={{ color: 'var(--primary-color)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '1.25rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.designation}</p>
                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                      {f.qualification || 'Qualification Not Specified'}
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                       {f.experience ? `${f.experience} Experience` : 'Experience Not Specified'}
                     </span>

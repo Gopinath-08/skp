@@ -90,9 +90,10 @@ const schemas = {
   faculty: [
     { key: 'name', label: 'Name', type: 'text' },
     { key: 'designation', label: 'Designation', type: 'text' },
+    { key: 'qualification', label: 'Qualification', type: 'text' },
+    { key: 'experience', label: 'Experience', type: 'text' },
     { key: 'email', label: 'Email', type: 'email' },
     { key: 'phone', label: 'Phone', type: 'text' },
-    { key: 'experience', label: 'Experience (Years)', type: 'text' },
   ],
   gallery: [
     { key: 'title', label: 'Title', type: 'text' },
@@ -210,7 +211,10 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    fetchData();
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const stats = data.stats || {
@@ -250,8 +254,9 @@ export default function Admin() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      if (editingItem && editingItem._id) {
-        await services[activeTab].update(editingItem._id, formData);
+      const itemId = editingItem?._id || editingItem?.id || editingItem?.key || editingItem?.section;
+      if (editingItem && itemId) {
+        await services[activeTab].update(itemId, formData);
       } else {
         if (activeTab === 'settings') {
            await services.settings.update(formData);
@@ -453,34 +458,6 @@ export default function Admin() {
             </form>
           </div>
         </div>
-      )}
-    </div>
-  );
-}
-
-function StatCard({ label, value }) {
-  return (
-    <div className="stat-card">
-      <h3>{value}</h3>
-      <p>{label}</p>
-    </div>
-  );
-}
-
-function RecentList({ title, items = [], fields }) {
-  return (
-    <div className="recent-panel">
-      <h3>{title}</h3>
-      {items.length === 0 ? (
-        <p>No recent records</p>
-      ) : (
-        <ul>
-          {items.map((item) => (
-            <li key={item._id}>
-              {fields.map((field) => getValue(item, field)).filter(Boolean).join(' - ')}
-            </li>
-          ))}
-        </ul>
       )}
     </div>
   );

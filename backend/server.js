@@ -91,7 +91,7 @@ app.use((err, req, res, next) => {
 sequelize.authenticate()
 .then(() => {
   console.log('PostgreSQL connected');
-  return sequelize.sync(); // Automatically updates tables based on models
+  return sequelize.sync({ alter: true }); // Automatically updates tables based on models
 })
 .then(() => console.log('Database synced'))
 .catch(err => console.log('Error: ' + err));

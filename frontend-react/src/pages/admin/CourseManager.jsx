@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { courseService } from '../../services/api';
 
 export default function CourseManager({ courses, faculty, onRefresh }) {
@@ -10,7 +10,7 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
     try {
       await courseService.delete(id);
       onRefresh();
-    } catch (e) {
+    } catch {
       alert('Error deleting course');
     }
   };
@@ -25,7 +25,7 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
       }
       setModalOpen(false);
       onRefresh();
-    } catch (err) {
+    } catch {
       alert('Error saving course');
     }
   };

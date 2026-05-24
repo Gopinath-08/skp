@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { certificateService } from '../../services/api';
 
@@ -12,7 +12,7 @@ export default function CertificateManager({ certificates, students, courses, on
       // Backend does not have delete for certs typically, but we will mock it if it doesn't exist
       await certificateService.delete?.(id);
       onRefresh();
-    } catch (e) {
+    } catch {
       alert('Error deleting certificate, or action not allowed.');
     }
   };
@@ -20,14 +20,15 @@ export default function CertificateManager({ certificates, students, courses, on
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      if (!formData.certificateNumber) {
-         formData.certificateNumber = 'CERT-' + Date.now().toString().slice(-6);
-      }
-      
-      await certificateService.create(formData);
+      const payload = {
+        ...formData,
+        certificateNumber: formData.certificateNumber || `CERT-${Date.now().toString().slice(-6)}`,
+      };
+
+      await certificateService.create(payload);
       setModalOpen(false);
       onRefresh();
-    } catch (err) {
+    } catch {
       alert('Error generating certificate');
     }
   };

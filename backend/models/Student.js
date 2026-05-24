@@ -7,6 +7,11 @@ const Student = sequelize.define('Student', {
     allowNull: false,
     unique: true
   },
+  branch: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'Titlagarh'
+  },
   fullName: {
     type: DataTypes.STRING,
     allowNull: false
@@ -14,6 +19,15 @@ const Student = sequelize.define('Student', {
   parentsName: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  motherName: {
+    type: DataTypes.STRING
+  },
+  parentNumber: {
+    type: DataTypes.STRING
+  },
+  studentCategory: {
+    type: DataTypes.STRING
   },
   dob: {
     type: DataTypes.DATE,
@@ -48,6 +62,15 @@ const Student = sequelize.define('Student', {
   address: {
     type: DataTypes.TEXT,
     allowNull: false
+  },
+  state: {
+    type: DataTypes.STRING
+  },
+  district: {
+    type: DataTypes.STRING
+  },
+  pinCode: {
+    type: DataTypes.STRING
   },
   courseId: {
     type: DataTypes.INTEGER,

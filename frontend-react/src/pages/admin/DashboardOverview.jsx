@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 export default function DashboardOverview({ stats, activities }) {
   if (!stats) return <p>Loading overview...</p>;
 

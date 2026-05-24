@@ -46,7 +46,7 @@ export default function StudentZone() {
             <label>Admission ID / Registration Number</label>
             <input 
               type="text" 
-              placeholder="e.g. ICE123456" 
+              placeholder="e.g. ICE26TLG001 or ICE26KHR001" 
               value={admissionId}
               onChange={(e) => setAdmissionId(e.target.value)}
               style={{ fontSize: '1.125rem', padding: '0.75rem 1rem' }}

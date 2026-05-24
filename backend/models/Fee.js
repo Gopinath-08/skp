@@ -29,13 +29,29 @@ const Fee = sequelize.define('Fee', {
     type: DataTypes.STRING, // e.g., 'Cash', 'UPI', 'Bank Transfer'
     defaultValue: 'Cash'
   },
+  paymentType: {
+    type: DataTypes.STRING, // e.g., 'Full Payment', 'Installment'
+    defaultValue: 'Installment'
+  },
+  admissionFees: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
+  courseFees: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
   installments: {
-    type: DataTypes.JSONB // Array of installment objects
+    type: DataTypes.JSONB,
+    defaultValue: []
   }
 }, {
   hooks: {
     beforeSave: (fee) => {
-      fee.pendingAmount = fee.totalFees - fee.paidAmount - (fee.discount || 0);
+      const totalFees = Number(fee.totalFees || 0);
+      const paidAmount = Number(fee.paidAmount || 0);
+      const discount = Number(fee.discount || 0);
+      fee.pendingAmount = Math.max(totalFees - paidAmount - discount, 0);
     }
   }
 });

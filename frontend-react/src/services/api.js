@@ -83,9 +83,11 @@ export const feeService = {
   getAll: () => api.get('/fees'),
   getById: (id) => api.get(`/fees/${id}`),
   getByStudent: (studentId) => api.get(`/fees/student/${studentId}`),
+  create: (data) => api.post('/fees', data),
   addInstallment: (id, data) => api.post(`/fees/${id}/installment`, data),
   payInstallment: (id, installmentId) => api.put(`/fees/${id}/installment/${installmentId}/pay`),
   update: (id, data) => api.put(`/fees/${id}`, data),
+  delete: (id) => api.delete(`/fees/${id}`),
 };
 
 export const certificateService = {

@@ -11,12 +11,22 @@ const fallbackCourses = [
   { _id: 'web', name: 'Web Development' },
 ];
 
+const branches = [
+  { name: 'Titlagarh', code: 'TLG' },
+  { name: 'Khariar Road', code: 'KHR' },
+];
+
 export default function Admission() {
   const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
+    motherName: '',
+    parentNumber: '',
+    studentCategory: '',
     email: '',
     phone: '',
+    address: '',
+    branch: '',
     course: '',
     message: '',
   });
@@ -50,12 +60,39 @@ export default function Admission() {
     setStatus({ type: '', message: '' });
 
     try {
+      const details = [
+        `Student Name: ${formData.name}`,
+        `Mother Name: ${formData.motherName}`,
+        `Parent Number: ${formData.parentNumber}`,
+        `Student Category: ${formData.studentCategory}`,
+        `Preferred Branch: ${formData.branch}`,
+        `Address: ${formData.address}`,
+        `Student Phone: ${formData.phone}`,
+        `Email: ${formData.email}`,
+        `Selected Course: ${formData.course}`,
+        `Additional Message: ${formData.message || 'Admission application submitted from the website.'}`,
+      ].join('\n');
+
       await inquiryService.create({
-        ...formData,
-        message: formData.message || 'Admission application submitted from the website.',
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        course: formData.course,
+        message: details,
       });
       setStatus({ type: 'success', message: 'Application submitted. We will contact you soon.' });
-      setFormData({ name: '', email: '', phone: '', course: '', message: '' });
+      setFormData({
+        name: '',
+        motherName: '',
+        parentNumber: '',
+        studentCategory: '',
+        email: '',
+        phone: '',
+        address: '',
+        branch: '',
+        course: '',
+        message: '',
+      });
     } catch (error) {
       const message = error.response?.data?.message || 'Unable to submit application. Please try again.';
       setStatus({ type: 'error', message });
@@ -100,17 +137,60 @@ export default function Admission() {
             </div>
           )}
           <form className="admission-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Full Name *</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder="Enter your full name"
-              />
+            <div className="form-grid two-columns">
+              <div className="form-group">
+                <label htmlFor="name">Student Name *</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter student full name"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="motherName">Mother Name *</label>
+                <input
+                  type="text"
+                  id="motherName"
+                  name="motherName"
+                  value={formData.motherName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter mother name"
+                />
+              </div>
+            </div>
+
+            <div className="form-grid two-columns">
+              <div className="form-group">
+                <label htmlFor="phone">Student Phone Number *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter student phone number"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="parentNumber">Parent Number *</label>
+                <input
+                  type="tel"
+                  id="parentNumber"
+                  name="parentNumber"
+                  value={formData.parentNumber}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter parent phone number"
+                />
+              </div>
             </div>
 
             <div className="form-group">
@@ -127,16 +207,40 @@ export default function Admission() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">Phone Number *</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
+              <label htmlFor="studentCategory">Student Category *</label>
+              <select
+                id="studentCategory"
+                name="studentCategory"
+                value={formData.studentCategory}
                 onChange={handleChange}
                 required
-                placeholder="Enter your phone number"
-              />
+              >
+                <option value="">-- Select Student Category --</option>
+                <option value="School Student">School Student</option>
+                <option value="College Student">College Student</option>
+                <option value="Working Professional">Working Professional</option>
+                <option value="Job Seeker">Job Seeker</option>
+                <option value="Business Owner">Business Owner</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="branch">Select Branch *</label>
+              <select
+                id="branch"
+                name="branch"
+                value={formData.branch}
+                onChange={handleChange}
+                required
+              >
+                <option value="">-- Select Branch --</option>
+                {branches.map((branch) => (
+                  <option key={branch.name} value={branch.name}>
+                    {branch.name} - ICE26{branch.code}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">
@@ -155,6 +259,19 @@ export default function Admission() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="address">Full Address *</label>
+              <textarea
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+                placeholder="Enter complete address"
+                rows="4"
+              ></textarea>
             </div>
 
             <div className="form-group">
