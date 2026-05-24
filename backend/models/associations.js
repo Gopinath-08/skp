@@ -10,6 +10,7 @@ const Setting = require('./Setting');
 const Content = require('./Content');
 const Testimonial = require('./Testimonial');
 const Faculty = require('./Faculty');
+const Inquiry = require('./Inquiry');
 
 // Associations
 Student.belongsTo(Course, { foreignKey: 'courseId' });
@@ -57,5 +58,6 @@ module.exports = {
   Setting,
   Content,
   Testimonial,
-  Faculty
+  Faculty,
+  Inquiry
 };
