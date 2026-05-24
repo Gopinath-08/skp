@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const isProd = import.meta.env.MODE === 'production';
-const API_BASE_URL = import.meta.env.VITE_API_URL || (isProd ? 'https://skp-lh6r.onrender.com/api' : 'http://localhost:5000/api');
+const API_BASE_URL = import.meta.env.VITE_API_URL || (isProd ? 'https://www.iceworld.info/api' : 'http://localhost:5000/api');
 const ASSET_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 const api = axios.create({
@@ -64,6 +64,7 @@ export const galleryService = {
 
 export const noticeService = {
   getAll: () => api.get('/notices'),
+  getAdminAll: () => api.get('/notices/all'),
   getById: (id) => api.get(`/notices/${id}`),
   getByType: (type) => api.get(`/notices/type/${type}`),
   create: (data) => api.post('/notices', data),

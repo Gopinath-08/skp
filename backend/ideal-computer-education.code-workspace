@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "ideal-computer-education",
+			"path": ".."
+		},
+		{
+			"name": "frontend",
+			"path": "../../../../SKP PROJECT (2)/SKP PROJECT/ideal-computer-education/frontend"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "ideal-computer-education"
+	}
+}

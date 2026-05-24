@@ -1410,3 +1410,78 @@ tr:hover {
   background: var(--background-light);
   color: var(--primary-color);
 }
+
+.notice-board {
+  padding-top: 4rem;
+  padding-bottom: 1rem;
+}
+
+.notice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.notice-card {
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--primary-color);
+  border-radius: 8px;
+  background: var(--surface-light);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.notice-card.priority-urgent {
+  border-left-color: #dc2626;
+}
+
+.notice-card.priority-high {
+  border-left-color: #f59e0b;
+}
+
+.notice-card.priority-low {
+  border-left-color: #64748b;
+}
+
+.notice-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.notice-card-header span,
+.notice-card-header strong {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.notice-card-header span {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.notice-card-header strong {
+  color: var(--primary-color);
+}
+
+.notice-card h3 {
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.notice-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.notice-card small {
+  display: block;
+  margin-top: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}

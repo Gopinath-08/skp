@@ -1,4 +1,5 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const { body, validationResult } = require('express-validator');
 const { Notice, Admin } = require('../models/associations');
 const auth = require('../middleware/auth');
@@ -9,7 +10,33 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const notices = await Notice.findAll({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        [Op.or]: [
+          { expiryDate: null },
+          { expiryDate: { [Op.gte]: new Date() } }
+        ]
+      },
+      order: [['createdAt', 'DESC']]
+    });
+    res.json(notices);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get active notices by type (public)
+router.get('/type/:type', async (req, res) => {
+  try {
+    const notices = await Notice.findAll({
+      where: {
+        type: req.params.type,
+        isActive: true,
+        [Op.or]: [
+          { expiryDate: null },
+          { expiryDate: { [Op.gte]: new Date() } }
+        ]
+      },
       order: [['createdAt', 'DESC']]
     });
     res.json(notices);

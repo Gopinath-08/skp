@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { courseService } from '../services/api';
+import { courseService, noticeService } from '../services/api';
 import '../styles/pages.css';
 
 const fallbackCourses = [
@@ -35,6 +35,7 @@ const fallbackCourses = [
 
 export default function Home() {
   const [courses, setCourses] = useState([]);
+  const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,6 +51,23 @@ export default function Home() {
       }
     };
     fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await noticeService.getAll();
+        const priorityOrder = { Urgent: 1, High: 2, Medium: 3, Low: 4 };
+        const sortedNotices = [...response.data].sort((first, second) => (
+          (priorityOrder[first.priority] || 5) - (priorityOrder[second.priority] || 5)
+        ));
+        setNotices(sortedNotices.slice(0, 4));
+      } catch (error) {
+        console.error('Error fetching notices:', error);
+        setNotices([]);
+      }
+    };
+    fetchNotices();
   }, []);
 
   const visibleCourses = courses.length > 0 ? courses : fallbackCourses;
@@ -92,6 +110,30 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {notices.length > 0 && (
+        <section className="notice-board page-shell">
+          <div className="section-heading">
+            <span>Latest Updates</span>
+            <h2>Notices</h2>
+          </div>
+          <div className="notice-grid">
+            {notices.map((notice) => (
+              <article key={notice.id} className={`notice-card priority-${String(notice.priority || 'medium').toLowerCase()}`}>
+                <div className="notice-card-header">
+                  <span>{notice.type || 'General'}</span>
+                  <strong>{notice.priority || 'Medium'}</strong>
+                </div>
+                <h3>{notice.title}</h3>
+                <p>{notice.content}</p>
+                {notice.expiryDate && (
+                  <small>Valid till {new Date(notice.expiryDate).toLocaleDateString()}</small>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="features-section">
         <div className="section-heading">

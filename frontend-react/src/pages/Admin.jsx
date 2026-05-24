@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import {
@@ -59,9 +59,11 @@ const schemas = {
   ],
   notices: [
     { key: 'title', label: 'Title', type: 'text' },
-    { key: 'type', label: 'Type', type: 'text' },
-    { key: 'priority', label: 'Priority', type: 'text' },
+    { key: 'type', label: 'Type', type: 'select', options: ['General', 'Admission', 'Exam', 'Holiday', 'Result', 'Urgent'] },
+    { key: 'priority', label: 'Priority', type: 'select', options: ['Low', 'Medium', 'High', 'Urgent'] },
+    { key: 'expiryDate', label: 'Expiry Date', type: 'date', required: false },
     { key: 'content', label: 'Content', type: 'textarea' },
+    { key: 'isActive', label: 'Show on Website', type: 'checkbox', required: false },
   ],
   students: [
     { key: 'fullName', label: 'Full Name', type: 'text' },
@@ -163,7 +165,7 @@ export default function Admin() {
     ['settings', 'Settings'],
   ], []);
 
-  const fetchData = async (silent = false) => {
+  const fetchData = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     setError('');
 
@@ -172,7 +174,7 @@ export default function Admin() {
       activities: adminService.getRecentActivities(),
       courses: courseService.getAll(),
       batches: batchService.getAll(),
-      notices: noticeService.getAll(),
+      notices: isLoggedIn ? noticeService.getAdminAll() : noticeService.getAll(),
       students: studentService.getAll(),
       inquiries: inquiryService.getAll(),
       fees: feeService.getAll(),
@@ -208,14 +210,14 @@ export default function Admin() {
       setError('Login is required to load protected admin endpoints.');
     }
     setLoading(false);
-  };
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchData();
     }, 0);
     return () => clearTimeout(timer);
-  }, []);
+  }, [fetchData]);
 
   const stats = data.stats || {
     totalStudents: data.students.length,
@@ -236,7 +238,7 @@ export default function Admin() {
     if (item) {
       setFormData(item);
     } else {
-      setFormData({});
+      setFormData(activeTab === 'notices' ? { type: 'General', priority: 'Medium', isActive: true } : {});
     }
     setModalOpen(true);
   };
@@ -254,16 +256,19 @@ export default function Admin() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
+      const payload = activeTab === 'notices'
+        ? { ...formData, expiryDate: formData.expiryDate || null, isActive: formData.isActive !== false }
+        : formData;
       const itemId = editingItem?._id || editingItem?.id || editingItem?.key || editingItem?.section;
       if (editingItem && itemId) {
-        await services[activeTab].update(itemId, formData);
+        await services[activeTab].update(itemId, payload);
       } else {
         if (activeTab === 'settings') {
-           await services.settings.update(formData);
+           await services.settings.update(payload);
         } else if (activeTab === 'content') {
-           await services.content.update(formData.section, formData);
+           await services.content.update(payload.section, payload);
         } else {
-           await services[activeTab].create(formData);
+           await services[activeTab].create(payload);
         }
       }
       setModalOpen(false);
@@ -274,8 +279,8 @@ export default function Admin() {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, type, checked, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
   return (
@@ -440,13 +445,35 @@ export default function Admin() {
                       onChange={handleInputChange} 
                       rows="3"
                     />
+                  ) : field.type === 'select' ? (
+                    <select
+                      name={field.key}
+                      value={formData[field.key] || field.options?.[0] || ''}
+                      onChange={handleInputChange}
+                      required={field.required !== false}
+                    >
+                      {field.options?.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  ) : field.type === 'checkbox' ? (
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontWeight: 600 }}>
+                      <input
+                        type="checkbox"
+                        name={field.key}
+                        checked={Boolean(formData[field.key])}
+                        onChange={handleInputChange}
+                        style={{ width: 'auto' }}
+                      />
+                      Active
+                    </label>
                   ) : (
                     <input 
                       type={field.type} 
                       name={field.key} 
-                      value={formData[field.key] || ''} 
+                      value={formatInputValue(formData[field.key], field.type)} 
                       onChange={handleInputChange} 
-                      required={field.key !== 'description'}
+                      required={field.required !== false && field.key !== 'description'}
                     />
                   )}
                 </div>
@@ -513,9 +540,16 @@ function getValue(row, path) {
 
 function formatValue(value) {
   if (!value) return '-';
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
     return new Date(value).toLocaleDateString();
   }
   if (typeof value === 'object') return value.name || value.fullName || value.title || '-';
   return String(value);
+}
+
+function formatInputValue(value, type) {
+  if (!value) return '';
+  if (type === 'date' && typeof value === 'string') return value.split('T')[0];
+  return value;
 }
