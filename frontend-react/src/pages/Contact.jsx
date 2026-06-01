@@ -63,10 +63,15 @@ export default function Contact() {
             Call/WhatsApp: +91 91242 80311<br />
             Call/WhatsApp: +91 91242 80322
           </InfoCard>
-          <InfoCard number="03" title="Email">
+          <InfoCard number="03" title="Sub Branch">
+            Near Khariar Autonomous College, Khariar<br />
+            Dist- Nuapada<br />
+            Mob: +91 98610 04687 / +91 98271 04687
+          </InfoCard>
+          <InfoCard number="04" title="Email">
             iceworldtlg.in@gmail.com
           </InfoCard>
-          <InfoCard number="04" title="Business Hours">
+          <InfoCard number="05" title="Business Hours">
             Monday - Saturday<br />Morning and evening batches available
           </InfoCard>
         </div>

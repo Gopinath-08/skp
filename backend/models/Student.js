@@ -10,7 +10,7 @@ const Student = sequelize.define('Student', {
   branch: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: 'Titlagarh'
+    defaultValue: 'Titilagarh'
   },
   fullName: {
     type: DataTypes.STRING,

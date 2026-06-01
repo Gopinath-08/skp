@@ -43,11 +43,17 @@ const states = [
 ];
 
 const branches = [
-  { name: 'Titlagarh', code: 'TLG' },
-  { name: 'Khariar Road', code: 'KHR' },
+  { name: 'Titilagarh', code: 'TLG' },
+  { name: 'Khariar', code: 'KHR' },
 ];
 
-const normalizeBranch = (branchName) => branchName === 'Balangir' ? 'Titlagarh' : branchName;
+const studentCategories = ['SC', 'ST', 'General', 'OBC'];
+
+const normalizeBranch = (branchName) => {
+  if (branchName === 'Balangir' || branchName === 'Titlagarh') return 'Titilagarh';
+  if (branchName === 'Khariar Road') return 'Khariar';
+  return branchName;
+};
 
 export default function StudentManager({ students, courses, batches, onRefresh }) {
   const [search, setSearch] = useState('');
@@ -124,7 +130,7 @@ export default function StudentManager({ students, courses, batches, onRefresh }
     try {
       const payload = {
         ...formData,
-        branch: normalizeBranch(formData.branch) || 'Titlagarh',
+        branch: normalizeBranch(formData.branch) || 'Titilagarh',
       };
       
       if (formData.id) {
@@ -274,7 +280,7 @@ export default function StudentManager({ students, courses, batches, onRefresh }
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
                   <label>Branch *</label>
-                  <select name="branch" value={formData.branch || 'Balangir'} onChange={(e) => setFormData({...formData, branch: e.target.value})} required disabled={Boolean(formData.id)}>
+                  <select name="branch" value={normalizeBranch(formData.branch) || 'Titilagarh'} onChange={(e) => setFormData({...formData, branch: e.target.value})} required disabled={Boolean(formData.id)}>
                     {branches.map((branch) => (
                       <option key={branch.name} value={branch.name}>{branch.name} - {getRollPrefix(branch.name, formData.admissionDate)}</option>
                     ))}
@@ -283,7 +289,7 @@ export default function StudentManager({ students, courses, batches, onRefresh }
                 {!formData.id && (
                   <div className="form-group">
                     <label>Roll Number Prefix</label>
-                    <input type="text" value={getRollPrefix(formData.branch || 'Titlagarh', formData.admissionDate)} readOnly />
+                    <input type="text" value={getRollPrefix(formData.branch || 'Titilagarh', formData.admissionDate)} readOnly />
                   </div>
                 )}
                 <div className="form-group">
@@ -327,12 +333,9 @@ export default function StudentManager({ students, courses, batches, onRefresh }
                   <label>Student Category *</label>
                   <select name="studentCategory" value={formData.studentCategory || ''} onChange={(e) => setFormData({...formData, studentCategory: e.target.value})} required>
                     <option value="">Select Category</option>
-                    <option value="School Student">School Student</option>
-                    <option value="College Student">College Student</option>
-                    <option value="Working Professional">Working Professional</option>
-                    <option value="Job Seeker">Job Seeker</option>
-                    <option value="Business Owner">Business Owner</option>
-                    <option value="Other">Other</option>
+                    {studentCategories.map((category) => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">

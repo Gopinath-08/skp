@@ -12,9 +12,11 @@ const fallbackCourses = [
 ];
 
 const branches = [
-  { name: 'Titlagarh', code: 'TLG' },
-  { name: 'Khariar Road', code: 'KHR' },
+  { name: 'Titilagarh', code: 'TLG' },
+  { name: 'Khariar', code: 'KHR' },
 ];
+
+const studentCategories = ['SC', 'ST', 'General', 'OBC'];
 
 export default function Admission() {
   const [courses, setCourses] = useState([]);
@@ -216,12 +218,9 @@ export default function Admission() {
                 required
               >
                 <option value="">-- Select Student Category --</option>
-                <option value="School Student">School Student</option>
-                <option value="College Student">College Student</option>
-                <option value="Working Professional">Working Professional</option>
-                <option value="Job Seeker">Job Seeker</option>
-                <option value="Business Owner">Business Owner</option>
-                <option value="Other">Other</option>
+                {studentCategories.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
               </select>
             </div>
 

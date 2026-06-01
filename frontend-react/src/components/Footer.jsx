@@ -30,8 +30,10 @@ export default function Footer() {
           <div className="footer-section">
             <h3>Contact</h3>
             <p>NEAR DAV COLLEGE, TITILAGARH<br/>DIST-BALANGIR, ODISHA, PIN-767033</p>
+            <p style={{marginTop: '0.5rem'}}>Sub Branch: Near Khariar Autonomous College, Khariar<br/>Dist- Nuapada</p>
             <p style={{marginTop: '0.5rem'}}>Email: iceworldtlg.in@gmail.com</p>
             <p>Phone: +91 91242 80311 / +91 91242 80322</p>
+            <p>Khariar Mob: +91 98610 04687 / +91 98271 04687</p>
             <p>WhatsApp: +91 91242 80311</p>
           </div>
           
