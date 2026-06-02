@@ -56,7 +56,7 @@ export default function Contact() {
         <div className="contact-info">
           <InfoCard number="01" title="Location">
             <strong>IDEAL COMPUTER EDUCATION</strong><br />
-            NEAR DAV COLLEGE, TITILAGARH<br />
+            NEAR DAV AUTONOMOUS COLLEGE, TITILAGARH<br />
             DIST-BALANGIR, ODISHA, PIN-767033
           </InfoCard>
           <InfoCard number="02" title="Phone & WhatsApp">
