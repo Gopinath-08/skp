@@ -3,7 +3,8 @@ const { Op } = require('sequelize');
 const { body, validationResult } = require('express-validator');
 const { Student, Course, Batch, Fee } = require('../models/associations');
 const auth = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const { profileUpload } = require('../middleware/upload');
+const { handleStudentProfileUpload } = require('../utils/fileUpload');
 
 const router = express.Router();
 
@@ -85,9 +86,10 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create student
-router.post('/', auth, upload.fields([
+router.post('/', auth, profileUpload.fields([
   { name: 'photo', maxCount: 1 },
-  { name: 'signature', maxCount: 1 }
+  { name: 'tenthCertificate', maxCount: 1 },
+  { name: 'twelfthCertificate', maxCount: 1 }
 ]), [
   body('fullName').notEmpty(),
   body('branch').customSanitizer(normalizeBranch).isIn(validBranches),
@@ -116,12 +118,14 @@ router.post('/', auth, upload.fields([
     const branch = normalizeBranch(req.body.branch) || 'Titilagarh';
     const admissionId = await getNextAdmissionId(branch, req.body.admissionDate);
 
+    const fileUpdates = handleStudentProfileUpload(req);
     const studentData = {
       ...req.body,
       branch,
       admissionId,
-      photo: req.files?.photo ? req.files.photo[0].path : null,
-      signature: req.files?.signature ? req.files.signature[0].path : null
+      photo: fileUpdates.photo || null,
+      tenthCertificate: fileUpdates.tenthCertificate || null,
+      twelfthCertificate: fileUpdates.twelfthCertificate || null
     };
 
     const student = await Student.create(studentData);
@@ -132,9 +136,10 @@ router.post('/', auth, upload.fields([
 });
 
 // Update student
-router.put('/:id', auth, upload.fields([
+router.put('/:id', auth, profileUpload.fields([
   { name: 'photo', maxCount: 1 },
-  { name: 'signature', maxCount: 1 }
+  { name: 'tenthCertificate', maxCount: 1 },
+  { name: 'twelfthCertificate', maxCount: 1 }
 ]), async (req, res) => {
   try {
     const student = await Student.findByPk(req.params.id);
@@ -152,8 +157,11 @@ router.put('/:id', auth, upload.fields([
     if (updateData.studentCategory && !validStudentCategories.includes(updateData.studentCategory)) {
       return res.status(400).json({ message: 'Invalid student category' });
     }
-    if (req.files?.photo) updateData.photo = req.files.photo[0].path;
-    if (req.files?.signature) updateData.signature = req.files.signature[0].path;
+
+    const fileUpdates = handleStudentProfileUpload(req);
+    if (fileUpdates.photo) updateData.photo = fileUpdates.photo;
+    if (fileUpdates.tenthCertificate) updateData.tenthCertificate = fileUpdates.tenthCertificate;
+    if (fileUpdates.twelfthCertificate) updateData.twelfthCertificate = fileUpdates.twelfthCertificate;
 
     await student.update(updateData);
     res.json(student);

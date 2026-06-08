@@ -82,6 +82,12 @@ const Student = sequelize.define('Student', {
   photo: {
     type: DataTypes.STRING
   },
+  tenthCertificate: {
+    type: DataTypes.STRING
+  },
+  twelfthCertificate: {
+    type: DataTypes.STRING
+  },
   signature: {
     type: DataTypes.STRING
   },

@@ -96,6 +96,7 @@ const schemas = {
     { key: 'experience', label: 'Experience', type: 'text' },
     { key: 'email', label: 'Email', type: 'email' },
     { key: 'phone', label: 'Phone', type: 'text' },
+    { key: 'photo', label: 'Profile Photo', type: 'file', required: false },
   ],
   gallery: [
     { key: 'title', label: 'Title', type: 'text' },
@@ -256,9 +257,22 @@ export default function Admin() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const payload = activeTab === 'notices'
+      let payload = activeTab === 'notices'
         ? { ...formData, expiryDate: formData.expiryDate || null, isActive: formData.isActive !== false }
         : formData;
+      if (activeTab === 'faculty' && formData.photo instanceof File) {
+        payload = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+          if (value === undefined || value === null || value === '') return;
+          if (key === 'photo' && !(value instanceof File)) return;
+          if (Array.isArray(value)) {
+            payload.append(key, JSON.stringify(value));
+            return;
+          }
+          if (typeof value === 'object' && !(value instanceof File)) return;
+          payload.append(key, value);
+        });
+      }
       const itemId = editingItem?._id || editingItem?.id || editingItem?.key || editingItem?.section;
       if (editingItem && itemId) {
         await services[activeTab].update(itemId, payload);
@@ -279,8 +293,8 @@ export default function Admin() {
   };
 
   const handleInputChange = (e) => {
-    const { name, type, checked, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    const { name, type, checked, value, files } = e.target;
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : type === 'file' ? files?.[0] || prev[name] : value }));
   };
 
   return (
@@ -467,6 +481,18 @@ export default function Admin() {
                       />
                       Active
                     </label>
+                  ) : field.type === 'file' ? (
+                    <>
+                      <input
+                        type="file"
+                        name={field.key}
+                        accept="image/jpeg,image/png"
+                        onChange={handleInputChange}
+                      />
+                      {typeof formData[field.key] === 'string' && formData[field.key] && (
+                        <small style={{color: '#64748b', display: 'block', marginTop: '0.35rem'}}>Current file saved</small>
+                      )}
+                    </>
                   ) : (
                     <input 
                       type={field.type} 

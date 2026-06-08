@@ -2,7 +2,8 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { Faculty, Course } = require('../models/associations');
 const auth = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const { profileUpload } = require('../middleware/upload');
+const { handleFacultyProfileUpload } = require('../utils/fileUpload');
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create faculty
-router.post('/', auth, upload.single('photo'), [
+router.post('/', auth, profileUpload.single('photo'), [
   body('name').notEmpty(),
   body('email').isEmail(),
   body('phone').notEmpty(),
@@ -46,7 +47,8 @@ router.post('/', auth, upload.single('photo'), [
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-    const data = { ...req.body, photo: req.file ? req.file.path : null };
+    const photoPath = req.file ? handleFacultyProfileUpload(req) : null;
+    const data = { ...req.body, photo: photoPath };
     if (data.subjects && typeof data.subjects === 'string') {
       try { data.subjects = JSON.parse(data.subjects); } catch(e) {}
     }
@@ -59,13 +61,15 @@ router.post('/', auth, upload.single('photo'), [
 });
 
 // Update faculty
-router.put('/:id', auth, upload.single('photo'), async (req, res) => {
+router.put('/:id', auth, profileUpload.single('photo'), async (req, res) => {
   try {
     const faculty = await Faculty.findByPk(req.params.id);
     if (!faculty) return res.status(404).json({ message: 'Faculty not found' });
 
     const updateData = { ...req.body };
-    if (req.file) updateData.photo = req.file.path;
+    if (req.file) {
+      updateData.photo = handleFacultyProfileUpload(req);
+    }
     if (updateData.subjects && typeof updateData.subjects === 'string') {
       try { updateData.subjects = JSON.parse(updateData.subjects); } catch(e) {}
     }

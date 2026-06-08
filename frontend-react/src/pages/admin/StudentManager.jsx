@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { studentService } from '../../services/api';
+import { getAssetUrl, studentService } from '../../services/api';
 
 const stateDistricts = {
   'Andhra Pradesh': ['Alluri Sitharama Raju', 'Anakapalli', 'Anantapur', 'Annamayya', 'Bapatla', 'Chittoor', 'Dr. B.R. Ambedkar Konaseema', 'East Godavari', 'Eluru', 'Guntur', 'Kakinada', 'Krishna', 'Kurnool', 'Nandyal', 'NTR', 'Palnadu', 'Parvathipuram Manyam', 'Prakasam', 'Sri Potti Sriramulu Nellore', 'Sri Sathya Sai', 'Srikakulam', 'Tirupati', 'Visakhapatnam', 'Vizianagaram', 'West Godavari', 'YSR Kadapa', 'Other'],
@@ -48,6 +48,7 @@ const branches = [
 ];
 
 const studentCategories = ['SC', 'ST', 'General', 'OBC'];
+const studentFileFields = ['photo', 'tenthCertificate', 'twelfthCertificate'];
 
 const normalizeBranch = (branchName) => {
   if (branchName === 'Balangir' || branchName === 'Titlagarh') return 'Titilagarh';
@@ -75,6 +76,34 @@ export default function StudentManager({ students, courses, batches, onRefresh }
     const normalizedBranch = normalizeBranch(branchName);
     const branch = branches.find((item) => item.name === normalizedBranch);
     return branch ? `${branch.name} (${getRollPrefix(branch.name)})` : branchName || '-';
+  };
+  const buildStudentPayload = () => {
+    const payload = {
+      ...formData,
+      branch: normalizeBranch(formData.branch) || 'Titilagarh',
+    };
+    const hasFiles = studentFileFields.some((field) => payload[field] instanceof File);
+
+    if (!hasFiles) {
+      return payload;
+    }
+
+    const multipart = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value === undefined || value === null || value === '') return;
+      if (studentFileFields.includes(key)) {
+        if (value instanceof File) multipart.append(key, value);
+        return;
+      }
+      if (Array.isArray(value)) {
+        multipart.append(key, JSON.stringify(value));
+        return;
+      }
+      if (typeof value === 'object') return;
+      multipart.append(key, value);
+    });
+
+    return multipart;
   };
 
   const filteredStudents = students.filter(s => {
@@ -128,10 +157,7 @@ export default function StudentManager({ students, courses, batches, onRefresh }
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        ...formData,
-        branch: normalizeBranch(formData.branch) || 'Titilagarh',
-      };
+      const payload = buildStudentPayload();
       
       if (formData.id) {
         await studentService.update(formData.id, payload);
@@ -237,9 +263,7 @@ export default function StudentManager({ students, courses, batches, onRefresh }
                 <td><strong>{student.admissionId}</strong></td>
                 <td>{getBranchLabel(student.branch)}</td>
                 <td>
-                   <div style={{width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px'}}>
-                      {student.photo ? 'IMG' : 'N/A'}
-                   </div>
+                  <StudentAvatar student={student} size="small" />
                 </td>
                 <td>
                   <div>{student.fullName}</div>
@@ -398,6 +422,21 @@ export default function StudentManager({ students, courses, batches, onRefresh }
                   <label>Admission Date</label>
                   <input type="date" name="admissionDate" value={formData.admissionDate ? formData.admissionDate.split('T')[0] : ''} onChange={(e) => setFormData({...formData, admissionDate: e.target.value})} />
                 </div>
+                <div className="form-group">
+                  <label>Student Profile Photo</label>
+                  <input type="file" name="photo" accept="image/jpeg,image/png" onChange={(e) => setFormData({...formData, photo: e.target.files?.[0] || formData.photo})} />
+                  {typeof formData.photo === 'string' && formData.photo && <FileLink href={formData.photo} label="Current photo" />}
+                </div>
+                <div className="form-group">
+                  <label>10th Certificate</label>
+                  <input type="file" name="tenthCertificate" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, tenthCertificate: e.target.files?.[0] || formData.tenthCertificate})} />
+                  {typeof formData.tenthCertificate === 'string' && formData.tenthCertificate && <FileLink href={formData.tenthCertificate} label="Current 10th certificate" />}
+                </div>
+                <div className="form-group">
+                  <label>12th Certificate</label>
+                  <input type="file" name="twelfthCertificate" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, twelfthCertificate: e.target.files?.[0] || formData.twelfthCertificate})} />
+                  {typeof formData.twelfthCertificate === 'string' && formData.twelfthCertificate && <FileLink href={formData.twelfthCertificate} label="Current 12th certificate" />}
+                </div>
               </div>
               <div style={{display: 'flex', gap: '1rem', marginTop: '2rem', borderTop: '1px solid #e2e8f0', paddingTop: '1rem'}}>
                 <button type="submit" className="btn btn-primary">Save Student Details</button>
@@ -410,36 +449,14 @@ export default function StudentManager({ students, courses, batches, onRefresh }
 
       {viewStudent && (
         <div className="modal">
-          <div className="modal-content" style={{maxWidth: '760px'}}>
+          <div className="modal-content student-profile-modal">
             <button className="close" onClick={() => setViewStudent(null)}>Ã—</button>
-            <h2 style={{marginBottom: '1.5rem'}}>Student Details</h2>
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '1rem'}}>
-              <Detail label="Admission ID" value={viewStudent.admissionId} />
-              <Detail label="Branch" value={getBranchLabel(viewStudent.branch)} />
-              <Detail label="Status" value={viewStudent.status || 'Active'} />
-              <Detail label="Full Name" value={viewStudent.fullName} />
-              <Detail label="Student Category" value={viewStudent.studentCategory} />
-              <Detail label="Father/Guardian Name" value={viewStudent.parentsName} />
-              <Detail label="Mother Name" value={viewStudent.motherName} />
-              <Detail label="Student Phone" value={viewStudent.mobile} />
-              <Detail label="Parent Number" value={viewStudent.parentNumber} />
-              <Detail label="Email" value={viewStudent.email} />
-              <Detail label="Aadhaar" value={viewStudent.aadhaar} />
-              <Detail label="Qualification" value={viewStudent.qualification} />
-              <Detail label="Gender" value={viewStudent.gender} />
-              <Detail label="Date of Birth" value={viewStudent.dob ? new Date(viewStudent.dob).toLocaleDateString() : ''} />
-              <Detail label="Admission Date" value={viewStudent.admissionDate ? new Date(viewStudent.admissionDate).toLocaleDateString() : ''} />
-              <Detail label="Course" value={getCourseName(viewStudent)} />
-              <Detail label="Batch" value={batches.find(b => b.id === viewStudent.batchId)?.name || viewStudent.Batch?.name || viewStudent.batchId} />
-              <div style={{gridColumn: '1 / -1'}}>
-                <Detail label="Address" value={[
-                  viewStudent.address,
-                  viewStudent.district,
-                  viewStudent.state,
-                  viewStudent.pinCode,
-                ].filter(Boolean).join(', ')} />
-              </div>
-            </div>
+            <StudentProfileCard
+              student={viewStudent}
+              branchLabel={getBranchLabel(viewStudent.branch)}
+              courseName={getCourseName(viewStudent)}
+              batchName={batches.find(b => b.id === viewStudent.batchId)?.name || viewStudent.Batch?.name || viewStudent.batchId}
+            />
             <div style={{display: 'flex', gap: '1rem', marginTop: '2rem', borderTop: '1px solid #e2e8f0', paddingTop: '1rem'}}>
               <button className="btn btn-primary" onClick={() => { setFormData(viewStudent); setViewStudent(null); setModalOpen(true); }}>Edit Student</button>
               <button className="btn btn-secondary" onClick={() => setViewStudent(null)}>Close</button>
@@ -451,15 +468,122 @@ export default function StudentManager({ students, courses, batches, onRefresh }
   );
 }
 
-function Detail({ label, value }) {
+function FileLink({ href, label }) {
   return (
-    <div style={{background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem'}}>
-      <div style={{fontSize: '0.75rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.35rem'}}>
-        {label}
+    <a href={getAssetUrl(href)} target="_blank" rel="noreferrer" style={{display: 'inline-block', marginTop: '0.35rem', fontSize: '0.8rem', fontWeight: 700}}>
+      {label}
+    </a>
+  );
+}
+
+function StudentProfileCard({ student, branchLabel, courseName, batchName }) {
+  const address = [
+    student.address,
+    student.district,
+    student.state,
+    student.pinCode,
+  ].filter(Boolean).join(', ');
+
+  return (
+    <div className="student-card">
+      <div className="student-card-header">
+        <StudentAvatar student={student} size="large" />
+        <div className="student-card-title">
+          <span className={`status-badge ${student.status?.toLowerCase() || 'active'}`}>{student.status || 'Active'}</span>
+          <h2>{student.fullName || 'Student'}</h2>
+          <div className="student-card-meta">
+            <strong>{student.admissionId || '-'}</strong>
+            <span>{branchLabel || '-'}</span>
+          </div>
+        </div>
       </div>
-      <div style={{color: '#0f172a', fontWeight: 600}}>
-        {value || '-'}
+
+      <div className="student-summary-strip">
+        <SummaryItem label="Course" value={courseName} />
+        <SummaryItem label="Batch" value={batchName} />
+        <SummaryItem label="Phone" value={student.mobile} />
+        <SummaryItem label="Category" value={student.studentCategory} />
       </div>
+
+      <div className="student-card-section">
+        <h3>Personal Details</h3>
+        <div className="student-detail-grid">
+          <Detail label="Father/Guardian" value={student.parentsName} />
+          <Detail label="Mother" value={student.motherName} />
+          <Detail label="Parent Number" value={student.parentNumber} />
+          <Detail label="Email" value={student.email} />
+          <Detail label="Aadhaar" value={student.aadhaar} />
+          <Detail label="Qualification" value={student.qualification} />
+          <Detail label="Gender" value={student.gender} />
+          <Detail label="Date of Birth" value={student.dob ? new Date(student.dob).toLocaleDateString() : ''} />
+          <Detail label="Admission Date" value={student.admissionDate ? new Date(student.admissionDate).toLocaleDateString() : ''} />
+          <Detail label="Address" value={address} wide />
+        </div>
+      </div>
+
+      <div className="student-card-section">
+        <h3>Documents</h3>
+        <div className="student-doc-grid">
+          <DocumentDetail label="Profile Photo" href={student.photo} />
+          <DocumentDetail label="10th Certificate" href={student.tenthCertificate} />
+          <DocumentDetail label="12th Certificate" href={student.twelfthCertificate} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StudentAvatar({ student, size = 'small' }) {
+  const [failed, setFailed] = useState(false);
+  const initials = (student.fullName || 'Student')
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
+  const showImage = student.photo && !failed;
+
+  return (
+    <div className={`student-avatar student-avatar-${size}`}>
+      {showImage ? (
+        <img src={getAssetUrl(student.photo)} alt={student.fullName || 'Student'} onError={() => setFailed(true)} />
+      ) : (
+        <span>{initials || 'ST'}</span>
+      )}
+    </div>
+  );
+}
+
+function SummaryItem({ label, value }) {
+  return (
+    <div className="student-summary-item">
+      <span>{label}</span>
+      <strong>{value || '-'}</strong>
+    </div>
+  );
+}
+
+function DocumentDetail({ label, href }) {
+  return (
+    <div className={`student-doc-tile ${href ? 'has-file' : ''}`}>
+      <span>{label}</span>
+      {href ? (
+        <a href={getAssetUrl(href)} target="_blank" rel="noreferrer">
+          View
+        </a>
+      ) : (
+        <strong>Missing</strong>
+      )}
+    </div>
+  );
+}
+
+function Detail({ label, value, wide = false }) {
+  return (
+    <div className={`student-detail ${wide ? 'wide' : ''}`}>
+      <span>{label}</span>
+      <strong>{value || '-'}</strong>
     </div>
   );
 }
