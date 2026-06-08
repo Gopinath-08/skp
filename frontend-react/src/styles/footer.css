@@ -42,9 +42,25 @@
   padding-left: 4px;
 }
 
+.footer-contact .contact-group {
+  margin-bottom: 1.5rem;
+}
+
+.footer-contact h4 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: white;
+}
+
+.contact-email {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
 .social-links {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-top: 1.5rem;
 }
 

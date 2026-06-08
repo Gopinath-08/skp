@@ -27,22 +27,28 @@ export default function Footer() {
             </ul>
           </div>
           
-          <div className="footer-section">
+          <div className="footer-section footer-contact">
             <h3>Contact</h3>
-            <p>NEAR DAV AUTONOMOUS COLLEGE, TITILAGARH<br/>DIST-BALANGIR, ODISHA, PIN-767033</p>
-            <p style={{marginTop: '0.5rem'}}>Sub Branch: Near Khariar Autonomous College, Khariar<br/>Dist- Nuapada</p>
-            <p style={{marginTop: '0.5rem'}}>Email: iceworldtlg.in@gmail.com</p>
-            <p>Phone: +91 91242 80311 / +91 91242 80322</p>
-            <p>Khariar Mob: +91 98610 04687 / +91 98271 04687</p>
-            <p>WhatsApp: +91 91242 80311</p>
+            <div className="contact-group">
+              <h4>Main Branch</h4>
+              <p>NEAR DAV AUTONOMOUS COLLEGE, TITILAGARH<br/>DIST-BALANGIR, ODISHA, PIN-767033</p>
+              <p>Phone: +91 91242 80311 / +91 91242 80322</p>
+              <p>WhatsApp: +91 91242 80311</p>
+            </div>
+            <div className="contact-group">
+              <h4>Sub Branch</h4>
+              <p>Near Khariar Autonomous College, Khariar<br/>Dist- Nuapada</p>
+              <p>Phone: +91 98610 04687 / +91 98271 04687</p>
+            </div>
+            <p className="contact-email">Email: iceworldtlg.in@gmail.com</p>
           </div>
           
-          <div className="footer-section">
+          <div className="footer-section footer-social">
             <h3>Follow Us</h3>
             <div className="social-links">
-              <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
-              <a href="#" target="_blank" rel="noopener noreferrer">Twitter</a>
-              <a href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://www.facebook.com/share/1CyGddFwpp/" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="https://www.instagram.com/ice_titilagarh?igsh=MWsyYnNhZnl2eDdqZw==" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
           </div>
         </div>
