@@ -1,7 +1,15 @@
 const multer = require('multer');
 const path = require('path');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config/cloudinary');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const hasCloudinaryCredentials = Boolean(
   process.env.CLOUDINARY_CLOUD_NAME &&
@@ -90,6 +98,33 @@ const profileUpload = multer({
   },
   fileFilter: studentFacultyFileFilter
 });
+
+// Middleware to log file details
+profileUpload.logFileDetails = (req, res, next) => {
+  console.log('🔍 Upload Middleware Analysis:', {
+    hasCloudinaryConfig: hasCloudinaryCredentials,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME ? '✅' : '❌',
+    apiKey: process.env.CLOUDINARY_API_KEY ? '✅' : '❌',
+    apiSecret: process.env.CLOUDINARY_API_SECRET ? '✅' : '❌',
+    storageType: studentFacultyStorage.constructor.name,
+    filesReceived: {
+      photo: req.files?.photo?.length || 0,
+      tenthCertificate: req.files?.tenthCertificate?.length || 0,
+      twelfthCertificate: req.files?.twelfthCertificate?.length || 0
+    }
+  });
+
+  // Log file object structure
+  if (req.files?.photo?.[0]) {
+    const file = req.files.photo[0];
+    console.log('📷 Photo file object keys:', Object.keys(file));
+    console.log('📷 Photo file secure_url:', file.secure_url ? '✅' : '❌');
+    console.log('📷 Photo file path:', file.path ? file.path.substring(0, 100) : 'N/A');
+    console.log('📷 Photo file filename:', file.filename);
+  }
+
+  next();
+};
 
 module.exports = {
   upload,

@@ -115,10 +115,18 @@ router.post('/', auth, profileUpload.fields([
       return res.status(400).json({ errors: errors.array() });
     }
 
+    console.log('📋 Creating student with files:', {
+      hasPhoto: !!req.files?.photo?.[0],
+      hasTenthCert: !!req.files?.tenthCertificate?.[0],
+      hasTwelfthCert: !!req.files?.twelfthCertificate?.[0]
+    });
+
     const branch = normalizeBranch(req.body.branch) || 'Titilagarh';
     const admissionId = await getNextAdmissionId(branch, req.body.admissionDate);
 
     const fileUpdates = handleStudentProfileUpload(req);
+    console.log('🔗 File updates extracted:', fileUpdates);
+
     const studentData = {
       ...req.body,
       branch,
@@ -129,9 +137,23 @@ router.post('/', auth, profileUpload.fields([
     };
 
     const student = await Student.create(studentData);
-    res.status(201).json(student);
+    console.log('✅ Student saved to database:', {
+      id: student.id,
+      photoUrl: student.photo ? student.photo.substring(0, 100) : null,
+      tenthCert: student.tenthCertificate ? '✅' : '❌',
+      twelfthCert: student.twelfthCertificate ? '✅' : '❌'
+    });
+
+    res.status(201).json({ 
+      message: 'Student created successfully',
+      data: student 
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('❌ Student creation error:', error.message);
+    res.status(500).json({ 
+      message: 'Error creating student',
+      error: error.message 
+    });
   }
 });
 
@@ -164,9 +186,16 @@ router.put('/:id', auth, profileUpload.fields([
     if (fileUpdates.twelfthCertificate) updateData.twelfthCertificate = fileUpdates.twelfthCertificate;
 
     await student.update(updateData);
-    res.json(student);
+    res.json({ 
+      message: 'Student updated successfully',
+      data: student 
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Student update error:', error);
+    res.status(500).json({ 
+      message: 'Error updating student',
+      error: error.message 
+    });
   }
 });
 

@@ -11,20 +11,48 @@ const getFilePath = (file) => {
 const extractFilePath = (file) => {
   if (!file) return null;
   
-  // For Cloudinary storage: file.path contains the secure_url
+  console.log('📁 Processing file object:', {
+    hasSecureUrl: !!file.secure_url,
+    hasPath: !!file.path,
+    hasFilename: !!file.filename,
+    secureUrl: file.secure_url ? '...' : undefined,
+    path: file.path ? file.path.substring(0, 100) : undefined,
+    filename: file.filename
+  });
+  
+  // Priority 1: Check for Cloudinary secure_url (HTTPS - most reliable)
+  if (file.secure_url) {
+    console.log('✅ Using Cloudinary secure_url');
+    return file.secure_url;
+  }
+  
+  // Priority 2: Check for Cloudinary url (HTTP fallback)
+  if (file.url && (file.url.includes('cloudinary') || file.url.includes('res.'))) {
+    console.log('✅ Using Cloudinary HTTP url');
+    return file.url;
+  }
+  
+  // Priority 3: Check if path is a full Cloudinary URL
   if (file.path && file.path.includes('cloudinary')) {
+    console.log('✅ Using Cloudinary path URL');
     return file.path;
   }
   
-  // For local disk storage: expose the URL served by server.js
+  // Priority 4: Local storage - construct path from filename
   if (file.filename) {
-    return `/uploads/${file.filename}`;
-  }
-
-  if (file.path) {
-    return `/uploads/${path.basename(file.path)}`;
+    const localPath = `/uploads/${file.filename}`;
+    console.log('📂 Using local storage path:', localPath);
+    return localPath;
   }
   
+  // Priority 5: Fallback - use basename from path
+  if (file.path && !file.path.includes('cloudinary')) {
+    const localPath = `/uploads/${path.basename(file.path)}`;
+    console.log('📂 Using local storage path (fallback):', localPath);
+    return localPath;
+  }
+  
+  console.warn('⚠️ No valid file path found in file object');
   return null;
 };
 

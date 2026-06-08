@@ -54,9 +54,16 @@ router.post('/', auth, profileUpload.single('photo'), [
     }
     
     const faculty = await Faculty.create(data);
-    res.status(201).json(faculty);
+    res.status(201).json({ 
+      message: 'Faculty created successfully',
+      data: faculty 
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Faculty creation error:', error);
+    res.status(500).json({ 
+      message: 'Error creating faculty',
+      error: error.message 
+    });
   }
 });
 
@@ -75,9 +82,16 @@ router.put('/:id', auth, profileUpload.single('photo'), async (req, res) => {
     }
 
     await faculty.update(updateData);
-    res.json(faculty);
+    res.json({ 
+      message: 'Faculty updated successfully',
+      data: faculty 
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Faculty update error:', error);
+    res.status(500).json({ 
+      message: 'Error updating faculty',
+      error: error.message 
+    });
   }
 });
 
