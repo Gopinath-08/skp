@@ -23,6 +23,10 @@ export const getAssetUrl = (path) => {
   if (!path) return '';
   if (/^https?:\/\//i.test(path)) return path;
   const normalizedPath = path.replace(/\\/g, '/').replace(/^\/+/, '');
+  const uploadsIndex = normalizedPath.toLowerCase().lastIndexOf('/uploads/');
+  if (uploadsIndex !== -1) {
+    return `${ASSET_BASE_URL}/${normalizedPath.slice(uploadsIndex + 1)}`;
+  }
   return `${ASSET_BASE_URL}/${normalizedPath}`;
 };
 

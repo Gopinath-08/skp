@@ -635,6 +635,16 @@ tr:hover {
   box-shadow: var(--shadow-sm);
 }
 
+.course-card-image {
+  width: calc(100% + 4rem);
+  height: 180px;
+  margin: -2rem -2rem 1.5rem;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  object-fit: cover;
+  display: block;
+  background: #e2e8f0;
+}
+
 .course-card-detailed:hover {
   transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
@@ -653,6 +663,12 @@ tr:hover {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.course-card-detailed:has(.course-card-image) .course-badge {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Form Groups */
@@ -1114,6 +1130,36 @@ tr:hover {
 .timeline-card p {
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+.faculty-photo-wrap {
+  width: 112px;
+  height: 112px;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e0f2fe, #f8fafc);
+  border: 1px solid var(--border-color);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.75);
+}
+
+.faculty-photo,
+.faculty-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faculty-photo {
+  object-fit: cover;
+}
+
+.faculty-photo-placeholder {
+  color: var(--primary-color);
+  font-weight: 800;
+  font-size: 1.5rem;
 }
 
 .about-stats {

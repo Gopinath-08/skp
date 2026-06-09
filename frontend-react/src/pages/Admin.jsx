@@ -102,6 +102,7 @@ const schemas = {
     { key: 'title', label: 'Title', type: 'text' },
     { key: 'category', label: 'Category', type: 'text' },
     { key: 'description', label: 'Description', type: 'textarea' },
+    { key: 'image', label: 'Gallery Photo', type: 'file', required: false },
   ],
   testimonials: [
     { key: 'name', label: 'Name', type: 'text' },
@@ -260,11 +261,11 @@ export default function Admin() {
       let payload = activeTab === 'notices'
         ? { ...formData, expiryDate: formData.expiryDate || null, isActive: formData.isActive !== false }
         : formData;
-      if (activeTab === 'faculty' && formData.photo instanceof File) {
+      if (Object.values(formData).some((value) => value instanceof File)) {
         payload = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
           if (value === undefined || value === null || value === '') return;
-          if (key === 'photo' && !(value instanceof File)) return;
+          if (['photo', 'image'].includes(key) && !(value instanceof File)) return;
           if (Array.isArray(value)) {
             payload.append(key, JSON.stringify(value));
             return;
@@ -486,7 +487,7 @@ export default function Admin() {
                       <input
                         type="file"
                         name={field.key}
-                        accept="image/jpeg,image/png"
+                        accept="image/jpeg,image/png,image/gif"
                         onChange={handleInputChange}
                       />
                       {typeof formData[field.key] === 'string' && formData[field.key] && (

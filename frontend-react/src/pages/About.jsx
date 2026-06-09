@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { facultyService } from '../services/api';
+import { facultyService, getAssetUrl } from '../services/api';
 import '../styles/pages.css';
 
 export default function About() {
@@ -96,6 +96,20 @@ export default function About() {
           <div className="faculty-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
             {faculty.map(f => (
               <div key={f.id} className="faculty-card" style={{ padding: '2rem', background: 'var(--surface-light)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)', transition: 'transform var(--transition-normal)' }}>
+                 <div className="faculty-photo-wrap">
+                   {f.photo ? (
+                     <img
+                       className="faculty-photo"
+                       src={getAssetUrl(f.photo)}
+                       alt={f.name}
+                       onError={(event) => {
+                         event.currentTarget.style.display = 'none';
+                       }}
+                     />
+                   ) : (
+                     <div className="faculty-photo-placeholder">{getInitials(f.name)}</div>
+                   )}
+                 </div>
                  <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)', fontSize: '1.25rem' }}>{f.name}</h3>
                  <p style={{ color: 'var(--primary-color)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '1.25rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.designation}</p>
                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
@@ -142,6 +156,16 @@ export default function About() {
       </section>
     </div>
   );
+}
+
+function getInitials(name = '') {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase() || 'ICE';
 }
 
 function ValueCard({ title, text }) {

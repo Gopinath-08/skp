@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { courseService, noticeService } from '../services/api';
+import { courseService, noticeService, getAssetUrl } from '../services/api';
 import '../styles/pages.css';
 
 const fallbackCourses = [
@@ -159,6 +159,16 @@ export default function Home() {
           <div className="courses-grid">
             {visibleCourses.map((course) => (
               <div key={course._id} className="course-card">
+                {course.image && (
+                  <img
+                    className="course-card-image"
+                    src={getAssetUrl(course.image)}
+                    alt={course.name}
+                    onError={(event) => {
+                      event.currentTarget.style.display = 'none';
+                    }}
+                  />
+                )}
                 <div className="course-header">
                   <span>{course.category || 'Course'}</span>
                   <h3>{course.name}</h3>

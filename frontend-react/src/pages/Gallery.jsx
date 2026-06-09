@@ -100,7 +100,7 @@ export default function Gallery() {
           <div className="gallery-grid">
             {filteredImages.map((image) => (
               <button
-                key={image._id}
+                key={image.id || image._id || image.image}
                 className="gallery-item"
                 onClick={() => setSelectedImage(image)}
               >

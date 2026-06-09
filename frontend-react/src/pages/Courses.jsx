@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { courseService } from '../services/api';
+import { courseService, getAssetUrl } from '../services/api';
 import '../styles/pages.css';
 
 const fallbackCourses = [
@@ -138,7 +138,17 @@ export default function Courses() {
           ) : filteredCourses.length > 0 ? (
             <div className="courses-grid">
               {filteredCourses.map((course) => (
-                <div key={course._id} className="course-card-detailed">
+                <div key={course.id || course._id || course.code} className="course-card-detailed">
+                  {course.image && (
+                    <img
+                      className="course-card-image"
+                      src={getAssetUrl(course.image)}
+                      alt={course.name}
+                      onError={(event) => {
+                        event.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  )}
                   <div className="course-badge">{course.category || 'General'}</div>
                   <h3>{course.name}</h3>
                   <span className="course-code">{course.code}</span>

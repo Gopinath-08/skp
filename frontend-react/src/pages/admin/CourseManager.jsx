@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { courseService } from '../../services/api';
+import { courseService, getAssetUrl } from '../../services/api';
 
 export default function CourseManager({ courses, faculty, onRefresh }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -18,10 +18,18 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
+      const payload = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value === undefined || value === null || value === '') return;
+        if (key === 'image' && !(value instanceof File)) return;
+        if (typeof value === 'object' && !(value instanceof File)) return;
+        payload.append(key, value);
+      });
+
       if (formData.id) {
-        await courseService.update(formData.id, formData);
+        await courseService.update(formData.id, payload);
       } else {
-        await courseService.create(formData);
+        await courseService.create(payload);
       }
       setModalOpen(false);
       onRefresh();
@@ -40,6 +48,16 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
       <div className="courses-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))' }}>
         {courses.map(course => (
           <div key={course.id} className="course-card-detailed">
+            {course.image && (
+              <img
+                className="course-card-image"
+                src={getAssetUrl(course.image)}
+                alt={course.name}
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none';
+                }}
+              />
+            )}
             <span className="course-badge">{course.category}</span>
             <div className="course-code">{course.code}</div>
             <h3 style={{fontSize: '1.25rem', marginTop: '0.5rem'}}>{course.name}</h3>
@@ -85,6 +103,13 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
                  <div className="form-group">
                    <label>Course Fees (Rs) *</label>
                    <input type="number" name="fees" value={formData.fees || ''} onChange={(e) => setFormData({...formData, fees: e.target.value})} required />
+                 </div>
+                 <div className="form-group">
+                   <label>Course Photo</label>
+                   <input type="file" name="image" accept="image/jpeg,image/png,image/gif" onChange={(e) => setFormData({...formData, image: e.target.files?.[0] || formData.image})} />
+                   {typeof formData.image === 'string' && formData.image && (
+                     <small style={{color: '#64748b', display: 'block', marginTop: '0.35rem'}}>Current photo saved</small>
+                   )}
                  </div>
                  <div className="form-group">
                    <label>Assign Primary Faculty</label>

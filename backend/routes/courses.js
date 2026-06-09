@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const { Course, Faculty, Batch } = require('../models/associations');
 const auth = require('../middleware/auth');
 const { upload } = require('../middleware/upload');
+const { extractFilePath } = require('../utils/fileUpload');
 
 const router = express.Router();
 
@@ -58,7 +59,7 @@ router.post('/', auth, upload.single('image'), [
 
     const courseData = {
       ...req.body,
-      image: req.file ? req.file.path : null
+      image: req.file ? extractFilePath(req.file) : null
     };
 
     if (courseData.syllabus && typeof courseData.syllabus === 'string') {
@@ -86,7 +87,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
     }
 
     const updateData = { ...req.body };
-    if (req.file) updateData.image = req.file.path;
+    if (req.file) updateData.image = extractFilePath(req.file);
     
     if (updateData.syllabus && typeof updateData.syllabus === 'string') {
       try {
