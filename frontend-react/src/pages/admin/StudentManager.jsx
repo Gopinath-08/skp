@@ -453,9 +453,9 @@ export default function StudentManager({ students, courses, batches, onRefresh }
                   {typeof formData.certificate2 === 'string' && formData.certificate2 && <FileLink href={formData.certificate2} label="Current Certificate 2" />}
                 </div>
                 <div className="form-group">
-                  <label>Certificate 3</label>
+                  <label>+3 Certificate</label>
                   <input type="file" name="certificate3" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, certificate3: e.target.files?.[0] || formData.certificate3})} />
-                  {typeof formData.certificate3 === 'string' && formData.certificate3 && <FileLink href={formData.certificate3} label="Current Certificate 3" />}
+                  {typeof formData.certificate3 === 'string' && formData.certificate3 && <FileLink href={formData.certificate3} label="Current +3 Certificate" />}
                 </div>
               </div>
               <div style={{display: 'flex', gap: '1rem', marginTop: '2rem', borderTop: '1px solid #e2e8f0', paddingTop: '1rem'}}>
@@ -550,7 +550,7 @@ function StudentProfileCard({ student, branchLabel, courseName, batchName }) {
           <DocumentDetail label="Aadhaar Card" href={student.aadhaarCard} />
           <DocumentDetail label="Certificate 1" href={student.certificate1} />
           <DocumentDetail label="Certificate 2" href={student.certificate2} />
-          <DocumentDetail label="Certificate 3" href={student.certificate3} />
+          <DocumentDetail label="+3 Certificate" href={student.certificate3} />
         </div>
       </div>
     </div>
