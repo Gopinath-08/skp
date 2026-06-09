@@ -1,8 +1,22 @@
-const API_URL = 'http://localhost:5000/api';
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
+const API_URL = process.env.API_URL || 'http://localhost:5000/api';
+
+const email = process.env.ADMIN_EMAIL || process.env.DEFAULT_ADMIN_EMAIL;
+const password = process.env.ADMIN_PASSWORD || process.env.DEFAULT_ADMIN_PASSWORD;
+
+if (!email || !password) {
+  console.error('❌ Error: ADMIN_EMAIL/DEFAULT_ADMIN_EMAIL and ADMIN_PASSWORD/DEFAULT_ADMIN_PASSWORD must be defined in your environment variables (e.g. backend/.env file).');
+  console.error('   Please configure them to run this script.');
+  process.exit(1);
+}
+
 const credentials = {
-  email: 'director@idealeducation.edu',
-  password: 'Id3@l_Admin_Secur3!99'
+  email,
+  password
 };
+
 
 async function fetchJSON(url, options = {}) {
   const response = await fetch(url, options);
