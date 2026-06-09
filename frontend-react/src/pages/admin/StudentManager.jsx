@@ -443,16 +443,6 @@ export default function StudentManager({ students, courses, batches, onRefresh }
                   {typeof formData.aadhaarCard === 'string' && formData.aadhaarCard && <FileLink href={formData.aadhaarCard} label="Current Aadhaar card" />}
                 </div>
                 <div className="form-group">
-                  <label>Certificate 1</label>
-                  <input type="file" name="certificate1" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, certificate1: e.target.files?.[0] || formData.certificate1})} />
-                  {typeof formData.certificate1 === 'string' && formData.certificate1 && <FileLink href={formData.certificate1} label="Current Certificate 1" />}
-                </div>
-                <div className="form-group">
-                  <label>Certificate 2</label>
-                  <input type="file" name="certificate2" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, certificate2: e.target.files?.[0] || formData.certificate2})} />
-                  {typeof formData.certificate2 === 'string' && formData.certificate2 && <FileLink href={formData.certificate2} label="Current Certificate 2" />}
-                </div>
-                <div className="form-group">
                   <label>+3 Certificate</label>
                   <input type="file" name="certificate3" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, certificate3: e.target.files?.[0] || formData.certificate3})} />
                   {typeof formData.certificate3 === 'string' && formData.certificate3 && <FileLink href={formData.certificate3} label="Current +3 Certificate" />}
@@ -548,8 +538,6 @@ function StudentProfileCard({ student, branchLabel, courseName, batchName }) {
           <DocumentDetail label="10th Certificate" href={student.tenthCertificate} />
           <DocumentDetail label="12th Certificate" href={student.twelfthCertificate} />
           <DocumentDetail label="Aadhaar Card" href={student.aadhaarCard} />
-          <DocumentDetail label="Certificate 1" href={student.certificate1} />
-          <DocumentDetail label="Certificate 2" href={student.certificate2} />
           <DocumentDetail label="+3 Certificate" href={student.certificate3} />
         </div>
       </div>
