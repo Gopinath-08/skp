@@ -54,24 +54,28 @@ export default function Contact() {
 
       <section className="contact-content page-shell">
         <div className="contact-info">
-          <InfoCard number="01" title="Location">
-            <strong>IDEAL COMPUTER EDUCATION</strong><br />
-            NEAR DAV AUTONOMOUS COLLEGE, TITILAGARH<br />
-            DIST-BALANGIR, ODISHA, PIN-767033
-          </InfoCard>
-          <InfoCard number="02" title="Phone & WhatsApp">
-            Call/WhatsApp: +91 91242 80311<br />
-            Call/WhatsApp: +91 91242 80322
-          </InfoCard>
-          <InfoCard number="03" title="Sub Branch">
-            Near Khariar Autonomous College, Khariar<br />
-            Dist- Nuapada<br />
-            Mob: +91 98610 04687 / +91 98271 04687
-          </InfoCard>
-          <InfoCard number="04" title="Email">
-            iceworldtlg.in@gmail.com
-          </InfoCard>
-          <InfoCard number="05" title="Business Hours">
+          <BranchCard
+            number="01"
+            title="Main Branch"
+            addressLines={[
+              'NEAR DAV AUTONOMOUS COLLEGE, TITILAGARH',
+              'DIST-BALANGIR, ODISHA, PIN-767033'
+            ]}
+            phone="+91 91242 80311 / +91 91242 80322"
+            whatsapp="+91 98610 04687"
+            email="iceworldtlg.in@gmail.com"
+          />
+          <BranchCard
+            number="02"
+            title="Sub Branch"
+            addressLines={[
+              'Near Khariar Autonomous College, Khariar',
+              'Dist- Nuapada'
+            ]}
+            phone="+91 98610 04687"
+            email="iceworldkrar.in@gmail.com"
+          />
+          <InfoCard number="03" title="Business Hours">
             Monday - Saturday<br />Morning and evening batches available
           </InfoCard>
         </div>
@@ -183,6 +187,43 @@ function InfoCard({ number, title, children }) {
       <div className="info-icon">{number}</div>
       <h3>{title}</h3>
       <p>{children}</p>
+    </div>
+  );
+}
+
+function BranchCard({ number, title, addressLines, phone, whatsapp, email }) {
+  return (
+    <div className="info-card">
+      <div className="info-icon">{number}</div>
+      <h3>{title}</h3>
+      
+      <div className="branch-section">
+        <p className="section-label">Address:</p>
+        {addressLines.map((line) => (
+          <p key={line} className="section-content">{line}</p>
+        ))}
+      </div>
+      
+      {phone && (
+        <div className="branch-section">
+          <p className="section-label">Phone:</p>
+          <p className="section-content">{phone}</p>
+        </div>
+      )}
+      
+      {whatsapp && (
+        <div className="branch-section">
+          <p className="section-label">WhatsApp:</p>
+          <p className="section-content">{whatsapp}</p>
+        </div>
+      )}
+      
+      {email && (
+        <div className="branch-section">
+          <p className="section-label">Email:</p>
+          <p className="section-content">{email}</p>
+        </div>
+      )}
     </div>
   );
 }

@@ -89,7 +89,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', auth, profileUpload.fields([
   { name: 'photo', maxCount: 1 },
   { name: 'tenthCertificate', maxCount: 1 },
-  { name: 'twelfthCertificate', maxCount: 1 }
+  { name: 'twelfthCertificate', maxCount: 1 },
+  { name: 'aadhaarCard', maxCount: 1 },
+  { name: 'certificate1', maxCount: 1 },
+  { name: 'certificate2', maxCount: 1 },
+  { name: 'certificate3', maxCount: 1 }
 ]), [
   body('fullName').notEmpty(),
   body('branch').customSanitizer(normalizeBranch).isIn(validBranches),
@@ -118,7 +122,11 @@ router.post('/', auth, profileUpload.fields([
     console.log('📋 Creating student with files:', {
       hasPhoto: !!req.files?.photo?.[0],
       hasTenthCert: !!req.files?.tenthCertificate?.[0],
-      hasTwelfthCert: !!req.files?.twelfthCertificate?.[0]
+      hasTwelfthCert: !!req.files?.twelfthCertificate?.[0],
+      hasAadhaarCard: !!req.files?.aadhaarCard?.[0],
+      hasCertificate1: !!req.files?.certificate1?.[0],
+      hasCertificate2: !!req.files?.certificate2?.[0],
+      hasCertificate3: !!req.files?.certificate3?.[0]
     });
 
     const branch = normalizeBranch(req.body.branch) || 'Titilagarh';
@@ -133,7 +141,11 @@ router.post('/', auth, profileUpload.fields([
       admissionId,
       photo: fileUpdates.photo || null,
       tenthCertificate: fileUpdates.tenthCertificate || null,
-      twelfthCertificate: fileUpdates.twelfthCertificate || null
+      twelfthCertificate: fileUpdates.twelfthCertificate || null,
+      aadhaarCard: fileUpdates.aadhaarCard || null,
+      certificate1: fileUpdates.certificate1 || null,
+      certificate2: fileUpdates.certificate2 || null,
+      certificate3: fileUpdates.certificate3 || null
     };
 
     const student = await Student.create(studentData);
@@ -161,7 +173,11 @@ router.post('/', auth, profileUpload.fields([
 router.put('/:id', auth, profileUpload.fields([
   { name: 'photo', maxCount: 1 },
   { name: 'tenthCertificate', maxCount: 1 },
-  { name: 'twelfthCertificate', maxCount: 1 }
+  { name: 'twelfthCertificate', maxCount: 1 },
+  { name: 'aadhaarCard', maxCount: 1 },
+  { name: 'certificate1', maxCount: 1 },
+  { name: 'certificate2', maxCount: 1 },
+  { name: 'certificate3', maxCount: 1 }
 ]), async (req, res) => {
   try {
     const student = await Student.findByPk(req.params.id);
@@ -184,6 +200,10 @@ router.put('/:id', auth, profileUpload.fields([
     if (fileUpdates.photo) updateData.photo = fileUpdates.photo;
     if (fileUpdates.tenthCertificate) updateData.tenthCertificate = fileUpdates.tenthCertificate;
     if (fileUpdates.twelfthCertificate) updateData.twelfthCertificate = fileUpdates.twelfthCertificate;
+    if (fileUpdates.aadhaarCard) updateData.aadhaarCard = fileUpdates.aadhaarCard;
+    if (fileUpdates.certificate1) updateData.certificate1 = fileUpdates.certificate1;
+    if (fileUpdates.certificate2) updateData.certificate2 = fileUpdates.certificate2;
+    if (fileUpdates.certificate3) updateData.certificate3 = fileUpdates.certificate3;
 
     await student.update(updateData);
     res.json({ 

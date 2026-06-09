@@ -48,7 +48,7 @@ const branches = [
 ];
 
 const studentCategories = ['SC', 'ST', 'General', 'OBC'];
-const studentFileFields = ['photo', 'tenthCertificate', 'twelfthCertificate'];
+const studentFileFields = ['photo', 'tenthCertificate', 'twelfthCertificate', 'aadhaarCard', 'certificate1', 'certificate2', 'certificate3'];
 
 const normalizeBranch = (branchName) => {
   if (branchName === 'Balangir' || branchName === 'Titlagarh') return 'Titilagarh';
@@ -437,6 +437,26 @@ export default function StudentManager({ students, courses, batches, onRefresh }
                   <input type="file" name="twelfthCertificate" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, twelfthCertificate: e.target.files?.[0] || formData.twelfthCertificate})} />
                   {typeof formData.twelfthCertificate === 'string' && formData.twelfthCertificate && <FileLink href={formData.twelfthCertificate} label="Current 12th certificate" />}
                 </div>
+                <div className="form-group">
+                  <label>Aadhaar Card</label>
+                  <input type="file" name="aadhaarCard" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, aadhaarCard: e.target.files?.[0] || formData.aadhaarCard})} />
+                  {typeof formData.aadhaarCard === 'string' && formData.aadhaarCard && <FileLink href={formData.aadhaarCard} label="Current Aadhaar card" />}
+                </div>
+                <div className="form-group">
+                  <label>Certificate 1</label>
+                  <input type="file" name="certificate1" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, certificate1: e.target.files?.[0] || formData.certificate1})} />
+                  {typeof formData.certificate1 === 'string' && formData.certificate1 && <FileLink href={formData.certificate1} label="Current Certificate 1" />}
+                </div>
+                <div className="form-group">
+                  <label>Certificate 2</label>
+                  <input type="file" name="certificate2" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, certificate2: e.target.files?.[0] || formData.certificate2})} />
+                  {typeof formData.certificate2 === 'string' && formData.certificate2 && <FileLink href={formData.certificate2} label="Current Certificate 2" />}
+                </div>
+                <div className="form-group">
+                  <label>Certificate 3</label>
+                  <input type="file" name="certificate3" accept="image/jpeg,image/png,application/pdf" onChange={(e) => setFormData({...formData, certificate3: e.target.files?.[0] || formData.certificate3})} />
+                  {typeof formData.certificate3 === 'string' && formData.certificate3 && <FileLink href={formData.certificate3} label="Current Certificate 3" />}
+                </div>
               </div>
               <div style={{display: 'flex', gap: '1rem', marginTop: '2rem', borderTop: '1px solid #e2e8f0', paddingTop: '1rem'}}>
                 <button type="submit" className="btn btn-primary">Save Student Details</button>
@@ -527,6 +547,10 @@ function StudentProfileCard({ student, branchLabel, courseName, batchName }) {
           <DocumentDetail label="Profile Photo" href={student.photo} />
           <DocumentDetail label="10th Certificate" href={student.tenthCertificate} />
           <DocumentDetail label="12th Certificate" href={student.twelfthCertificate} />
+          <DocumentDetail label="Aadhaar Card" href={student.aadhaarCard} />
+          <DocumentDetail label="Certificate 1" href={student.certificate1} />
+          <DocumentDetail label="Certificate 2" href={student.certificate2} />
+          <DocumentDetail label="Certificate 3" href={student.certificate3} />
         </div>
       </div>
     </div>

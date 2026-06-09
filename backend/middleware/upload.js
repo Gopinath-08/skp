@@ -34,7 +34,11 @@ const studentFacultyStorage = hasCloudinaryCredentials
       const folderByField = {
         photo: 'profile-photos',
         tenthCertificate: 'student-certificates',
-        twelfthCertificate: 'student-certificates'
+        twelfthCertificate: 'student-certificates',
+        aadhaarCard: 'student-certificates',
+        certificate1: 'student-certificates',
+        certificate2: 'student-certificates',
+        certificate3: 'student-certificates'
       };
 
       return {
@@ -63,7 +67,11 @@ const studentFacultyFileFilter = (req, file, cb) => {
   const allowedByField = {
     photo: /jpeg|jpg|png/,
     tenthCertificate: /jpeg|jpg|png|pdf/,
-    twelfthCertificate: /jpeg|jpg|png|pdf/
+    twelfthCertificate: /jpeg|jpg|png|pdf/,
+    aadhaarCard: /jpeg|jpg|png|pdf/,
+    certificate1: /jpeg|jpg|png|pdf/,
+    certificate2: /jpeg|jpg|png|pdf/,
+    certificate3: /jpeg|jpg|png|pdf/
   };
   const allowedTypes = allowedByField[file.fieldname];
 
@@ -109,8 +117,12 @@ profileUpload.logFileDetails = (req, res, next) => {
     storageType: studentFacultyStorage.constructor.name,
     filesReceived: {
       photo: req.files?.photo?.length || 0,
+      aadhaarCard: req.files?.aadhaarCard?.length || 0,
       tenthCertificate: req.files?.tenthCertificate?.length || 0,
-      twelfthCertificate: req.files?.twelfthCertificate?.length || 0
+      twelfthCertificate: req.files?.twelfthCertificate?.length || 0,
+      certificate1: req.files?.certificate1?.length || 0,
+      certificate2: req.files?.certificate2?.length || 0,
+      certificate3: req.files?.certificate3?.length || 0
     }
   });
 

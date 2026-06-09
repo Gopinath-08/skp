@@ -88,6 +88,18 @@ const Student = sequelize.define('Student', {
   twelfthCertificate: {
     type: DataTypes.STRING
   },
+  aadhaarCard: {
+    type: DataTypes.STRING
+  },
+  certificate1: {
+    type: DataTypes.STRING
+  },
+  certificate2: {
+    type: DataTypes.STRING
+  },
+  certificate3: {
+    type: DataTypes.STRING
+  },
   signature: {
     type: DataTypes.STRING
   },

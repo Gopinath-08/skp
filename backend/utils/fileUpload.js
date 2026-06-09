@@ -71,6 +71,22 @@ const handleStudentProfileUpload = (req) => {
   if (req.files?.twelfthCertificate?.[0]) {
     updates.twelfthCertificate = extractFilePath(req.files.twelfthCertificate[0]);
   }
+
+  if (req.files?.aadhaarCard?.[0]) {
+    updates.aadhaarCard = extractFilePath(req.files.aadhaarCard[0]);
+  }
+
+  if (req.files?.certificate1?.[0]) {
+    updates.certificate1 = extractFilePath(req.files.certificate1[0]);
+  }
+
+  if (req.files?.certificate2?.[0]) {
+    updates.certificate2 = extractFilePath(req.files.certificate2[0]);
+  }
+
+  if (req.files?.certificate3?.[0]) {
+    updates.certificate3 = extractFilePath(req.files.certificate3[0]);
+  }
   
   return updates;
 };
