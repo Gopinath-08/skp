@@ -6,16 +6,18 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 const getRequiredEnv = (name) => process.env[name]?.trim();
+const getAdminUserId = () => getRequiredEnv('ADMIN_USER_ID') || getRequiredEnv('ADMIN_EMAIL');
 
 const getEnvAdmin = () => ({
   id: 'env-admin',
   name: process.env.ADMIN_NAME || 'Admin',
-  email: getRequiredEnv('ADMIN_EMAIL')
+  email: getAdminUserId(),
+  userId: getAdminUserId()
 });
 
 // Login
 router.post('/login', [
-  body('email').isEmail().trim().toLowerCase(),
+  body('email').trim().notEmpty().withMessage('User ID is required'),
   body('password').notEmpty()
 ], async (req, res) => {
   try {
@@ -25,27 +27,27 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
-    const adminEmail = getRequiredEnv('ADMIN_EMAIL');
+    const adminUserId = getAdminUserId();
     const adminPassword = getRequiredEnv('ADMIN_PASSWORD');
     const jwtSecret = getRequiredEnv('JWT_SECRET');
 
-    if (!adminEmail || !adminPassword || !jwtSecret) {
+    if (!adminUserId || !adminPassword || !jwtSecret) {
       return res.status(500).json({
         message: 'Admin login is not configured',
         missing: [
-          !adminEmail && 'ADMIN_EMAIL',
+          !adminUserId && 'ADMIN_USER_ID',
           !adminPassword && 'ADMIN_PASSWORD',
           !jwtSecret && 'JWT_SECRET'
         ].filter(Boolean)
       });
     }
 
-    if (email.toLowerCase() !== adminEmail.toLowerCase() || password !== adminPassword) {
+    if (email.trim().toLowerCase() !== adminUserId.toLowerCase() || password !== adminPassword) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const admin = getEnvAdmin();
-    const token = jwt.sign({ id: admin.id, email: admin.email }, jwtSecret, {
+    const token = jwt.sign({ id: admin.id, userId: admin.userId }, jwtSecret, {
       expiresIn: process.env.JWT_EXPIRE || '7d'
     });
 

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const getRequiredEnv = (name) => process.env[name]?.trim();
+const getAdminUserId = () => getRequiredEnv('ADMIN_USER_ID') || getRequiredEnv('ADMIN_EMAIL');
 
 const auth = async (req, res, next) => {
   try {
@@ -11,22 +12,24 @@ const auth = async (req, res, next) => {
     }
 
     const jwtSecret = getRequiredEnv('JWT_SECRET');
-    const adminEmail = getRequiredEnv('ADMIN_EMAIL');
+    const adminUserId = getAdminUserId();
 
-    if (!jwtSecret || !adminEmail) {
+    if (!jwtSecret || !adminUserId) {
       return res.status(500).json({ message: 'Admin authentication is not configured' });
     }
 
     const decoded = jwt.verify(token, jwtSecret);
+    const tokenUserId = decoded.userId || decoded.email;
 
-    if (decoded.email?.toLowerCase() !== adminEmail.toLowerCase()) {
+    if (tokenUserId?.toLowerCase() !== adminUserId.toLowerCase()) {
       return res.status(401).json({ message: 'Invalid token' });
     }
 
     req.admin = {
       id: decoded.id || 'env-admin',
       name: process.env.ADMIN_NAME || 'Admin',
-      email: adminEmail
+      email: adminUserId,
+      userId: adminUserId
     };
     next();
   } catch (error) {
