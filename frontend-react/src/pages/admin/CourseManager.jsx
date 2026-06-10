@@ -66,7 +66,7 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
             <div className="course-meta">
               <span><strong>Duration</strong>{course.duration}</span>
               <span><strong>Fees</strong>Rs. {course.fees}</span>
-              <span><strong>Faculty ID</strong>{course.assignedFacultyId || 'Unassigned'}</span>
+              <span><strong>Faculty</strong>{course.Faculty?.name || course.facultyId || 'Unassigned'}</span>
             </div>
             
             <div style={{display: 'flex', gap: '0.5rem', marginTop: '1rem', borderTop: '1px solid #e2e8f0', paddingTop: '1rem'}}>
@@ -94,7 +94,13 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
                  </div>
                  <div className="form-group">
                    <label>Category *</label>
-                   <input type="text" name="category" value={formData.category || ''} onChange={(e) => setFormData({...formData, category: e.target.value})} required />
+                   <select name="category" value={formData.category || ''} onChange={(e) => setFormData({...formData, category: e.target.value})} required>
+                     <option value="">Select Category</option>
+                     <option value="Basic">Basic</option>
+                     <option value="Advanced">Advanced</option>
+                     <option value="Certification">Certification</option>
+                     <option value="Skill Development">Skill Development</option>
+                   </select>
                  </div>
                  <div className="form-group">
                    <label>Duration *</label>
@@ -113,7 +119,7 @@ export default function CourseManager({ courses, faculty, onRefresh }) {
                  </div>
                  <div className="form-group">
                    <label>Assign Primary Faculty</label>
-                   <select name="assignedFacultyId" value={formData.assignedFacultyId || ''} onChange={(e) => setFormData({...formData, assignedFacultyId: e.target.value})}>
+                   <select name="facultyId" value={formData.facultyId || ''} onChange={(e) => setFormData({...formData, facultyId: e.target.value})}>
                       <option value="">Select Faculty</option>
                       {faculty.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                    </select>

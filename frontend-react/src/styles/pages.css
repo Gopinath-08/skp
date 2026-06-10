@@ -1132,6 +1132,26 @@ tr:hover {
   line-height: 1.6;
 }
 
+.faculty-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.faculty-card {
+  min-width: 0;
+  padding: 2rem;
+  background: var(--surface-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal);
+}
+
+.faculty-card:hover {
+  transform: translateY(-4px);
+}
+
 .faculty-photo-wrap {
   width: 112px;
   height: 112px;
@@ -1160,6 +1180,44 @@ tr:hover {
   color: var(--primary-color);
   font-weight: 800;
   font-size: 1.5rem;
+}
+
+.faculty-card h3 {
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.faculty-designation {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+}
+
+.faculty-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.faculty-details span {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.faculty-details svg {
+  flex: 0 0 auto;
+  margin-top: 0.15rem;
 }
 
 .about-stats {
@@ -1496,6 +1554,15 @@ tr:hover {
 @media (max-width: 768px) {
   .about-hero, .admission-content, .contact-content, .map-section {
     grid-template-columns: 1fr;
+  }
+
+  .faculty-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .faculty-card {
+    padding: 1.5rem;
   }
 
   .form-grid.two-columns {

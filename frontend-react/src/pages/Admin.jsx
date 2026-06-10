@@ -100,7 +100,7 @@ const schemas = {
   ],
   gallery: [
     { key: 'title', label: 'Title', type: 'text' },
-    { key: 'category', label: 'Category', type: 'text' },
+    { key: 'category', label: 'Category', type: 'select', options: ['Campus', 'Events', 'Students', 'Faculty', 'Achievements', 'Infrastructure'] },
     { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'image', label: 'Gallery Photo', type: 'file', required: false },
   ],

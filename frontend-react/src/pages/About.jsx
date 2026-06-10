@@ -9,11 +9,23 @@ export default function About() {
   useEffect(() => {
     facultyService.getAll()
       .then(res => {
-        // Sort to put MANAGING DIRECTOR first
+        const displayOrder = [
+          'JAGABALIA SAHU',
+          'SANKALPA KUMAR DASH',
+          'CHANDAN NARAYANA SAHU',
+          'SUSHRITA NANDA',
+          'RUTURAJ CHALAN',
+          'DIPASIKHA PANDA',
+          'KAPILESH NARAYANA SAHU'
+        ];
+
         const sorted = res.data.sort((a, b) => {
-          if (a.designation === 'MANAGING DIRECTOR') return -1;
-          if (b.designation === 'MANAGING DIRECTOR') return 1;
-          return 0;
+          const aIndex = displayOrder.indexOf((a.name || '').toUpperCase());
+          const bIndex = displayOrder.indexOf((b.name || '').toUpperCase());
+          if (aIndex !== -1 || bIndex !== -1) {
+            return (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) - (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex);
+          }
+          return (a.name || '').localeCompare(b.name || '');
         });
         setFaculty(sorted);
       })
@@ -93,9 +105,9 @@ export default function About() {
             <span>Our Team</span>
             <h2>Meet Our Expert Faculty</h2>
           </div>
-          <div className="faculty-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+          <div className="faculty-grid">
             {faculty.map(f => (
-              <div key={f.id} className="faculty-card" style={{ padding: '2rem', background: 'var(--surface-light)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)', transition: 'transform var(--transition-normal)' }}>
+              <div key={f.id} className="faculty-card">
                  <div className="faculty-photo-wrap">
                    {f.photo ? (
                      <img
@@ -110,22 +122,22 @@ export default function About() {
                      <div className="faculty-photo-placeholder">{getInitials(f.name)}</div>
                    )}
                  </div>
-                 <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)', fontSize: '1.25rem' }}>{f.name}</h3>
-                 <p style={{ color: 'var(--primary-color)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '1.25rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.designation}</p>
-                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                 <h3>{f.name}</h3>
+                 <p className="faculty-designation">{f.designation}</p>
+                 <div className="faculty-details">
+                    <span>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
                       {f.qualification || 'Qualification Not Specified'}
                     </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                       {f.experience ? `${f.experience} Experience` : 'Experience Not Specified'}
                     </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', wordBreak: 'break-all' }}>
+                    <span>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                       {f.email || 'No email provided'}
                     </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                       {f.phone || 'No phone provided'}
                     </span>

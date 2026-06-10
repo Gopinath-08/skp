@@ -50,6 +50,24 @@ const studentFacultyStorage = hasCloudinaryCredentials
   })
   : localStorage;
 
+const uploadStorage = hasCloudinaryCredentials
+  ? new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: async (req, file) => {
+      const folderByField = {
+        image: 'gallery-and-courses',
+        logo: 'site-assets'
+      };
+
+      return {
+        folder: `ideal-computer-education/${folderByField[file.fieldname] || 'uploads'}`,
+        resource_type: 'auto',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'pdf']
+      };
+    }
+  })
+  : localStorage;
+
 // File filter
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|pdf/;
@@ -91,7 +109,7 @@ const studentFacultyFileFilter = (req, file, cb) => {
 
 // Upload middleware
 const upload = multer({
-  storage: localStorage,
+  storage: uploadStorage,
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
