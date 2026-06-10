@@ -1,14 +1,19 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const { Admin } = require('../models/associations');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+const getEnvAdmin = () => ({
+  id: 'env-admin',
+  name: process.env.ADMIN_NAME || 'Admin',
+  email: process.env.ADMIN_EMAIL
+});
+
 // Login
 router.post('/login', [
-  body('email').isEmail().normalizeEmail(),
+  body('email').isEmail().trim().toLowerCase(),
   body('password').notEmpty()
 ], async (req, res) => {
   try {
@@ -18,13 +23,19 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
-    const admin = await Admin.findOne({ where: { email } });
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
 
-    if (!admin || !(await admin.comparePassword(password))) {
+    if (!adminEmail || !adminPassword) {
+      return res.status(500).json({ message: 'Admin login is not configured' });
+    }
+
+    if (email.toLowerCase() !== adminEmail.toLowerCase() || password !== adminPassword) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: admin.id }, process.env.JWT_SECRET, {
+    const admin = getEnvAdmin();
+    const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE
     });
 
@@ -53,31 +64,8 @@ router.get('/me', auth, async (req, res) => {
 });
 
 // Change password
-router.put('/change-password', auth, [
-  body('currentPassword').notEmpty(),
-  body('newPassword').isLength({ min: 6 })
-], async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { currentPassword, newPassword } = req.body;
-    const admin = req.admin;
-
-    if (!(await admin.comparePassword(currentPassword))) {
-      return res.status(400).json({ message: 'Current password is incorrect' });
-    }
-
-    // Sequelize hook will hash it automatically since we used beforeSave hook
-    admin.password = newPassword;
-    await admin.save();
-
-    res.json({ message: 'Password changed successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
+router.put('/change-password', auth, async (req, res) => {
+  res.status(403).json({ message: 'Admin password can only be changed in environment variables' });
 });
 
 module.exports = router;

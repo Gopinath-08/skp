@@ -1,10 +1,13 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Configuration
 const BASE_URL = 'http://localhost:5000/api';
 let authToken = '';
+const adminEmail = process.env.ADMIN_EMAIL;
+const adminPassword = process.env.ADMIN_PASSWORD;
 
 // Helper function to log results
 const log = (title, data) => {
@@ -17,9 +20,13 @@ const log = (title, data) => {
 // Test Admin Login
 const testAdminLogin = async () => {
   try {
+    if (!adminEmail || !adminPassword) {
+      throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in the environment');
+    }
+
     const response = await axios.post(`${BASE_URL}/auth/login`, {
-      email: 'admin@ideal.com',
-      password: 'admin123'
+      email: adminEmail,
+      password: adminPassword
     });
     authToken = response.data.token;
     log('✅ Admin Login Successful', response.data);
