@@ -5,10 +5,12 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+const getRequiredEnv = (name) => process.env[name]?.trim();
+
 const getEnvAdmin = () => ({
   id: 'env-admin',
   name: process.env.ADMIN_NAME || 'Admin',
-  email: process.env.ADMIN_EMAIL
+  email: getRequiredEnv('ADMIN_EMAIL')
 });
 
 // Login
@@ -23,11 +25,19 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    const adminEmail = getRequiredEnv('ADMIN_EMAIL');
+    const adminPassword = getRequiredEnv('ADMIN_PASSWORD');
+    const jwtSecret = getRequiredEnv('JWT_SECRET');
 
-    if (!adminEmail || !adminPassword) {
-      return res.status(500).json({ message: 'Admin login is not configured' });
+    if (!adminEmail || !adminPassword || !jwtSecret) {
+      return res.status(500).json({
+        message: 'Admin login is not configured',
+        missing: [
+          !adminEmail && 'ADMIN_EMAIL',
+          !adminPassword && 'ADMIN_PASSWORD',
+          !jwtSecret && 'JWT_SECRET'
+        ].filter(Boolean)
+      });
     }
 
     if (email.toLowerCase() !== adminEmail.toLowerCase() || password !== adminPassword) {
@@ -35,8 +45,8 @@ router.post('/login', [
     }
 
     const admin = getEnvAdmin();
-    const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE
+    const token = jwt.sign({ id: admin.id, email: admin.email }, jwtSecret, {
+      expiresIn: process.env.JWT_EXPIRE || '7d'
     });
 
     res.json({
@@ -48,6 +58,7 @@ router.post('/login', [
       }
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

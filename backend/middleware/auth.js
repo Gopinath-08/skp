@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const getRequiredEnv = (name) => process.env[name]?.trim();
+
 const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -8,10 +10,16 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const jwtSecret = getRequiredEnv('JWT_SECRET');
+    const adminEmail = getRequiredEnv('ADMIN_EMAIL');
 
-    if (!adminEmail || decoded.email?.toLowerCase() !== adminEmail.toLowerCase()) {
+    if (!jwtSecret || !adminEmail) {
+      return res.status(500).json({ message: 'Admin authentication is not configured' });
+    }
+
+    const decoded = jwt.verify(token, jwtSecret);
+
+    if (decoded.email?.toLowerCase() !== adminEmail.toLowerCase()) {
       return res.status(401).json({ message: 'Invalid token' });
     }
 
