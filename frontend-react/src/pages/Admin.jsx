@@ -102,7 +102,7 @@ const schemas = {
     { key: 'title', label: 'Title', type: 'text' },
     { key: 'category', label: 'Category', type: 'select', options: ['Campus', 'Events', 'Students', 'Faculty', 'Achievements', 'Infrastructure'] },
     { key: 'description', label: 'Description', type: 'textarea' },
-    { key: 'image', label: 'Gallery Photo', type: 'file', required: false },
+    { key: 'image', label: 'Gallery Photo', type: 'file' },
   ],
   testimonials: [
     { key: 'name', label: 'Name', type: 'text' },
@@ -240,7 +240,7 @@ export default function Admin() {
     if (item) {
       setFormData(item);
     } else {
-      setFormData(activeTab === 'notices' ? { type: 'General', priority: 'Medium', isActive: true } : {});
+      setFormData(getInitialFormData(activeTab));
     }
     setModalOpen(true);
   };
@@ -289,7 +289,7 @@ export default function Admin() {
       setModalOpen(false);
       await fetchData(true);
     } catch (err) {
-      alert('Error saving item: ' + (err.response?.data?.message || err.message));
+      alert('Error saving item: ' + getApiErrorMessage(err));
     }
   };
 
@@ -489,6 +489,7 @@ export default function Admin() {
                         name={field.key}
                         accept="image/jpeg,image/png,image/gif"
                         onChange={handleInputChange}
+                        required={!editingItem && field.required !== false}
                       />
                       {typeof formData[field.key] === 'string' && formData[field.key] && (
                         <small style={{color: '#64748b', display: 'block', marginTop: '0.35rem'}}>Current file saved</small>
@@ -579,4 +580,36 @@ function formatInputValue(value, type) {
   if (!value) return '';
   if (type === 'date' && typeof value === 'string') return value.split('T')[0];
   return value;
+}
+
+function getInitialFormData(tab) {
+  const defaults = {};
+
+  schemas[tab]?.forEach((field) => {
+    if (field.type === 'select' && field.options?.length) {
+      defaults[field.key] = field.options[0];
+    }
+    if (field.type === 'checkbox') {
+      defaults[field.key] = Boolean(field.defaultValue);
+    }
+  });
+
+  if (tab === 'notices') {
+    return { ...defaults, type: 'General', priority: 'Medium', isActive: true };
+  }
+
+  return defaults;
+}
+
+function getApiErrorMessage(err) {
+  const responseData = err.response?.data;
+
+  if (responseData?.message) return responseData.message;
+  if (Array.isArray(responseData?.errors) && responseData.errors.length > 0) {
+    return responseData.errors
+      .map((error) => `${error.path || error.param || 'field'}: ${error.msg}`)
+      .join(', ');
+  }
+
+  return err.message;
 }
