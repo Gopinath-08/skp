@@ -6,6 +6,14 @@ const { upload } = require('../middleware/upload');
 const { extractFilePath } = require('../utils/fileUpload');
 
 const router = express.Router();
+const galleryCategories = ['Campus', 'Events', 'Students', 'Faculty', 'Achievements', 'Infrastructure'];
+
+const applyGalleryDefaults = (req, res, next) => {
+  if (!req.body.category) {
+    req.body.category = 'Campus';
+  }
+  next();
+};
 
 // Get all gallery items
 router.get('/', async (req, res) => {
@@ -21,9 +29,9 @@ router.get('/', async (req, res) => {
 });
 
 // Upload image (admin only)
-router.post('/', auth, upload.single('image'), [
-  body('title').notEmpty().trim(),
-  body('category').isIn(['Campus', 'Events', 'Students', 'Faculty', 'Achievements', 'Infrastructure'])
+router.post('/', auth, upload.single('image'), applyGalleryDefaults, [
+  body('title').notEmpty().trim().withMessage('Title is required'),
+  body('category').isIn(galleryCategories).withMessage('Category is invalid')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
