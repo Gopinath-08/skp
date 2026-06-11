@@ -61,8 +61,8 @@ export default function Contact() {
               'NEAR DAV AUTONOMOUS COLLEGE, TITILAGARH',
               'DIST-BALANGIR, ODISHA, PIN-767033'
             ]}
-            phone="+91 91242 80311 / +91 91242 80322"
-            whatsapp="+91 98610 04687"
+            phone="+91 91242 80311"
+            whatsapp="+91 91242 80311"
             email="iceworldtlg.in@gmail.com"
           />
           <BranchCard
@@ -70,9 +70,10 @@ export default function Contact() {
             title="Sub Branch"
             addressLines={[
               'Near Khariar Autonomous College, Khariar',
-              'Dist- Nuapada'
+              'Dist- Nuapada, Odisha, PIN-766107'
             ]}
             phone="+91 98610 04687"
+            whatsapp="+91 98610 04687"
             email="iceworldkrar.in@gmail.com"
           />
           <InfoCard number="03" title="Business Hours">

@@ -36,7 +36,7 @@ function AppContent() {
       <Footer />
       {!isAdminOrLogin && (
         <a 
-          href="https://wa.me/919861004687" 
+          href="https://wa.me/919124280311" 
           className="whatsapp-float"
           target="_blank" 
           rel="noopener noreferrer"

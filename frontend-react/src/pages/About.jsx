@@ -61,7 +61,7 @@ export default function About() {
              <div>
                <p style={{margin: 0, fontWeight: 800, fontSize: '1.125rem', color: 'var(--text-primary)'}}>JAGABALIA SAHU</p>
                <p style={{margin: 0, fontSize: '0.875rem', color: 'var(--primary-color)', fontWeight: 600}}>Chairperson-cum-Managing Director</p>
-               <p style={{margin: 0, color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem'}}>WhatsApp / Mob: +91 98610 04687</p>
+               <p style={{margin: 0, color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem'}}>MD Mob: +91 80184 04687</p>
              </div>
           </div>
           <div className="about-actions">

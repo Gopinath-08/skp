@@ -9,7 +9,7 @@ const getRequiredEnv = (name) => process.env[name]?.trim();
 const getAdminUserId = () => getRequiredEnv('ADMIN_USER_ID') || getRequiredEnv('ADMIN_EMAIL');
 
 const getEnvAdmin = () => ({
-  id: 'env-admin',
+  id: null,
   name: process.env.ADMIN_NAME || 'Admin',
   email: getAdminUserId(),
   userId: getAdminUserId()

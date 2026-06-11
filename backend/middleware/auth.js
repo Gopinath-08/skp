@@ -25,8 +25,11 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid token' });
     }
 
+    const parsedAdminId = Number.parseInt(decoded.id, 10);
+    const adminId = Number.isInteger(parsedAdminId) ? parsedAdminId : null;
+
     req.admin = {
-      id: decoded.id || 'env-admin',
+      id: adminId,
       name: process.env.ADMIN_NAME || 'Admin',
       email: adminUserId,
       userId: adminUserId
