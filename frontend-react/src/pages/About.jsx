@@ -154,7 +154,7 @@ export default function About() {
           <p>Students Trained</p>
         </div>
         <div className="achievement">
-          <h3>12+</h3>
+          <h3>9</h3>
           <p>Career Courses</p>
         </div>
         <div className="achievement">

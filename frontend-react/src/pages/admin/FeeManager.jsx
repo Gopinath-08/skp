@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { feeService } from '../../services/api';
 
 const paymentMethods = ['Cash', 'UPI', 'Bank Transfer', 'Card', 'Cheque'];
-const paymentTypes = ['Admission Fee', 'Course Fee', 'Installment', 'Full Payment'];
+const paymentTypes = ['Course Fee', 'Installment', 'Full Payment'];
 const feeStatuses = ['All', 'Paid', 'Pending'];
 
 const money = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
@@ -36,7 +36,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
     [courses]
   );
 
-  const calculateTotal = (data) => numberValue(data.admissionFees) + numberValue(data.courseFees);
+  const calculateTotal = (data) => numberValue(data.courseFees);
   const calculatePending = (data) => Math.max(calculateTotal(data) - numberValue(data.paidAmount) - numberValue(data.discount), 0);
 
   const summary = useMemo(() => fees.reduce((totals, fee) => ({
@@ -74,7 +74,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
       studentId,
       courseId: student?.courseId || '',
       courseFees,
-      totalFees: numberValue(current.admissionFees) + courseFees,
+      totalFees: courseFees,
     }));
   };
 
@@ -115,7 +115,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
       const payload = {
         studentId: formData.studentId,
         courseId: formData.courseId,
-        admissionFees: numberValue(formData.admissionFees),
+        admissionFees: 0,
         courseFees: numberValue(formData.courseFees),
         totalFees: calculateTotal(formData),
         paidAmount: numberValue(formData.paidAmount),
@@ -144,14 +144,12 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
     if (fee) {
       setFormData({
         ...fee,
-        admissionFees: numberValue(fee.admissionFees),
         courseFees: numberValue(fee.courseFees || fee.totalFees),
         paidAmount: numberValue(fee.paidAmount),
         discount: numberValue(fee.discount),
       });
     } else {
       setFormData({
-        admissionFees: 0,
         courseFees: 0,
         totalFees: 0,
         paidAmount: 0,
@@ -252,7 +250,6 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
             <tr>
               <th>Student</th>
               <th>Course</th>
-              <th>Admission Fee</th>
               <th>Course Fee</th>
               <th>Total</th>
               <th>Paid</th>
@@ -264,7 +261,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
           <tbody>
             {filteredFees.length === 0 ? (
               <tr>
-                <td colSpan="9" style={{ textAlign: 'center', padding: '2rem' }}>No fee records found.</td>
+                <td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>No fee records found.</td>
               </tr>
             ) : filteredFees.map((fee) => {
               const student = getStudent(fee);
@@ -278,7 +275,6 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
                     <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{student?.admissionId || ''}</div>
                   </td>
                   <td>{course?.name || fee.courseId}</td>
-                  <td>{money(fee.admissionFees)}</td>
                   <td>{money(fee.courseFees || fee.totalFees)}</td>
                   <td><strong>{money(fee.totalFees)}</strong></td>
                   <td style={{ color: '#059669', fontWeight: 700 }}>{money(fee.paidAmount)}</td>
@@ -329,7 +325,6 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '1rem' }}>
-                <FormNumber label="Admission Fees" value={formData.admissionFees} onChange={(value) => handleFeeFieldChange('admissionFees', value)} />
                 <FormNumber label="Course Fees" value={formData.courseFees} onChange={(value) => handleFeeFieldChange('courseFees', value)} />
                 <ReadOnlyAmount label="Total Fees" value={calculateTotal(formData)} />
                 <FormNumber label="Discount / Scholarship" value={formData.discount} onChange={(value) => handleFeeFieldChange('discount', value)} />

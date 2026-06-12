@@ -221,13 +221,15 @@ export default function Admin() {
     return () => clearTimeout(timer);
   }, [fetchData]);
 
+  const feeStats = getFeeStats(data.fees);
   const stats = data.stats || {
     totalStudents: data.students.length,
     newInquiries: data.inquiries.filter((item) => item.status === 'New').length,
     totalCourses: data.courses.length,
     totalCertificates: data.certificates.length,
-    totalRevenue: 0,
-    pendingFees: 0,
+    totalRevenue: feeStats.totalRevenue,
+    pendingFees: feeStats.pendingFees,
+    todayPayments: feeStats.todayPayments,
   };
 
   const handleLogout = () => {
@@ -599,6 +601,38 @@ function getInitialFormData(tab) {
   }
 
   return defaults;
+}
+
+function getLocalDateKey(date = new Date()) {
+  const value = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(value.getTime())) return '';
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getPaymentDateKey(paidDate) {
+  if (!paidDate) return '';
+  if (typeof paidDate === 'string' && /^\d{4}-\d{2}-\d{2}/.test(paidDate)) return paidDate.slice(0, 10);
+  return getLocalDateKey(paidDate);
+}
+
+function getFeeStats(fees = []) {
+  const todayKey = getLocalDateKey();
+
+  return fees.reduce((stats, fee) => {
+    const installments = Array.isArray(fee.installments) ? fee.installments : [];
+    return {
+      totalRevenue: stats.totalRevenue + Number(fee.paidAmount || 0),
+      pendingFees: stats.pendingFees + Number(fee.pendingAmount || 0),
+      todayPayments: stats.todayPayments + installments.reduce((sum, payment) => (
+        getPaymentDateKey(payment.paidDate) === todayKey
+          ? sum + Number(payment.amount || 0)
+          : sum
+      ), 0),
+    };
+  }, { totalRevenue: 0, pendingFees: 0, todayPayments: 0 });
 }
 
 function getApiErrorMessage(err) {

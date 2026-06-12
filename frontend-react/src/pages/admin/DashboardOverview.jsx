@@ -9,6 +9,7 @@ export default function DashboardOverview({ stats, activities }) {
         <StatCard label="Faculty Members" value={stats.totalFaculty || 0} color="#8b5cf6" />
         <StatCard label="Total Batches" value={stats.totalBatches || 0} color="#f59e0b" />
         <StatCard label="Fees Collected" value={`Rs. ${stats.totalRevenue || 0}`} color="#059669" />
+        <StatCard label="Today Payment" value={`Rs. ${stats.todayPayments || 0}`} color="#0ea5e9" />
         <StatCard label="Pending Fees" value={`Rs. ${stats.pendingFees || 0}`} color="#ef4444" />
         <StatCard label="New Leads" value={stats.newInquiries || 0} color="#ec4899" />
         <StatCard label="Notices" value={stats.totalNotices || 0} color="#64748b" />

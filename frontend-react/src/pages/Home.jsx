@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { courseService, noticeService, getAssetUrl } from '../services/api';
+import { sortCoursesByPreferredOrder } from '../utils/courseOrder';
 import '../styles/pages.css';
 
 const fallbackCourses = [
@@ -14,22 +15,76 @@ const fallbackCourses = [
     category: 'Basic',
   },
   {
+    _id: 'adca',
+    name: 'ADCA',
+    code: 'ADCA001',
+    description: 'Advanced diploma training for deeper office, software, and workplace computer skills.',
+    duration: '12 months',
+    fees: 12000,
+    category: 'Advanced',
+  },
+  {
     _id: 'pgdca',
     name: 'PGDCA',
     code: 'PGDCA001',
-    description: 'Advanced computer applications, database basics, office automation, and project-oriented learning.',
+    description: 'Post graduate computer applications with database basics, automation, and project practice.',
     duration: '12 months',
     fees: 15000,
     category: 'Advanced',
   },
   {
-    _id: 'tally',
-    name: 'Tally',
-    code: 'TALLY001',
-    description: 'Accounting, GST, inventory, billing, and day-to-day business reporting with Tally.',
+    _id: 'office-package',
+    name: 'Office Package',
+    code: 'OFFICE001',
+    description: 'Word, Excel, PowerPoint, typing, internet, email, and practical office computer work.',
     duration: '3 months',
     fees: 5000,
+    category: 'Basic',
+  },
+  {
+    _id: 'tally-prime-gst',
+    name: 'Tally Prime and GST',
+    code: 'TALLYGST001',
+    description: 'Accounting, GST, inventory, billing, and day-to-day business reporting with Tally Prime.',
+    duration: '3 months',
+    fees: 6000,
     category: 'Certification',
+  },
+  {
+    _id: 'photoshop',
+    name: 'Photoshop',
+    code: 'PS001',
+    description: 'Photo editing, poster design, social media creatives, and practical design basics.',
+    duration: '2 months',
+    fees: 6000,
+    category: 'Skill Development',
+  },
+  {
+    _id: 'cttc',
+    name: 'CTTC',
+    code: 'CTTC001',
+    description: 'Typing practice focused on speed, accuracy, keyboard skills, and certificate preparation.',
+    duration: '3 months',
+    fees: 4000,
+    category: 'Typing',
+  },
+  {
+    _id: 'java',
+    name: 'Java',
+    code: 'JAVA001',
+    description: 'Core Java programming with object-oriented concepts, logic building, and coding exercises.',
+    duration: '4 months',
+    fees: 10000,
+    category: 'Advanced',
+  },
+  {
+    _id: 'python',
+    name: 'Python',
+    code: 'PYTHON001',
+    description: 'Python fundamentals, problem solving, file handling, and practical beginner projects.',
+    duration: '4 months',
+    fees: 10000,
+    category: 'Advanced',
   },
 ];
 
@@ -42,10 +97,10 @@ export default function Home() {
     const fetchCourses = async () => {
       try {
         const response = await courseService.getAll();
-        setCourses(response.data.slice(0, 6));
+        setCourses(sortCoursesByPreferredOrder(response.data).slice(0, 6));
       } catch (error) {
         console.error('Error fetching courses:', error);
-        setCourses(fallbackCourses);
+        setCourses(sortCoursesByPreferredOrder(fallbackCourses));
       } finally {
         setLoading(false);
       }
@@ -71,6 +126,7 @@ export default function Home() {
   }, []);
 
   const visibleCourses = courses.length > 0 ? courses : fallbackCourses;
+  const previewCourses = visibleCourses.slice(0, 6);
 
   return (
     <div className="home">
@@ -104,7 +160,7 @@ export default function Home() {
               <span>Students</span>
             </div>
             <div>
-              <strong>12+</strong>
+              <strong>9</strong>
               <span>Courses</span>
             </div>
           </div>
@@ -157,8 +213,8 @@ export default function Home() {
           <p className="center-message">Loading courses...</p>
         ) : (
           <div className="courses-grid">
-            {visibleCourses.map((course) => (
-              <div key={course._id} className="course-card">
+            {previewCourses.map((course) => (
+              <div key={course.id || course._id || course.code} className="course-card">
                 {course.image && (
                   <img
                     className="course-card-image"
@@ -190,7 +246,7 @@ export default function Home() {
           <p>Students Trained</p>
         </div>
         <div className="stat">
-          <h3>12+</h3>
+          <h3>9</h3>
           <p>Career Courses</p>
         </div>
         <div className="stat">

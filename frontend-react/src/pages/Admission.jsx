@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react';
 import { courseService, inquiryService } from '../services/api';
+import { sortCoursesByPreferredOrder } from '../utils/courseOrder';
 import '../styles/pages.css';
 
 const fallbackCourses = [
   { _id: 'dca', name: 'DCA' },
-  { _id: 'pgdca', name: 'PGDCA' },
   { _id: 'adca', name: 'ADCA' },
-  { _id: 'tally', name: 'Tally' },
-  { _id: 'dtp', name: 'DTP' },
-  { _id: 'web', name: 'Web Development' },
+  { _id: 'pgdca', name: 'PGDCA' },
+  { _id: 'office-package', name: 'Office Package' },
+  { _id: 'tally-prime-gst', name: 'Tally Prime and GST' },
+  { _id: 'photoshop', name: 'Photoshop' },
+  { _id: 'cttc', name: 'CTTC' },
+  { _id: 'java', name: 'Java' },
+  { _id: 'python', name: 'Python' },
 ];
 
 const branches = [
   { name: 'Titilagarh', code: 'TLG' },
-  { name: 'Khariar', code: 'KHR' },
+  { name: 'Rajkhariar', code: 'KHR' },
 ];
 
 const studentCategories = ['SC', 'ST', 'General', 'OBC'];
@@ -39,10 +43,10 @@ export default function Admission() {
     const fetchCourses = async () => {
       try {
         const response = await courseService.getAll();
-        setCourses(response.data.length > 0 ? response.data : fallbackCourses);
+        setCourses(sortCoursesByPreferredOrder(response.data.length > 0 ? response.data : fallbackCourses));
       } catch (error) {
         console.error('Error fetching courses:', error);
-        setCourses(fallbackCourses);
+        setCourses(sortCoursesByPreferredOrder(fallbackCourses));
       }
     };
     fetchCourses();
@@ -253,7 +257,7 @@ export default function Admission() {
               >
                 <option value="">-- Select a Course --</option>
                 {courses.map((course) => (
-                  <option key={course._id} value={course.name}>
+                  <option key={course.id || course._id || course.name} value={course.name}>
                     {course.name}
                   </option>
                 ))}
@@ -308,7 +312,7 @@ export default function Admission() {
           </div>
           <div className="faq-item">
             <h3>What is the course duration?</h3>
-            <p>Course durations vary from 4 weeks to 6 months depending on the course.</p>
+            <p>Course durations vary from 2 months to 12 months depending on the course.</p>
           </div>
           <div className="faq-item">
             <h3>Do you provide placement assistance?</h3>

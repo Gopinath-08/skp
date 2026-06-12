@@ -10,17 +10,18 @@ const router = express.Router();
 
 const branchCodes = {
   Titilagarh: 'TLG',
+  Rajkhariar: 'KHR',
   Khariar: 'KHR',
   Titlagarh: 'TLG',
   'Khariar Road': 'KHR'
 };
 
-const validBranches = ['Titilagarh', 'Khariar'];
+const validBranches = ['Titilagarh', 'Rajkhariar'];
 const validStudentCategories = ['SC', 'ST', 'General', 'OBC'];
 
 const normalizeBranch = (branch) => {
   if (branch === 'Balangir' || branch === 'Titlagarh') return 'Titilagarh';
-  if (branch === 'Khariar Road') return 'Khariar';
+  if (branch === 'Khariar' || branch === 'Khariar Road') return 'Rajkhariar';
   return branch;
 };
 

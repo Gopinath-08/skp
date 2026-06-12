@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { courseService, getAssetUrl } from '../services/api';
+import { sortCoursesByPreferredOrder } from '../utils/courseOrder';
 import '../styles/pages.css';
 
 const fallbackCourses = [
@@ -13,6 +14,15 @@ const fallbackCourses = [
     description: 'Diploma in Computer Applications covering computer fundamentals, office tools, typing, internet, and practical file work.',
   },
   {
+    _id: 'adca',
+    name: 'ADCA',
+    code: 'ADCA001',
+    category: 'Advanced',
+    duration: '12 months',
+    fees: 12000,
+    description: 'Advanced Diploma in Computer Applications for students who want deeper software and workplace computer skills.',
+  },
+  {
     _id: 'pgdca',
     name: 'PGDCA',
     code: 'PGDCA001',
@@ -22,40 +32,58 @@ const fallbackCourses = [
     description: 'Post Graduate Diploma in Computer Applications with database basics, office automation, and project practice.',
   },
   {
-    _id: 'adca',
-    name: 'ADCA',
-    code: 'ADCA001',
-    category: 'Advanced',
-    duration: '9 months',
-    fees: 12000,
-    description: 'Advanced Diploma in Computer Applications for students who want deeper software and workplace computer skills.',
-  },
-  {
-    _id: 'tally',
-    name: 'Tally',
-    code: 'TALLY001',
-    category: 'Certification',
+    _id: 'office-package',
+    name: 'Office Package',
+    code: 'OFFICE001',
+    category: 'Basic',
     duration: '3 months',
     fees: 5000,
-    description: 'Accounting, GST, inventory, billing, and business reports using Tally for shop and office work.',
+    description: 'MS Word, Excel, PowerPoint, typing, printing, internet, email, and everyday office computer work.',
   },
   {
-    _id: 'dtp',
-    name: 'DTP',
-    code: 'DTP001',
-    category: 'Skill Development',
-    duration: '4 months',
+    _id: 'tally-prime-gst',
+    name: 'Tally Prime and GST',
+    code: 'TALLYGST001',
+    category: 'Certification',
+    duration: '3 months',
     fees: 6000,
-    description: 'Desktop publishing basics for posters, documents, print layouts, and local business design needs.',
+    description: 'Accounting, GST, inventory, billing, and business reports using Tally Prime for shop and office work.',
   },
   {
-    _id: 'web',
-    name: 'Web Development',
-    code: 'WEB001',
+    _id: 'photoshop',
+    name: 'Photoshop',
+    code: 'PS001',
+    category: 'Skill Development',
+    duration: '2 months',
+    fees: 6000,
+    description: 'Photo editing, poster design, social media creatives, image correction, and practical design basics.',
+  },
+  {
+    _id: 'cttc',
+    name: 'CTTC',
+    code: 'CTTC001',
+    category: 'Typing',
+    duration: '3 months',
+    fees: 4000,
+    description: 'Computer typing training focused on speed, accuracy, keyboard practice, and certificate preparation.',
+  },
+  {
+    _id: 'java',
+    name: 'Java',
+    code: 'JAVA001',
     category: 'Advanced',
-    duration: '8 months',
-    fees: 18000,
-    description: 'HTML, CSS, JavaScript, backend basics, and practical website projects for career-ready learning.',
+    duration: '4 months',
+    fees: 10000,
+    description: 'Core Java programming with object-oriented concepts, logic building, and practical coding exercises.',
+  },
+  {
+    _id: 'python',
+    name: 'Python',
+    code: 'PYTHON001',
+    category: 'Advanced',
+    duration: '4 months',
+    fees: 10000,
+    description: 'Python programming fundamentals, problem solving, file handling, and practical beginner projects.',
   },
 ];
 
@@ -70,10 +98,10 @@ export default function Courses() {
     const fetchCourses = async () => {
       try {
         const response = await courseService.getAll();
-        setCourses(response.data.length > 0 ? response.data : fallbackCourses);
+        setCourses(sortCoursesByPreferredOrder(response.data.length > 0 ? response.data : fallbackCourses));
       } catch (error) {
         console.error('Error fetching courses:', error);
-        setCourses(fallbackCourses);
+        setCourses(sortCoursesByPreferredOrder(fallbackCourses));
         setApiMessage('Showing course information while the live server is unavailable.');
       } finally {
         setLoading(false);

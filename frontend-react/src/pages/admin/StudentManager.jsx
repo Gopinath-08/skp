@@ -44,7 +44,7 @@ const states = [
 
 const branches = [
   { name: 'Titilagarh', code: 'TLG' },
-  { name: 'Khariar', code: 'KHR' },
+  { name: 'Rajkhariar', code: 'KHR' },
 ];
 
 const studentCategories = ['SC', 'ST', 'General', 'OBC'];
@@ -52,7 +52,7 @@ const studentFileFields = ['photo', 'tenthCertificate', 'twelfthCertificate', 'a
 
 const normalizeBranch = (branchName) => {
   if (branchName === 'Balangir' || branchName === 'Titlagarh') return 'Titilagarh';
-  if (branchName === 'Khariar Road') return 'Khariar';
+  if (branchName === 'Khariar' || branchName === 'Khariar Road') return 'Rajkhariar';
   return branchName;
 };
 

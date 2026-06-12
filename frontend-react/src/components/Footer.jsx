@@ -32,15 +32,15 @@ export default function Footer() {
             <div className="contact-group">
               <h4>Main Branch</h4>
               <p>NEAR DAV AUTONOMOUS COLLEGE, TITILAGARH<br/>DIST-BALANGIR, ODISHA, PIN-767033</p>
-              <p>Phone: +91 91242 80311</p>
-              <p>WhatsApp: +91 91242 80311</p>
+              <p>Phone: +91 91242 80311, +91 91242 80322</p>
+              <p>WhatsApp: +91 91242 80311, +91 91242 80322</p>
               <p>Email: iceworldtlg.in@gmail.com</p>
             </div>
             <div className="contact-group">
               <h4>Sub Branch</h4>
-              <p>Near Khariar Autonomous College, Khariar<br/>Dist- Nuapada, Odisha, PIN-766107</p>
-              <p>Phone: +91 98610 04687</p>
-              <p>WhatsApp: +91 98610 04687</p>
+              <p>Near Rajkhariar Autonomous College, Rajkhariar<br/>Dist- Nuapada, Odisha, PIN-766107</p>
+              <p>Phone: +91 98271 04687</p>
+              <p>WhatsApp: +91 98271 04687</p>
               <p>Email: iceworldkrar.in@gmail.com</p>
             </div>
           </div>

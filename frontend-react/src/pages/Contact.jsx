@@ -62,18 +62,19 @@ export default function Contact() {
               'DIST-BALANGIR, ODISHA, PIN-767033'
             ]}
             phone="+91 91242 80311"
-            whatsapp="+91 91242 80311"
+            extraPhone="+91 91242 80322"
+            whatsapp="+91 91242 80311, +91 91242 80322"
             email="iceworldtlg.in@gmail.com"
           />
           <BranchCard
             number="02"
             title="Sub Branch"
             addressLines={[
-              'Near Khariar Autonomous College, Khariar',
+              'Near Rajkhariar Autonomous College, Rajkhariar',
               'Dist- Nuapada, Odisha, PIN-766107'
             ]}
-            phone="+91 98610 04687"
-            whatsapp="+91 98610 04687"
+            phone="+91 98271 04687"
+            whatsapp="+91 98271 04687"
             email="iceworldkrar.in@gmail.com"
           />
           <InfoCard number="03" title="Business Hours">
@@ -192,7 +193,7 @@ function InfoCard({ number, title, children }) {
   );
 }
 
-function BranchCard({ number, title, addressLines, phone, whatsapp, email }) {
+function BranchCard({ number, title, addressLines, phone, extraPhone, whatsapp, email }) {
   return (
     <div className="info-card">
       <div className="info-icon">{number}</div>
@@ -208,7 +209,7 @@ function BranchCard({ number, title, addressLines, phone, whatsapp, email }) {
       {phone && (
         <div className="branch-section">
           <p className="section-label">Phone:</p>
-          <p className="section-content">{phone}</p>
+          <p className="section-content">{[phone, extraPhone].filter(Boolean).join(', ')}</p>
         </div>
       )}
       

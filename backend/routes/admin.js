@@ -5,6 +5,34 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 const sumMoney = (rows, field) => rows.reduce((sum, row) => sum + Number(row[field] || 0), 0);
+const getLocalDateKey = (date = new Date()) => {
+  const value = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(value.getTime())) return '';
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const getPaymentDateKey = (paidDate) => {
+  if (!paidDate) return '';
+  if (typeof paidDate === 'string' && /^\d{4}-\d{2}-\d{2}/.test(paidDate)) {
+    return paidDate.slice(0, 10);
+  }
+  return getLocalDateKey(paidDate);
+};
+
+const sumTodayPayments = (fees) => {
+  const todayKey = getLocalDateKey();
+  return fees.reduce((total, fee) => {
+    const installments = Array.isArray(fee.installments) ? fee.installments : [];
+    return total + installments.reduce((sum, payment) => (
+      getPaymentDateKey(payment.paidDate) === todayKey
+        ? sum + Number(payment.amount || 0)
+        : sum
+    ), 0);
+  }, 0);
+};
 
 const getStats = async () => {
   const [totalStudents, totalCourses, totalBatches, totalFaculty, totalNotices, newInquiries, fees] = await Promise.all([
@@ -25,7 +53,8 @@ const getStats = async () => {
     totalNotices,
     newInquiries,
     totalRevenue: sumMoney(fees, 'paidAmount'),
-    pendingFees: sumMoney(fees, 'pendingAmount')
+    pendingFees: sumMoney(fees, 'pendingAmount'),
+    todayPayments: sumTodayPayments(fees)
   };
 };
 
