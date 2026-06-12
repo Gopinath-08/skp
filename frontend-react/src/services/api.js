@@ -137,6 +137,8 @@ export const reportService = {
 
 export const settingService = {
   getAll: () => api.get('/settings'),
+  getVisitorCount: () => api.get('/settings/visitor-count'),
+  trackVisitor: () => api.post('/settings/visitor-count'),
   update: (data) => api.post('/settings', data),
 };
 
