@@ -166,7 +166,7 @@ export default function Courses() {
           ) : filteredCourses.length > 0 ? (
             <div className="courses-grid">
               {filteredCourses.map((course) => (
-                <div key={course.id || course._id || course.code} className="course-card-detailed">
+                <div key={course.id || course._id || course.code} className="course-card">
                   {course.image && (
                     <img
                       className="course-card-image"
@@ -177,16 +177,14 @@ export default function Courses() {
                       }}
                     />
                   )}
-                  <div className="course-badge">{course.category || 'General'}</div>
-                  <h3>{course.name}</h3>
-                  <span className="course-code">{course.code}</span>
-                  <p className="course-description">{course.description}</p>
-                  <div className="course-meta">
-                    <span><strong>Duration</strong>{course.duration}</span>
-                    <span><strong>Fees</strong>Rs. {course.fees}</span>
+                  <div className="course-header">
+                    <span>{course.category || 'Course'}</span>
+                    <h3>{course.name}</h3>
                   </div>
+                  <p className="course-description">{course.description}</p>
                   <div className="course-footer">
-                    <a className="btn btn-enroll" href="/admission">Enroll Now</a>
+                    <span>{course.duration}</span>
+                    <strong>Rs. {course.fees}</strong>
                   </div>
                 </div>
               ))}

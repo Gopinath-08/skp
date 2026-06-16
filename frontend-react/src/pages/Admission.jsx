@@ -26,6 +26,7 @@ export default function Admission() {
   const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
+    fatherName: '',
     motherName: '',
     parentNumber: '',
     studentCategory: '',
@@ -68,6 +69,7 @@ export default function Admission() {
     try {
       const details = [
         `Student Name: ${formData.name}`,
+        `Father Name: ${formData.fatherName}`,
         `Mother Name: ${formData.motherName}`,
         `Parent Number: ${formData.parentNumber}`,
         `Student Category: ${formData.studentCategory}`,
@@ -89,6 +91,7 @@ export default function Admission() {
       setStatus({ type: 'success', message: 'Application submitted. We will contact you soon.' });
       setFormData({
         name: '',
+        fatherName: '',
         motherName: '',
         parentNumber: '',
         studentCategory: '',
@@ -158,6 +161,21 @@ export default function Admission() {
               </div>
 
               <div className="form-group">
+                <label htmlFor="fatherName">Father Name *</label>
+                <input
+                  type="text"
+                  id="fatherName"
+                  name="fatherName"
+                  value={formData.fatherName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter father name"
+                />
+              </div>
+            </div>
+
+            <div className="form-grid two-columns">
+              <div className="form-group">
                 <label htmlFor="motherName">Mother Name *</label>
                 <input
                   type="text"
@@ -167,6 +185,18 @@ export default function Admission() {
                   onChange={handleChange}
                   required
                   placeholder="Enter mother name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="parentNumber">Parent Number *</label>
+                <input
+                  type="tel"
+                  id="parentNumber"
+                  name="parentNumber"
+                  value={formData.parentNumber}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter parent phone number"
                 />
               </div>
             </div>
@@ -186,30 +216,17 @@ export default function Admission() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="parentNumber">Parent Number *</label>
+                <label htmlFor="email">Email Address *</label>
                 <input
-                  type="tel"
-                  id="parentNumber"
-                  name="parentNumber"
-                  value={formData.parentNumber}
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
                   required
-                  placeholder="Enter parent phone number"
+                  placeholder="Enter your email"
                 />
               </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email Address *</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="Enter your email"
-              />
             </div>
 
             <div className="form-group">

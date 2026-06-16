@@ -73,8 +73,9 @@ export default function Contact() {
               'Near Rajkhariar Autonomous College, Rajkhariar',
               'Dist- Nuapada, Odisha, PIN-766107'
             ]}
-            phone="+91 98271 04687"
-            whatsapp="+91 98271 04687"
+            phone="+91 98610 04687"
+            extraPhone="+91 98271 04687"
+            whatsapp="+91 98610 04687"
             email="iceworldkrar.in@gmail.com"
           />
           <InfoCard number="03" title="Business Hours">

@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { feeService } from '../../services/api';
 
 const paymentMethods = ['Cash', 'UPI', 'Bank Transfer', 'Card', 'Cheque'];
-const paymentTypes = ['Course Fee', 'Installment', 'Full Payment'];
+const paymentTypes = ['Admission Fee', 'Course Fee', 'Installment', 'Full Payment'];
 const feeStatuses = ['All', 'Paid', 'Pending'];
 
 const money = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
