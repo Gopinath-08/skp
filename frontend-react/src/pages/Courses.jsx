@@ -184,7 +184,6 @@ export default function Courses() {
                   <p className="course-description">{course.description}</p>
                   <div className="course-footer">
                     <span>{course.duration}</span>
-                    <strong>Rs. {course.fees}</strong>
                   </div>
                 </div>
               ))}
