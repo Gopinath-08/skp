@@ -74,16 +74,42 @@ export default function About() {
         </div>
       </section>
 
+      <section className="why-choose-section page-shell">
+        <div className="section-heading" style={{ textAlign: 'center' }}>
+          <span>Your Success Path</span>
+          <h2>Why Choose Ideal Computer Education?</h2>
+        </div>
+        <p style={{ fontSize: '1.125rem', lineHeight: '1.8', color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
+          At Ideal Computer Education, we combine quality learning with practical skills to prepare you for the digital future. Our expert guidance, hands-on training, and student-focused approach ensure that every learner gains confidence and real-world knowledge. We offer affordable, up-to-date courses in a supportive environment where your growth is our priority. Whether you're starting your journey or upgrading your skills, we are committed to helping you succeed.<br/><br/>
+          <strong style={{ color: 'var(--primary-color)' }}>Choose Ideal Computer Education—where learning meets opportunity.</strong>
+        </p>
+      </section>
+
+      <section className="mission-section page-shell" style={{ backgroundColor: 'var(--surface-light)', borderRadius: 'var(--radius-xl)', padding: '4rem', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)', margin: '0 auto', maxWidth: '1100px' }}>
+        <div className="section-heading" style={{ textAlign: 'center' }}>
+          <span>Our Purpose</span>
+          <h2>Mission</h2>
+        </div>
+        <p style={{ fontSize: '1.125rem', lineHeight: '1.8', color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+          At Ideal Computer Education, our mission is to inspire and empower learners through quality computer education that builds confidence, creativity, and real-world skills. We are dedicated to making digital learning accessible, affordable, and practical for students from all backgrounds, helping them succeed in an increasingly technology-driven world.<br/><br/>
+          We focus on hands-on training, innovative teaching methods, and up-to-date course content to ensure our students are not only knowledgeable but also job-ready. Our goal is to create a supportive learning environment where every student can explore their potential, develop technical expertise, and grow into a confident digital citizen.<br/><br/>
+          By bridging the gap between education and industry, Ideal Computer Education strives to shape skilled, responsible, and future-ready individuals who can achieve their dreams and contribute meaningfully to society.
+        </p>
+      </section>
+
       <section className="values-section page-shell">
-        <div className="section-heading">
-          <span>What we stand for</span>
-          <h2>Clear teaching, steady practice, useful outcomes</h2>
+        <div className="section-heading" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem auto' }}>
+          <span>Vision & Core Values</span>
+          <h2 style={{ fontSize: '2rem' }}>Our core values define our commitment to excellence and guide our approach to teaching and learning</h2>
         </div>
         <div className="values-grid">
-          <ValueCard title="Practical Skills" text="Students spend time on real exercises, forms, documents, accounts, designs, and projects." />
-          <ValueCard title="Student Guidance" text="We help learners choose the right course based on their current level and career direction." />
-          <ValueCard title="Affordable Learning" text="Courses are planned for local learners who need quality training without unnecessary complexity." />
-          <ValueCard title="Certificate Support" text="Completion certificates help students show their learning during jobs, interviews, and admissions." />
+          <ValueCard title="1. Excellence in Education" text="We uphold the highest standards in delivering quality, industry-relevant computer education." />
+          <ValueCard title="2. Student-Centric Approach" text="We prioritize the needs, growth, and success of our students through personalized and supportive learning experiences." />
+          <ValueCard title="3. Integrity & Accountability" text="We maintain transparency, honesty, and responsibility in all our actions and interactions." />
+          <ValueCard title="4. Innovation & Adaptability" text="We embrace emerging technologies and continuously evolve our teaching methodologies to stay relevant." />
+          <ValueCard title="5. Inclusivity & Accessibility" text="We are committed to providing equal learning opportunities for all, fostering a diverse and inclusive environment." />
+          <ValueCard title="6. Practical Competence" text="We focus on skill-based, hands-on training to prepare students for real-world challenges and career opportunities." />
+          <ValueCard title="7. Lifelong Learning" text="We encourage continuous learning and professional development in an ever-changing digital landscape." />
         </div>
       </section>
 
