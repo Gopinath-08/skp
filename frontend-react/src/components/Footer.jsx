@@ -61,7 +61,7 @@ export default function Footer() {
             </div>
             <div className="contact-group">
               <h4>Sub Branch</h4>
-              <p>Near Rajkhariar Autonomous College, Rajkhariar<br/>Dist- Nuapada, Odisha, PIN-766107</p>
+              <p>Near Khariar Autonomous college, Rajkhariar<br/>Dist- Nuapada, Odisha, PIN-766107</p>
               <p>Phone: +91 98610 04687, +91 98271 04687</p>
               <p>WhatsApp: +91 98610 04687</p>
               <p>Email: iceworldkrar.in@gmail.com</p>
