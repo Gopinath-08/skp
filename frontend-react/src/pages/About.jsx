@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { facultyService, getAssetUrl } from '../services/api';
 import '../styles/pages.css';
+import logo from '../assets/logo.png';
 
 export default function About() {
   const [faculty, setFaculty] = useState([]);
@@ -47,6 +48,7 @@ export default function About() {
       <section className="about-hero page-shell">
         <div className="about-photo" aria-label="Students learning in computer lab"></div>
         <div className="about-intro">
+          <img src={logo} alt="Ideal Computer Education Logo" className="about-logo" style={{ maxWidth: '180px', marginBottom: '1.5rem', display: 'block' }} />
           <span className="eyebrow">YOUR SUCCESS ! OUR MISSION</span>
           <h2>IDEAL COMPUTER EDUCATION</h2>
           <p>
