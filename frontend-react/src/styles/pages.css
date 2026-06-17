@@ -745,6 +745,10 @@ tr:hover {
   padding: 5rem 1.5rem;
 }
 
+.section-heading {
+  margin-bottom: 3rem;
+}
+
 .section-heading span {
   color: var(--primary-color);
   font-weight: 700;
