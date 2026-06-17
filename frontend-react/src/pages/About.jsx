@@ -46,9 +46,10 @@ export default function About() {
       </section>
 
       <section className="about-hero page-shell">
-        <div className="about-photo" aria-label="Students learning in computer lab"></div>
+        <div className="about-logo-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', backgroundColor: 'var(--surface-light)', borderRadius: 'var(--radius-xl)' }}>
+          <img src={logo} alt="Ideal Computer Education Logo" style={{ width: '100%', maxWidth: '400px', objectFit: 'contain' }} />
+        </div>
         <div className="about-intro">
-          <img src={logo} alt="Ideal Computer Education Logo" className="about-logo" style={{ maxWidth: '180px', marginBottom: '1.5rem', display: 'block' }} />
           <span className="eyebrow">YOUR SUCCESS ! OUR MISSION</span>
           <h2>IDEAL COMPUTER EDUCATION</h2>
           <p>
