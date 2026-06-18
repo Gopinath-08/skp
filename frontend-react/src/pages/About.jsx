@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { facultyService, getAssetUrl } from '../services/api';
 import '../styles/pages.css';
-import logo from '../assets/logo.png';
+import logo from '../assets/ICE.png';
 
 export default function About() {
   const [faculty, setFaculty] = useState([]);
