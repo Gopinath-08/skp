@@ -529,7 +529,7 @@ tr:hover {
   justify-content: center;
   z-index: 2000;
   padding: 2rem;
-  animation: fadeIn 0.2s ease-out forwards;
+  animation: fadeInSimple 0.2s ease-out forwards;
 }
 
 .modal-content {

@@ -167,10 +167,15 @@ input:focus, textarea:focus, select:focus {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeInSimple {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.5s var(--transition-normal) forwards;
 }
 
 .page-shell, .admin-container, .auth-container, .main-content {
-  animation: fadeIn 0.4s var(--transition-normal) forwards;
+  animation: fadeInSimple 0.4s var(--transition-normal) forwards;
 }
