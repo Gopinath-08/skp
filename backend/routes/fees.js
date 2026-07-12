@@ -101,7 +101,7 @@ router.post('/', auth, [
       paymentMethod: req.body.paymentMethod || 'Cash',
       paymentType: req.body.paymentType || 'Installment',
       paidDate: req.body.paidDate || new Date(),
-      receiptNumber: buildReceiptNumber(),
+      receiptNumber: req.body.receiptNumber || buildReceiptNumber(),
       note: 'Opening payment'
     }] : [];
 
@@ -138,8 +138,28 @@ router.put('/:id', auth, [
     const admissionFees = roundMoney(req.body.admissionFees ?? fee.admissionFees);
     const courseFees = roundMoney(req.body.courseFees ?? fee.courseFees);
     const totalFees = roundMoney(req.body.totalFees ?? (admissionFees + courseFees));
-    const paidAmount = roundMoney(req.body.paidAmount ?? fee.paidAmount);
     const discount = roundMoney(req.body.discount ?? fee.discount);
+
+    let installments = fee.installments || [];
+    let paidAmount = fee.paidAmount;
+
+    if (req.body.installments !== undefined) {
+      if (!Array.isArray(req.body.installments)) {
+        return res.status(400).json({ message: 'Installments must be an array' });
+      }
+      installments = req.body.installments.map(inst => ({
+        amount: roundMoney(inst.amount),
+        paymentMethod: inst.paymentMethod || 'Cash',
+        paymentType: inst.paymentType || 'Installment',
+        paidDate: inst.paidDate || new Date(),
+        receiptNumber: inst.receiptNumber || buildReceiptNumber(),
+        note: inst.note || ''
+      }));
+      paidAmount = installments.reduce((sum, inst) => sum + inst.amount, 0);
+    } else {
+      paidAmount = roundMoney(req.body.paidAmount ?? fee.paidAmount);
+    }
+
     const totalError = validatePaymentTotals({ totalFees, paidAmount, discount });
     if (totalError) return res.status(400).json({ message: totalError });
 
@@ -160,7 +180,7 @@ router.put('/:id', auth, [
       totalFees,
       paidAmount,
       discount,
-      installments: fee.installments || []
+      installments
     });
     res.json(await getFeeWithDetails(fee.id));
   } catch (error) {
@@ -195,7 +215,7 @@ router.post('/:id/installment', auth, [
       paymentMethod: req.body.paymentMethod,
       paymentType: req.body.paymentType,
       paidDate: req.body.paidDate || new Date(),
-      receiptNumber: buildReceiptNumber(),
+      receiptNumber: req.body.receiptNumber || buildReceiptNumber(),
       note: req.body.note || ''
     };
 

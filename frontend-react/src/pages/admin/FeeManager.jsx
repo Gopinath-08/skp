@@ -26,6 +26,9 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [saving, setSaving] = useState(false);
+  const [editInstallmentIndex, setEditInstallmentIndex] = useState(null);
+  const [editInstallmentData, setEditInstallmentData] = useState(null);
+  const [editInstallmentModalOpen, setEditInstallmentModalOpen] = useState(false);
 
   const getStudent = useCallback(
     (fee) => students.find((student) => String(student.id) === String(fee.studentId)) || fee.Student,
@@ -123,6 +126,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
         paymentMethod: formData.paymentMethod || 'Cash',
         paymentType: formData.paymentType || 'Installment',
         paidDate: formData.paidDate || today(),
+        receiptNumber: formData.receiptNumber || undefined,
       };
 
       if (formData.id) {
@@ -157,6 +161,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
         paymentMethod: 'Cash',
         paymentType: 'Installment',
         paidDate: today(),
+        receiptNumber: '',
       });
     }
     setModalOpen(true);
@@ -174,6 +179,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
       paymentType: 'Installment',
       paidDate: today(),
       note: '',
+      receiptNumber: '',
     });
     setPaymentModalOpen(true);
   };
@@ -200,6 +206,69 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
       onRefresh();
     } catch (error) {
       alert(getApiMessage(error, 'Error recording installment/payment'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditInstallment = (index, payment) => {
+    setEditInstallmentIndex(index);
+    setEditInstallmentData({
+      ...payment,
+      paidDate: payment.paidDate ? payment.paidDate.split('T')[0] : today()
+    });
+    setEditInstallmentModalOpen(true);
+  };
+
+  const handleDeleteInstallment = async (index, payment) => {
+    if (!window.confirm(`Delete this payment of ${money(payment.amount)} (Receipt: ${payment.receiptNumber || '-'})?`)) return;
+
+    try {
+      setSaving(true);
+      const updatedInstallments = [...(historyFee.installments || [])];
+      updatedInstallments.splice(index, 1);
+
+      const response = await feeService.update(historyFee.id, {
+        installments: updatedInstallments
+      });
+
+      setHistoryFee(response.data || response);
+      onRefresh();
+    } catch (error) {
+      alert(getApiMessage(error, 'Error deleting installment'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditInstallmentSave = async (event) => {
+    event.preventDefault();
+    const amount = numberValue(editInstallmentData.amount);
+    
+    if (amount <= 0) {
+      alert('Enter a valid payment amount.');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const updatedInstallments = [...(historyFee.installments || [])];
+      updatedInstallments[editInstallmentIndex] = {
+        ...editInstallmentData,
+        amount
+      };
+
+      const response = await feeService.update(historyFee.id, {
+        installments: updatedInstallments
+      });
+
+      setHistoryFee(response.data || response);
+      setEditInstallmentModalOpen(false);
+      setEditInstallmentData(null);
+      setEditInstallmentIndex(null);
+      onRefresh();
+    } catch (error) {
+      alert(getApiMessage(error, 'Error saving installment'));
     } finally {
       setSaving(false);
     }
@@ -328,17 +397,17 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
                 <FormNumber label="Course Fees" value={formData.courseFees} onChange={(value) => handleFeeFieldChange('courseFees', value)} />
                 <ReadOnlyAmount label="Total Fees" value={calculateTotal(formData)} />
                 <FormNumber label="Discount / Scholarship" value={formData.discount} onChange={(value) => handleFeeFieldChange('discount', value)} />
-                <FormNumber label="Paid Amount" value={formData.paidAmount} onChange={(value) => handleFeeFieldChange('paidAmount', value)} />
+                <FormNumber label="Paid Amount" value={formData.paidAmount} onChange={(value) => handleFeeFieldChange('paidAmount', value)} disabled={Boolean(formData.id)} />
                 <ReadOnlyAmount label="Pending Amount" value={calculatePending(formData)} />
                 <div className="form-group">
                   <label>Payment Method</label>
-                  <select value={formData.paymentMethod || 'Cash'} onChange={(event) => handleFeeFieldChange('paymentMethod', event.target.value)}>
+                  <select value={formData.paymentMethod || 'Cash'} onChange={(event) => handleFeeFieldChange('paymentMethod', event.target.value)} disabled={Boolean(formData.id)}>
                     {paymentMethods.map((method) => <option key={method} value={method}>{method}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
                   <label>Payment Type</label>
-                  <select value={formData.paymentType || 'Installment'} onChange={(event) => handleFeeFieldChange('paymentType', event.target.value)}>
+                  <select value={formData.paymentType || 'Installment'} onChange={(event) => handleFeeFieldChange('paymentType', event.target.value)} disabled={Boolean(formData.id)}>
                     {paymentTypes.map((type) => <option key={type} value={type}>{type}</option>)}
                   </select>
                 </div>
@@ -346,6 +415,17 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
                   <div className="form-group">
                     <label>Opening Payment Date</label>
                     <input type="date" value={formData.paidDate || today()} onChange={(event) => handleFeeFieldChange('paidDate', event.target.value)} />
+                  </div>
+                )}
+                {!formData.id && numberValue(formData.paidAmount) > 0 && (
+                  <div className="form-group">
+                    <label>Receipt Number (Optional)</label>
+                    <input
+                      type="text"
+                      value={formData.receiptNumber || ''}
+                      onChange={(event) => handleFeeFieldChange('receiptNumber', event.target.value)}
+                      placeholder="Auto-generated if blank"
+                    />
                   </div>
                 )}
               </div>
@@ -382,6 +462,15 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
                 </select>
               </div>
               <div className="form-group">
+                <label>Receipt Number (Optional)</label>
+                <input
+                  type="text"
+                  value={paymentData.receiptNumber || ''}
+                  onChange={(event) => setPaymentData({ ...paymentData, receiptNumber: event.target.value })}
+                  placeholder="Auto-generated if blank"
+                />
+              </div>
+              <div className="form-group">
                 <label>Payment Date</label>
                 <input type="date" value={paymentData.paidDate} onChange={(event) => setPaymentData({ ...paymentData, paidDate: event.target.value })} />
               </div>
@@ -400,7 +489,7 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
 
       {historyFee && (
         <div className="modal">
-          <div className="modal-content" style={{ maxWidth: '720px', padding: '2rem' }}>
+          <div className="modal-content" style={{ maxWidth: '780px', padding: '2rem' }}>
             <button className="close" onClick={() => setHistoryFee(null)}>x</button>
             <h2 style={{ marginBottom: '1rem' }}>Payment History</h2>
             <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>
@@ -416,11 +505,12 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
                     <th>Method</th>
                     <th>Note</th>
                     <th style={{ textAlign: 'right' }}>Amount</th>
+                    <th style={{ textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(Array.isArray(historyFee.installments) ? historyFee.installments : []).length === 0 ? (
-                    <tr><td colSpan="6" style={{ textAlign: 'center', padding: '1.5rem' }}>No payments recorded.</td></tr>
+                    <tr><td colSpan="7" style={{ textAlign: 'center', padding: '1.5rem' }}>No payments recorded.</td></tr>
                   ) : historyFee.installments.map((payment, index) => (
                     <tr key={`${payment.receiptNumber || 'payment'}-${index}`}>
                       <td>{payment.paidDate ? new Date(payment.paidDate).toLocaleDateString() : '-'}</td>
@@ -429,11 +519,72 @@ export default function FeeManager({ fees = [], students = [], courses = [], onR
                       <td>{payment.paymentMethod || '-'}</td>
                       <td>{payment.note || '-'}</td>
                       <td style={{ textAlign: 'right', fontWeight: 700 }}>{money(payment.amount)}</td>
+                      <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                        <button
+                          className="btn btn-secondary btn-small"
+                          onClick={() => handleEditInstallment(index, payment)}
+                          style={{ marginRight: '0.35rem', padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn btn-secondary btn-small"
+                          onClick={() => handleDeleteInstallment(index, payment)}
+                          style={{ color: '#ef4444', borderColor: '#fee2e2', padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
+                        >
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      )}
+
+      {editInstallmentModalOpen && editInstallmentData && (
+        <div className="modal" style={{ zIndex: 3000 }}>
+          <div className="modal-content" style={{ maxWidth: '520px', padding: '2rem' }}>
+            <button className="close" onClick={() => { setEditInstallmentModalOpen(false); setEditInstallmentData(null); }}>x</button>
+            <h2 style={{ marginBottom: '1.5rem' }}>Edit Payment</h2>
+            <form onSubmit={handleEditInstallmentSave}>
+              <FormNumber label="Amount *" value={editInstallmentData.amount} min="1" onChange={(value) => setEditInstallmentData({ ...editInstallmentData, amount: value })} required />
+              <div className="form-group">
+                <label>Payment Type *</label>
+                <select value={editInstallmentData.paymentType} onChange={(event) => setEditInstallmentData({ ...editInstallmentData, paymentType: event.target.value })} required>
+                  {paymentTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Payment Method *</label>
+                <select value={editInstallmentData.paymentMethod} onChange={(event) => setEditInstallmentData({ ...editInstallmentData, paymentMethod: event.target.value })} required>
+                  {paymentMethods.map((method) => <option key={method} value={method}>{method}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Receipt Number (Optional)</label>
+                <input
+                  type="text"
+                  value={editInstallmentData.receiptNumber || ''}
+                  onChange={(event) => setEditInstallmentData({ ...editInstallmentData, receiptNumber: event.target.value })}
+                  placeholder="Auto-generated if blank"
+                />
+              </div>
+              <div className="form-group">
+                <label>Payment Date</label>
+                <input type="date" value={editInstallmentData.paidDate} onChange={(event) => setEditInstallmentData({ ...editInstallmentData, paidDate: event.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Note / Transaction ID</label>
+                <input type="text" value={editInstallmentData.note} onChange={(event) => setEditInstallmentData({ ...editInstallmentData, note: event.target.value })} placeholder="UPI ref, receipt note, etc." />
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</button>
+                <button type="button" className="btn btn-secondary" onClick={() => { setEditInstallmentModalOpen(false); setEditInstallmentData(null); }}>Cancel</button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -450,11 +601,11 @@ function FeeStat({ label, value, color }) {
   );
 }
 
-function FormNumber({ label, value, onChange, min = '0', required = false }) {
+function FormNumber({ label, value, onChange, min = '0', required = false, disabled = false }) {
   return (
     <div className="form-group">
       <label>{label}</label>
-      <input type="number" min={min} step="0.01" value={value ?? ''} onChange={(event) => onChange(event.target.value)} required={required} />
+      <input type="number" min={min} step="0.01" value={value ?? ''} onChange={(event) => onChange(event.target.value)} required={required} disabled={disabled} />
     </div>
   );
 }
