@@ -1,21 +1,15 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const { Admin } = require('../models/associations');
 const auth = require('../middleware/auth');
+const { normalizeBranch, validBranches } = require('../config/branches');
 
 const router = express.Router();
 
 const getRequiredEnv = (name) => process.env[name]?.trim();
-const getAdminUserId = () => getRequiredEnv('ADMIN_USER_ID') || getRequiredEnv('ADMIN_EMAIL');
 
-const getEnvAdmin = () => ({
-  id: null,
-  name: process.env.ADMIN_NAME || 'Admin',
-  email: getAdminUserId(),
-  userId: getAdminUserId()
-});
-
-// Login
+// Login (supports both superadmin via env and branch admin via DB)
 router.post('/login', [
   body('email').trim().notEmpty().withMessage('User ID is required'),
   body('password').notEmpty()
@@ -27,38 +21,45 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
-    const adminUserId = getAdminUserId();
-    const adminPassword = getRequiredEnv('ADMIN_PASSWORD');
     const jwtSecret = getRequiredEnv('JWT_SECRET');
 
-    if (!adminUserId || !adminPassword || !jwtSecret) {
-      return res.status(500).json({
-        message: 'Admin login is not configured',
-        missing: [
-          !adminUserId && 'ADMIN_USER_ID',
-          !adminPassword && 'ADMIN_PASSWORD',
-          !jwtSecret && 'JWT_SECRET'
-        ].filter(Boolean)
+    if (!jwtSecret) {
+      return res.status(500).json({ message: 'Login is not configured' });
+    }
+
+    // Try superadmin login (env-based)
+    const adminUserId = getRequiredEnv('ADMIN_USER_ID') || getRequiredEnv('ADMIN_EMAIL');
+    const adminPassword = getRequiredEnv('ADMIN_PASSWORD');
+
+    if (adminUserId && adminPassword &&
+        email.trim().toLowerCase() === adminUserId.toLowerCase() &&
+        password === adminPassword) {
+      const token = jwt.sign(
+        { id: null, userId: adminUserId, name: process.env.ADMIN_NAME || 'System Director', role: 'superadmin', branch: null },
+        jwtSecret,
+        { expiresIn: process.env.JWT_EXPIRE || '7d' }
+      );
+      return res.json({
+        token,
+        admin: { id: null, name: process.env.ADMIN_NAME || 'System Director', email: adminUserId, role: 'superadmin', branch: null }
       });
     }
 
-    if (email.trim().toLowerCase() !== adminUserId.toLowerCase() || password !== adminPassword) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    // Try branch admin login (DB-based)
+    const branchAdmin = await Admin.findOne({ where: { email: email.trim().toLowerCase() } });
+    if (branchAdmin && (await branchAdmin.comparePassword(password))) {
+      const token = jwt.sign(
+        { id: branchAdmin.id, userId: branchAdmin.email, name: branchAdmin.name, role: 'branch_admin', branch: branchAdmin.branch },
+        jwtSecret,
+        { expiresIn: process.env.JWT_EXPIRE || '7d' }
+      );
+      return res.json({
+        token,
+        admin: { id: branchAdmin.id, name: branchAdmin.name, email: branchAdmin.email, role: 'branch_admin', branch: branchAdmin.branch }
+      });
     }
 
-    const admin = getEnvAdmin();
-    const token = jwt.sign({ id: admin.id, userId: admin.userId }, jwtSecret, {
-      expiresIn: process.env.JWT_EXPIRE || '7d'
-    });
-
-    res.json({
-      token,
-      admin: {
-        id: admin.id,
-        name: admin.name,
-        email: admin.email
-      }
-    });
+    return res.status(401).json({ message: 'Invalid credentials' });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
@@ -67,18 +68,24 @@ router.post('/login', [
 
 // Get current admin
 router.get('/me', auth, async (req, res) => {
-  res.json({
-    admin: {
-      id: req.admin.id,
-      name: req.admin.name,
-      email: req.admin.email
-    }
-  });
+  res.json({ admin: req.admin });
 });
 
 // Change password
 router.put('/change-password', auth, async (req, res) => {
-  res.status(403).json({ message: 'Admin password can only be changed in environment variables' });
+  const { role, id } = req.admin;
+  if (role === 'superadmin') {
+    return res.status(403).json({ message: 'Superadmin password can only be changed in environment variables' });
+  }
+  try {
+    const admin = await Admin.findByPk(id);
+    if (!admin) return res.status(404).json({ message: 'Admin not found' });
+    admin.password = req.body.password;
+    await admin.save();
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 module.exports = router;

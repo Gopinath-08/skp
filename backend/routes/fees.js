@@ -2,6 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { Fee, Student, Course } = require('../models/associations');
 const auth = require('../middleware/auth');
+const { getBranchFilter, setBranchIfNeeded } = require('../utils/branchFilter');
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ const roundMoney = (value) => Math.round(toNumber(value) * 100) / 100;
 const buildReceiptNumber = () => `RCP${Date.now()}`;
 
 const feeIncludes = [
-  { model: Student, attributes: ['id', 'fullName', 'admissionId', 'mobile', 'email'] },
+  { model: Student, attributes: ['id', 'fullName', 'admissionId', 'mobile', 'email', 'branch'] },
   { model: Course, attributes: ['id', 'name', 'fees'] }
 ];
 
@@ -33,7 +34,12 @@ const validatePaymentTotals = ({ totalFees, paidAmount, discount }) => {
 // Get all fees
 router.get('/', async (req, res) => {
   try {
+    const whereClause = {};
+    if (req.query.branch) {
+      whereClause.branch = req.query.branch;
+    }
     const fees = await Fee.findAll({
+      where: whereClause,
       include: feeIncludes,
       order: [['createdAt', 'DESC']]
     });
@@ -85,6 +91,11 @@ router.post('/', auth, [
     const student = await Student.findByPk(req.body.studentId);
     if (!student) return res.status(400).json({ message: 'Selected student does not exist' });
 
+    // Branch admins can only create fees for students in their branch
+    if (req.admin.role === 'branch_admin' && student.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage fees for students in your branch' });
+    }
+
     const course = await Course.findByPk(req.body.courseId);
     if (!course) return res.status(400).json({ message: 'Selected course does not exist' });
 
@@ -105,15 +116,18 @@ router.post('/', auth, [
       note: 'Opening payment'
     }] : [];
 
-    const fee = await Fee.create({
+    const feeData = {
       ...req.body,
+      branch: student.branch,
       totalFees,
       paidAmount,
       discount,
       admissionFees,
       courseFees,
       installments,
-    });
+    };
+
+    const fee = await Fee.create(feeData);
     res.status(201).json(await getFeeWithDetails(fee.id));
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -134,6 +148,11 @@ router.put('/:id', auth, [
 
     const fee = await Fee.findByPk(req.params.id);
     if (!fee) return res.status(404).json({ message: 'Fee record not found' });
+
+    // Branch admins can only update fees in their branch
+    if (req.admin.role === 'branch_admin' && fee.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage fees in your branch' });
+    }
 
     const admissionFees = roundMoney(req.body.admissionFees ?? fee.admissionFees);
     const courseFees = roundMoney(req.body.courseFees ?? fee.courseFees);
@@ -201,6 +220,11 @@ router.post('/:id/installment', auth, [
     const fee = await Fee.findByPk(req.params.id);
     if (!fee) return res.status(404).json({ message: 'Fee record not found' });
 
+    // Branch admins can only add installments to fees in their branch
+    if (req.admin.role === 'branch_admin' && fee.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage fees in your branch' });
+    }
+
     const amount = roundMoney(req.body.amount);
     if (amount <= 0) return res.status(400).json({ message: 'Payment amount must be greater than zero' });
 
@@ -237,7 +261,12 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     const fee = await Fee.findByPk(req.params.id);
     if (!fee) return res.status(404).json({ message: 'Fee record not found' });
-    
+
+    // Branch admins can only delete fees in their branch
+    if (req.admin.role === 'branch_admin' && fee.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage fees in your branch' });
+    }
+
     await fee.destroy();
     res.json({ message: 'Fee record deleted' });
   } catch (error) {

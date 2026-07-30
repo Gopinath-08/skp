@@ -1,4 +1,4 @@
-export default function DashboardOverview({ stats, activities }) {
+export default function DashboardOverview({ stats, activities, branch }) {
   if (!stats) return <p>Loading overview...</p>;
 
   return (

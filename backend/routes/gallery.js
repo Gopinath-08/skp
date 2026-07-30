@@ -18,8 +18,12 @@ const applyGalleryDefaults = (req, res, next) => {
 // Get all gallery items
 router.get('/', async (req, res) => {
   try {
+    const whereClause = { isActive: true };
+    if (req.query.branch) {
+      whereClause.branch = req.query.branch;
+    }
     const items = await Gallery.findAll({
-      where: { isActive: true },
+      where: whereClause,
       order: [['uploadedAt', 'DESC']]
     });
     res.json(items);
@@ -44,13 +48,19 @@ router.post('/', auth, upload.single('image'), applyGalleryDefaults, [
       tags = typeof req.body.tags === 'string' ? req.body.tags.split(',').map(t => t.trim()) : req.body.tags;
     }
 
-    const item = await Gallery.create({
+    const itemData = {
       ...req.body,
       image: extractFilePath(req.file),
       tags,
       uploadedBy: req.admin.id
-    });
-    
+    };
+
+    // Branch admin gallery items are automatically assigned to their branch
+    if (req.admin.role === 'branch_admin') {
+      itemData.branch = req.admin.branch;
+    }
+
+    const item = await Gallery.create(itemData);
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -62,6 +72,11 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
   try {
     const item = await Gallery.findByPk(req.params.id);
     if (!item) return res.status(404).json({ message: 'Item not found' });
+
+    // Branch admins can only update gallery items in their branch
+    if (req.admin.role === 'branch_admin' && item.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage gallery items in your branch' });
+    }
 
     const updateData = { ...req.body };
     if (req.file) updateData.image = extractFilePath(req.file);
@@ -81,7 +96,12 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     const item = await Gallery.findByPk(req.params.id);
     if (!item) return res.status(404).json({ message: 'Item not found' });
-    
+
+    // Branch admins can only delete gallery items in their branch
+    if (req.admin.role === 'branch_admin' && item.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage gallery items in your branch' });
+    }
+
     await item.destroy();
     res.json({ message: 'Image deleted' });
   } catch (error) {

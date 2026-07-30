@@ -22,6 +22,10 @@ const Admin = sequelize.define('Admin', {
   role: {
     type: DataTypes.STRING,
     defaultValue: 'admin'
+  },
+  branch: {
+    type: DataTypes.STRING,
+    allowNull: true
   }
 }, {
   hooks: {

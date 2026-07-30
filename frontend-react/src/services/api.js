@@ -30,6 +30,13 @@ export const getAssetUrl = (path) => {
   return `${ASSET_BASE_URL}/${normalizedPath}`;
 };
 
+const addBranchParam = (params, branch) => {
+  if (branch) {
+    return { ...params, branch };
+  }
+  return params;
+};
+
 export const courseService = {
   getAll: () => api.get('/courses'),
   getById: (id) => api.get(`/courses/${id}`),
@@ -39,7 +46,7 @@ export const courseService = {
 };
 
 export const studentService = {
-  getAll: () => api.get('/students'),
+  getAll: (branch) => api.get('/students', { params: addBranchParam({}, branch) }),
   getById: (id) => api.get(`/students/${id}`),
   create: (data) => api.post('/students', data),
   register: (data) => api.post('/students', data),
@@ -57,7 +64,7 @@ export const facultyService = {
 };
 
 export const galleryService = {
-  getAll: (params) => api.get('/gallery', { params }),
+  getAll: (branch) => api.get('/gallery', { params: addBranchParam({}, branch) }),
   getById: (id) => api.get(`/gallery/${id}`),
   getCategories: () => api.get('/gallery/categories/list'),
   create: (formData) => api.post('/gallery', formData),
@@ -67,8 +74,8 @@ export const galleryService = {
 };
 
 export const noticeService = {
-  getAll: () => api.get('/notices'),
-  getAdminAll: () => api.get('/notices/all'),
+  getAll: (branch) => api.get('/notices', { params: addBranchParam({}, branch) }),
+  getAdminAll: (branch) => api.get('/notices/all', { params: addBranchParam({}, branch) }),
   getById: (id) => api.get(`/notices/${id}`),
   getByType: (type) => api.get(`/notices/type/${type}`),
   create: (data) => api.post('/notices', data),
@@ -77,7 +84,7 @@ export const noticeService = {
 };
 
 export const inquiryService = {
-  getAll: () => api.get('/inquiries'),
+  getAll: (branch) => api.get('/inquiries', { params: addBranchParam({}, branch) }),
   getById: (id) => api.get(`/inquiries/${id}`),
   create: (data) => api.post('/inquiries', data),
   updateStatus: (id, status) => api.put(`/inquiries/${id}/status`, { status }),
@@ -85,7 +92,7 @@ export const inquiryService = {
 };
 
 export const feeService = {
-  getAll: () => api.get('/fees'),
+  getAll: (branch) => api.get('/fees', { params: addBranchParam({}, branch) }),
   getById: (id) => api.get(`/fees/${id}`),
   getByStudent: (studentId) => api.get(`/fees/student/${studentId}`),
   create: (data) => api.post('/fees', data),
@@ -96,7 +103,7 @@ export const feeService = {
 };
 
 export const certificateService = {
-  getAll: () => api.get('/certificates'),
+  getAll: (branch) => api.get('/certificates', { params: addBranchParam({}, branch) }),
   getById: (id) => api.get(`/certificates/${id}`),
   verify: (certificateNumber) => api.get(`/certificates/verify/${certificateNumber}`),
   create: (data) => api.post('/certificates', data),
@@ -104,8 +111,8 @@ export const certificateService = {
 };
 
 export const adminService = {
-  getStats: () => api.get('/admin/stats'),
-  getRecentActivities: () => api.get('/admin/recent-activities'),
+  getStats: (branch) => api.get('/admin/stats', { params: addBranchParam({}, branch) }),
+  getRecentActivities: (branch) => api.get('/admin/recent-activities', { params: addBranchParam({}, branch) }),
   seed: () => api.post('/admin/seed'),
 };
 
@@ -132,7 +139,7 @@ export const testimonialService = {
 };
 
 export const reportService = {
-  getReports: () => api.get('/reports'),
+  getReports: (branch) => api.get('/reports', { params: addBranchParam({}, branch) }),
 };
 
 export const settingService = {

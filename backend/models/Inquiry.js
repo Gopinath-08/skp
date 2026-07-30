@@ -21,6 +21,10 @@ const Inquiry = sequelize.define('Inquiry', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  branch: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   message: {
     type: DataTypes.TEXT,
     allowNull: false

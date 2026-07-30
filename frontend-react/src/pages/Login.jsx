@@ -34,7 +34,7 @@ export default function Login() {
       setFormData({ email: '', password: '' });
       navigate('/admin');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please check your admin credentials.');
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
@@ -52,7 +52,7 @@ export default function Login() {
 
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">Email Address / User ID</label>
               <input
                 type="text"
                 id="email"
@@ -60,7 +60,7 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="Enter admin user id"
+                placeholder="Enter your email or user id"
               />
             </div>
 

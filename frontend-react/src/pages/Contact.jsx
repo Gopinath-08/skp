@@ -78,7 +78,18 @@ export default function Contact() {
             whatsapp="+91 98610 04687"
             email="iceworldkrar.in@gmail.com"
           />
-          <InfoCard number="03" title="Business Hours">
+          <BranchCard
+            number="03"
+            title="Sonepur Branch"
+            addressLines={[
+              'Sonepur, Odisha',
+              'Dist- Subarnapur, Odisha'
+            ]}
+            phone="+91 00000 00000"
+            whatsapp="+91 00000 00000"
+            email="sonepur@iceworld.info"
+          />
+          <InfoCard number="04" title="Business Hours">
             Monday - Saturday<br />Morning and evening batches available
           </InfoCard>
         </div>

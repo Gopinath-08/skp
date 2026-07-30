@@ -5,25 +5,11 @@ const { Student, Course, Batch, Fee } = require('../models/associations');
 const auth = require('../middleware/auth');
 const { profileUpload } = require('../middleware/upload');
 const { handleStudentProfileUpload } = require('../utils/fileUpload');
+const { branchCodes, validBranches, normalizeBranch } = require('../config/branches');
 
 const router = express.Router();
 
-const branchCodes = {
-  Titilagarh: 'TLG',
-  Rajkhariar: 'KHR',
-  Khariar: 'KHR',
-  Titlagarh: 'TLG',
-  'Khariar Road': 'KHR'
-};
-
-const validBranches = ['Titilagarh', 'Rajkhariar'];
 const validStudentCategories = ['SC', 'ST', 'General', 'OBC'];
-
-const normalizeBranch = (branch) => {
-  if (branch === 'Balangir' || branch === 'Titlagarh') return 'Titilagarh';
-  if (branch === 'Khariar' || branch === 'Khariar Road') return 'Rajkhariar';
-  return branch;
-};
 
 const getAdmissionYear = (dateValue) => {
   const date = dateValue ? new Date(dateValue) : new Date();
@@ -54,7 +40,12 @@ const getNextAdmissionId = async (branch, admissionDate) => {
 // Get all students
 router.get('/', async (req, res) => {
   try {
+    const whereClause = {};
+    if (req.query.branch) {
+      whereClause.branch = normalizeBranch(req.query.branch);
+    }
     const students = await Student.findAll({
+      where: whereClause,
       include: [
         { model: Course, attributes: ['id', 'name'] },
         { model: Batch, attributes: ['id', 'name', 'timing'] }
@@ -120,21 +111,16 @@ router.post('/', auth, profileUpload.fields([
       return res.status(400).json({ errors: errors.array() });
     }
 
-    console.log('📋 Creating student with files:', {
-      hasPhoto: !!req.files?.photo?.[0],
-      hasTenthCert: !!req.files?.tenthCertificate?.[0],
-      hasTwelfthCert: !!req.files?.twelfthCertificate?.[0],
-      hasAadhaarCard: !!req.files?.aadhaarCard?.[0],
-      hasCertificate1: !!req.files?.certificate1?.[0],
-      hasCertificate2: !!req.files?.certificate2?.[0],
-      hasCertificate3: !!req.files?.certificate3?.[0]
-    });
-
     const branch = normalizeBranch(req.body.branch) || 'Titilagarh';
+
+    // Branch admins can only create students in their branch
+    if (req.admin.role === 'branch_admin' && branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only add students to your branch' });
+    }
+
     const admissionId = await getNextAdmissionId(branch, req.body.admissionDate);
 
     const fileUpdates = handleStudentProfileUpload(req);
-    console.log('🔗 File updates extracted:', fileUpdates);
 
     const studentData = {
       ...req.body,
@@ -150,22 +136,15 @@ router.post('/', auth, profileUpload.fields([
     };
 
     const student = await Student.create(studentData);
-    console.log('✅ Student saved to database:', {
-      id: student.id,
-      photoUrl: student.photo ? student.photo.substring(0, 100) : null,
-      tenthCert: student.tenthCertificate ? '✅' : '❌',
-      twelfthCert: student.twelfthCertificate ? '✅' : '❌'
-    });
-
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'Student created successfully',
-      data: student 
+      data: student
     });
   } catch (error) {
-    console.error('❌ Student creation error:', error.message);
-    res.status(500).json({ 
+    console.error('Student creation error:', error.message);
+    res.status(500).json({
       message: 'Error creating student',
-      error: error.message 
+      error: error.message
     });
   }
 });
@@ -184,6 +163,11 @@ router.put('/:id', auth, profileUpload.fields([
     const student = await Student.findByPk(req.params.id);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Branch admins can only update students in their branch
+    if (req.admin.role === 'branch_admin' && student.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only update students in your branch' });
     }
 
     const updateData = { ...req.body };
@@ -207,15 +191,15 @@ router.put('/:id', auth, profileUpload.fields([
     if (fileUpdates.certificate3) updateData.certificate3 = fileUpdates.certificate3;
 
     await student.update(updateData);
-    res.json({ 
+    res.json({
       message: 'Student updated successfully',
-      data: student 
+      data: student
     });
   } catch (error) {
     console.error('Student update error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Error updating student',
-      error: error.message 
+      error: error.message
     });
   }
 });
@@ -226,6 +210,11 @@ router.delete('/:id', auth, async (req, res) => {
     const student = await Student.findByPk(req.params.id);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Branch admins can only delete students in their branch
+    if (req.admin.role === 'branch_admin' && student.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only delete students in your branch' });
     }
 
     await student.destroy();

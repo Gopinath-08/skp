@@ -10,6 +10,10 @@ const Certificate = sequelize.define('Certificate', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  branch: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   certificateNumber: {
     type: DataTypes.STRING,
     allowNull: false,

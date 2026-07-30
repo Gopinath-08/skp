@@ -136,12 +136,15 @@ const emptyData = {
   reports: null,
 };
 
+const validBranches = ['Titilagarh', 'Rajkhariar', 'Sonepur'];
+
 export default function Admin() {
   const [data, setData] = useState(emptyData);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [error, setError] = useState('');
-  
+  const [branchFilter, setBranchFilter] = useState('');
+
   // Modal State
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -149,44 +152,51 @@ export default function Admin() {
 
   const isLoggedIn = Boolean(localStorage.getItem('authToken'));
   const admin = JSON.parse(localStorage.getItem('admin') || 'null');
+  const isBranchAdmin = admin?.role === 'branch_admin';
+  const userBranch = admin?.branch || '';
 
-  const tabs = useMemo(() => [
-    ['dashboard', 'Dashboard'],
-    ['inquiries', 'Inquiries / Leads'],
-    ['students', 'Students'],
-    ['courses', 'Courses'],
-    ['batches', 'Batches'],
-    ['fees', 'Fees'],
-    ['certificates', 'Certificates'],
-    ['faculty', 'Faculty'],
-    ['notices', 'Notices'],
-    ['content', 'Web Content'],
-    ['gallery', 'Gallery'],
-    ['testimonials', 'Testimonials'],
-    ['reports', 'Reports'],
-    ['settings', 'Settings'],
-  ], []);
+  const tabs = useMemo(() => {
+    const allTabs = [
+      ['dashboard', 'Dashboard'],
+      ['inquiries', 'Inquiries / Leads'],
+      ['students', 'Students'],
+      ['courses', 'Courses'],
+      ['batches', 'Batches'],
+      ['fees', 'Fees'],
+      ['certificates', 'Certificates'],
+      ['faculty', 'Faculty'],
+      ['notices', 'Notices'],
+      ['content', 'Web Content'],
+      ['gallery', 'Gallery'],
+      ['testimonials', 'Testimonials'],
+      ['reports', 'Reports'],
+      ['settings', 'Settings'],
+    ];
+    return allTabs;
+  }, []);
 
   const fetchData = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     setError('');
 
+    const branch = isBranchAdmin ? userBranch : branchFilter;
+
     const requests = {
-      stats: adminService.getStats(),
-      activities: adminService.getRecentActivities(),
+      stats: adminService.getStats(branch),
+      activities: adminService.getRecentActivities(branch),
       courses: courseService.getAll(),
       batches: batchService.getAll(),
-      notices: isLoggedIn ? noticeService.getAdminAll() : noticeService.getAll(),
-      students: studentService.getAll(),
-      inquiries: inquiryService.getAll(),
-      fees: feeService.getAll(),
-      certificates: certificateService.getAll(),
+      notices: isLoggedIn ? noticeService.getAdminAll(branch) : noticeService.getAll(branch),
+      students: studentService.getAll(branch),
+      inquiries: inquiryService.getAll(branch),
+      fees: feeService.getAll(branch),
+      certificates: certificateService.getAll(branch),
       faculty: facultyService.getAll(),
-      gallery: galleryService.getAll(),
+      gallery: galleryService.getAll(branch),
       testimonials: testimonialService.getAll(),
       settings: settingService.getAll(),
       content: contentService.getAll(),
-      reports: reportService.getReports().catch(() => ({ data: { message: 'Reports disabled or offline' } })),
+      reports: reportService.getReports(branch).catch(() => ({ data: { message: 'Reports disabled or offline' } })),
     };
 
     const entries = await Promise.allSettled(
@@ -212,7 +222,7 @@ export default function Admin() {
       setError('Login is required to load protected admin endpoints.');
     }
     setLoading(false);
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isBranchAdmin, userBranch, branchFilter]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -314,14 +324,33 @@ export default function Admin() {
               System Online
             </span>
             <span style={{ color: 'var(--text-secondary)', textTransform: 'capitalize', fontSize: '0.85rem' }}>{activeTab.replace('-', ' ')}</span>
+            {isBranchAdmin && (
+              <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', background: '#fef3c7', color: '#92400e', borderRadius: 'var(--radius-full)', fontWeight: 600 }}>
+                {userBranch} Branch
+              </span>
+            )}
           </span>
         </div>
-        {isLoggedIn && (
-          <div className="admin-user">
-            <span>{admin?.name || admin?.email || 'Admin'}</span>
-            <button className="btn btn-secondary btn-small" onClick={handleLogout}>Logout</button>
-          </div>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          {!isBranchAdmin && isLoggedIn && (
+            <select
+              value={branchFilter}
+              onChange={(e) => setBranchFilter(e.target.value)}
+              style={{ maxWidth: '200px', padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}
+            >
+              <option value="">All Branches</option>
+              {validBranches.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
+          )}
+          {isLoggedIn && (
+            <div className="admin-user">
+              <span>{admin?.name || admin?.email || 'Admin'}</span>
+              <button className="btn btn-secondary btn-small" onClick={handleLogout}>Logout</button>
+            </div>
+          )}
+        </div>
       </section>
 
       {!isLoggedIn && (
@@ -353,7 +382,7 @@ export default function Admin() {
           ) : (
             <>
               {activeTab === 'dashboard' && (
-                <DashboardOverview stats={stats} activities={data.activities} />
+                <DashboardOverview stats={stats} activities={data.activities} branch={isBranchAdmin ? userBranch : branchFilter} />
               )}
               {activeTab === 'students' && (
                 <StudentManager students={data.students} courses={data.courses} batches={data.batches} onRefresh={() => fetchData(true)} />
@@ -404,13 +433,15 @@ export default function Admin() {
                           const doc = new jsPDF();
                           doc.text('Fees Report', 14, 15);
                           const headers = ['Fee ID', 'Student', 'Amount', 'Date', 'Status'];
-                          const tableData = data.reports.feesReport.map(fee => [
-                             fee.id,
-                             fee.Student?.fullName || 'N/A',
-                             `Rs. ${fee.amountPaid}`,
-                             new Date(fee.paymentDate).toLocaleDateString(),
-                             fee.status
-                          ]);
+                          const tableData = data.reports.feesReport.map(fee => (
+                             [
+                                fee.id,
+                                fee.Student?.fullName || 'N/A',
+                                `Rs. ${fee.amountPaid}`,
+                                new Date(fee.paymentDate).toLocaleDateString(),
+                                fee.status
+                             ]
+                          ));
                           autoTable(doc, {
                             head: [headers],
                             body: tableData,
@@ -431,7 +462,7 @@ export default function Admin() {
                       + Add New
                     </button>
                   </div>
-                  
+
                   <CrudTable
                     rows={data[activeTab] || []}
                     schema={schemas[activeTab]}
@@ -449,17 +480,17 @@ export default function Admin() {
       {modalOpen && (
         <div className="modal">
           <div className="modal-content" style={{maxWidth: '500px'}}>
-            <button className="close" onClick={() => setModalOpen(false)}>×</button>
+            <button className="close" onClick={() => setModalOpen(false)}>x</button>
             <h2 style={{marginBottom: '1.5rem'}}>{editingItem ? 'Edit' : 'Add'} {activeTab.slice(0,-1)}</h2>
             <form onSubmit={handleSave}>
               {schemas[activeTab]?.map((field) => (
                 <div className="form-group" key={field.key}>
                   <label>{field.label}</label>
                   {field.type === 'textarea' ? (
-                    <textarea 
-                      name={field.key} 
-                      value={formData[field.key] || ''} 
-                      onChange={handleInputChange} 
+                    <textarea
+                      name={field.key}
+                      value={formData[field.key] || ''}
+                      onChange={handleInputChange}
                       rows="3"
                     />
                   ) : field.type === 'select' ? (
@@ -498,11 +529,11 @@ export default function Admin() {
                       )}
                     </>
                   ) : (
-                    <input 
-                      type={field.type} 
-                      name={field.key} 
-                      value={formatInputValue(formData[field.key], field.type)} 
-                      onChange={handleInputChange} 
+                    <input
+                      type={field.type}
+                      name={field.key}
+                      value={formatInputValue(formData[field.key], field.type)}
+                      onChange={handleInputChange}
                       required={field.required !== false && field.key !== 'description'}
                     />
                   )}
@@ -522,7 +553,7 @@ export default function Admin() {
 
 function CrudTable({ rows, schema, onEdit, onDelete }) {
   if (!schema) return <p>No schema defined for this tab.</p>;
-  
+
   return (
     <div className="table-container">
       <table>

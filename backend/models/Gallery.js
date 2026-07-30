@@ -18,7 +18,11 @@ const Gallery = sequelize.define('Gallery', {
     allowNull: false
   },
   tags: {
-    type: DataTypes.JSONB // Array of strings
+    type: DataTypes.JSONB
+  },
+  branch: {
+    type: DataTypes.STRING,
+    allowNull: true
   },
   isActive: {
     type: DataTypes.BOOLEAN,

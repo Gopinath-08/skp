@@ -10,6 +10,10 @@ const Fee = sequelize.define('Fee', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  branch: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   totalFees: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
@@ -26,11 +30,11 @@ const Fee = sequelize.define('Fee', {
     defaultValue: 0
   },
   paymentMethod: {
-    type: DataTypes.STRING, // e.g., 'Cash', 'UPI', 'Bank Transfer'
+    type: DataTypes.STRING,
     defaultValue: 'Cash'
   },
   paymentType: {
-    type: DataTypes.STRING, // e.g., 'Full Payment', 'Installment'
+    type: DataTypes.STRING,
     defaultValue: 'Installment'
   },
   admissionFees: {

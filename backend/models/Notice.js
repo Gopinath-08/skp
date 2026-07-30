@@ -18,6 +18,10 @@ const Notice = sequelize.define('Notice', {
     type: DataTypes.STRING,
     defaultValue: 'Medium'
   },
+  branch: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true

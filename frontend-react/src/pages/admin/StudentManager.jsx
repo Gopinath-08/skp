@@ -45,6 +45,7 @@ const states = [
 const branches = [
   { name: 'Titilagarh', code: 'TLG' },
   { name: 'Rajkhariar', code: 'KHR' },
+  { name: 'Sonepur', code: 'SPR' },
 ];
 
 const studentCategories = ['SC', 'ST', 'General', 'OBC'];

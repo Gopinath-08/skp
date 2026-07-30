@@ -8,7 +8,14 @@ const router = express.Router();
 // Get all inquiries (admin only)
 router.get('/', auth, async (req, res) => {
   try {
+    const whereClause = {};
+    if (req.admin.role === 'branch_admin') {
+      whereClause.branch = req.admin.branch;
+    } else if (req.query.branch) {
+      whereClause.branch = req.query.branch;
+    }
     const inquiries = await Inquiry.findAll({
+      where: whereClause,
       order: [['createdAt', 'DESC']]
     });
     res.json(inquiries);
@@ -42,6 +49,11 @@ router.put('/:id', auth, async (req, res) => {
     const inquiry = await Inquiry.findByPk(req.params.id);
     if (!inquiry) return res.status(404).json({ message: 'Inquiry not found' });
 
+    // Branch admins can only update inquiries in their branch
+    if (req.admin.role === 'branch_admin' && inquiry.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage inquiries in your branch' });
+    }
+
     await inquiry.update({ status: req.body.status });
     res.json(inquiry);
   } catch (error) {
@@ -54,6 +66,11 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     const inquiry = await Inquiry.findByPk(req.params.id);
     if (!inquiry) return res.status(404).json({ message: 'Inquiry not found' });
+
+    // Branch admins can only delete inquiries in their branch
+    if (req.admin.role === 'branch_admin' && inquiry.branch !== req.admin.branch) {
+      return res.status(403).json({ message: 'You can only manage inquiries in your branch' });
+    }
 
     await inquiry.destroy();
     res.json({ message: 'Inquiry deleted' });
